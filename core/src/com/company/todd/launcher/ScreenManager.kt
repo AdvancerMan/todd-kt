@@ -5,11 +5,16 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.utils.Queue
 import java.lang.UnsupportedOperationException
 
-class ScreenManager: Screen {
+class ScreenManager(): Screen {
     private val stack = Queue<Screen>(4)
     private var width = Gdx.graphics.width
     private var height = Gdx.graphics.height
     private val doOnUpdate = Queue<() -> Unit>(2)
+
+    constructor(firstScreen: Screen): this() {
+        ScreenManager()
+        push(firstScreen)
+    }
 
     fun update() {
         doOnUpdate.forEach { it() }
