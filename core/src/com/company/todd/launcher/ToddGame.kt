@@ -12,7 +12,7 @@ class ToddGame: ApplicationAdapter() {
 
     override fun create() {
         batch = SpriteBatch()
-        screenManager = ScreenManager(RainbowScreen(4f, 5f))
+        screenManager = ScreenManager(RainbowScreen(this, 4f, 5f))
     }
 
     override fun render() {

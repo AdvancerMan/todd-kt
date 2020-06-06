@@ -1,11 +1,13 @@
 package com.company.todd.screen
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
+import com.company.todd.launcher.ToddGame
 import kotlin.math.abs
 
-class RainbowScreen(private val maxValue: Float, private val step: Float): Screen {
+class RainbowScreen(game: ToddGame, private val maxValue: Float, private val step: Float): MyScreen(game) {
     private val rgb = arrayOf(0f, maxValue, 0f)
     private var ind = 1
 
@@ -18,18 +20,16 @@ class RainbowScreen(private val maxValue: Float, private val step: Float): Scree
         }
     }
 
-    override fun render(delta: Float) {
+    override fun update(delta: Float) {
         updateColor(delta)
+    }
+
+    override fun draw(batch: SpriteBatch, cameraRect: Rectangle) {
         rgb.map { it / maxValue }.let {
             Gdx.gl.glClearColor(it[0], it[1], it[2], 1f)
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         }
     }
 
-    override fun hide() {}
-    override fun show() {}
-    override fun pause() {}
-    override fun resume() {}
-    override fun resize(width: Int, height: Int) {}
     override fun dispose() {}
 }
