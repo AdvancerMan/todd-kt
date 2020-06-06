@@ -2,6 +2,8 @@ package com.company.todd.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.toPix

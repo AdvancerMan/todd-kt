@@ -1,6 +1,6 @@
 package com.company.todd.objects.base
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Disposable
 
@@ -13,7 +13,7 @@ class InGameObject: Disposable {
         TODO()
     }
 
-    fun draw(batch: SpriteBatch, cameraRect: Rectangle) {
+    fun draw(batch: Batch, cameraRect: Rectangle) {
         TODO()
     }
 

@@ -3,7 +3,7 @@ package com.company.todd.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.company.todd.launcher.ToddGame
@@ -68,7 +68,7 @@ abstract class MyScreen(protected val game: ToddGame): Screen {
     }
 
     abstract fun update(delta: Float)
-    abstract fun draw(batch: SpriteBatch, cameraRect: Rectangle)
+    abstract fun draw(batch: Batch, cameraRect: Rectangle)
 
     override fun pause() {}
     override fun resume() {}

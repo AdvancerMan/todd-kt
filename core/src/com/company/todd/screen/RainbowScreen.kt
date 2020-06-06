@@ -2,7 +2,7 @@ package com.company.todd.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Rectangle
 import com.company.todd.launcher.ToddGame
 import kotlin.math.abs
@@ -24,7 +24,7 @@ class RainbowScreen(game: ToddGame, private val maxValue: Float, private val ste
         updateColor(delta)
     }
 
-    override fun draw(batch: SpriteBatch, cameraRect: Rectangle) {
+    override fun draw(batch: Batch, cameraRect: Rectangle) {
         rgb.map { it / maxValue }.let {
             Gdx.gl.glClearColor(it[0], it[1], it[2], 1f)
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
