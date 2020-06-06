@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.company.todd.screen.RainbowScreen
 
-class ToddLauncher: ApplicationAdapter() {
+class ToddGame: ApplicationAdapter() {
     lateinit var batch: SpriteBatch private set
-    private lateinit var screenManager: ScreenManager
+    lateinit var screenManager: ScreenManager private set
 
     override fun create() {
         batch = SpriteBatch()
