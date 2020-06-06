@@ -54,8 +54,13 @@ abstract class MyScreen(protected val game: ToddGame): Screen {
     fun addToCameraSize(deltaWidth: Float, deltaHeight: Float) =
             setCameraSize(camera.viewportWidth + deltaWidth, camera.viewportHeight + deltaHeight)
 
-    fun zoom(scaleX: Float = 1f, scaleY: Float = 1f) =
+    fun zoom(scaleX: Float, scaleY: Float) =
             setCameraSize(camera.viewportWidth * scaleX, camera.viewportHeight * scaleY)
+
+    fun zoom(zoom: Float) {
+        camera.zoom *= zoom
+        camera.update()
+    }
 
     override fun resize(width: Int, height: Int) {
         zoom(width.toFloat() / resizedTo.x, height.toFloat() / resizedTo.y)

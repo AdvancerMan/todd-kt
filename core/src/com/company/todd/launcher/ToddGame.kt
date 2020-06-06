@@ -23,6 +23,8 @@ class ToddGame: ApplicationAdapter() {
     }
 
     override fun dispose() {
+        screenManager.pause()
+        screenManager.dispose()
         batch.dispose()
     }
 }
