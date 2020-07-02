@@ -32,7 +32,7 @@ class ScreenManager(): Screen {
     }
 
     fun pop() {
-        doOnUpdate.addLast(this::realPop)
+        doOnUpdate.addLast { realPop() }
     }
 
     private fun naivePush(screen: Screen) {
@@ -71,8 +71,8 @@ class ScreenManager(): Screen {
     }
 
     override fun render(delta: Float) = doWithLast { render(delta) }
-    override fun resume() = doWithLast(Screen::resume)
-    override fun pause() = doWithLast(Screen::pause)
+    override fun resume() = doWithLast { resume() }
+    override fun pause() = doWithLast { pause() }
 
     override fun resize(width: Int, height: Int) {
         this.width = width
@@ -81,7 +81,7 @@ class ScreenManager(): Screen {
     }
 
     override fun dispose() {
-        stack.forEach(Screen::dispose)
+        stack.forEach { it.dispose() }
         stack.clear()
     }
 }

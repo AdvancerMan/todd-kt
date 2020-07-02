@@ -42,6 +42,6 @@ fun crawlJsonListsWithComments(internalPath: String) =
                             }
                 }
 
-fun getLevels() = crawlJsonListsWithComments(assetsFolder + "levels")
+fun loadLevels() = crawlJsonListsWithComments(assetsFolder + "levels")
 
-fun getAnimationInfos() = crawlJsonListsWithComments(assetsFolder + "pics")
+fun loadAnimationInfos() = crawlJsonListsWithComments(assetsFolder + "pics")
