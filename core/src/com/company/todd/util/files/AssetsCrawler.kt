@@ -24,7 +24,7 @@ fun crawl(fileNamePattern: Pattern, internalPath: String): List<Pair<String, Str
     return res
 }
 
-val commentsPattern = Pattern.compile("(//|#)[^\\n]*\\n?")!!
+val commentsPattern = Pattern.compile("//[^\\n]*\\n?")!!
 
 fun removeComments(input: String) =
         commentsPattern.matcher(input).replaceAll("\n")!!
