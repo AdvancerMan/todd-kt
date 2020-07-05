@@ -41,7 +41,3 @@ fun crawlJsonListsWithComments(internalPath: String) =
                                 jsonReader.parse(if (json[0] == '[') json else "[$json]")
                             }
                 }
-
-fun loadLevels() = crawlJsonListsWithComments(assetsFolder + "levels")
-
-fun loadAnimationInfos() = crawlJsonListsWithComments(assetsFolder + "pics")

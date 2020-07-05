@@ -15,19 +15,19 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
             Animation(
                     info.frameDuration,
                     *info.bounds
-                            .map { loadTextureRegion(RegionInfo(info.fileName, it.x, it.y, it.width, it.height)) }
+                            .map { loadTextureRegion(RegionInfo(info.path, it.x, it.y, it.width, it.height)) }
                             .toTypedArray()
             )
 
     fun loadTextureRegion(info: RegionInfo) =
-            TextureRegion(load(info.fileName), info.x, info.y, info.w, info.h)
+            TextureRegion(load(info.path), info.x, info.y, info.w, info.h)
 
     fun unloadAnimationPack(info: AnimationPackInfo) =
             info.animations.forEach { unloadAnimation(it.second) }
 
     fun unloadAnimation(info: AnimationInfo) =
-            unload(info.fileName, info.bounds.size)
+            unload(info.path, info.bounds.size)
 
     fun unloadTextureRegion(info: RegionInfo) =
-            unload(info.fileName)
+            unload(info.path)
 }

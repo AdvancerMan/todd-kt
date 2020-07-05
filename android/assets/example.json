@@ -49,25 +49,25 @@
 // type --- reg (texture region), anim (animation), anims (animations)
 
 // reg:
-// fileName --- file name with extension
+// path --- path to picture with file extension
 // xywh --- bounding rectangle for texture region (x, y, width, height)
 
 {
   "type": "reg",
   "name": "test",
-  "fileName": "testPic.png",
+  "path": "very/long/path/testPic.png",
   "xywh": [10, 20, 10, 10]
 }
 
 // anim:
-// fileName --- file name with extension (it is used for all frames)
+// path --- path to picture with file extension (one path is used for all frames)
 // frameDuration --- duration of each frame in ms
 // bounds --- list of "xywh"
 
 {
   "type": "anim",
   "name": "testAnim",
-  "fileName": "testAnim.png",
+  "path": "testAnim.png",
   "frameDuration": 100,
   "bounds": [
     [0, 0, 10, 10],
@@ -82,7 +82,7 @@
 {
   "type": "anim",
   "name": "testAnim",
-  "fileName": "testAnim.png",
+  "path": "testAnim.png",
   "frameDuration": 100,
   "xywh": [0, 0, 20, 20],
   "r": 2,  // rows
@@ -98,14 +98,14 @@
   "name": "testAnims",
   "anims": {
     "RUN": {
-      "fileName": "testAnim.png",
+      "path": "testAnim.png",
       "frameDuration": 100,
       "xywh": [0, 0, 20, 10],
       "r": 1,
       "c": 2
     },
     "JUMP": {
-      "fileName": "testAnim.png",
+      "path": "testAnim.png",
       "frameDuration": 100,
       "xywh": [0, 10, 20, 10],
       "r": 1,
