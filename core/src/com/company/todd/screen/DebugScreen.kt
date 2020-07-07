@@ -11,10 +11,15 @@ import com.company.todd.objects.base.toPix
 class DebugScreen(game: ToddGame): GameScreen(game) {
     private val renderer = Box2DDebugRenderer()
     private var pressedPlay = true
+    private var debugDraw = true
 
     override fun render(delta: Float) {
         update(delta)
-        renderer.render(world, getCameraProjectionMatrix().cpy().toPix())
+        if (debugDraw) {
+            renderer.render(world, getCameraProjectionMatrix().cpy().toPix())
+        } else {
+            draw(game.batch, getCameraRectangle())
+        }
     }
 
     override fun update(delta: Float) {
@@ -23,6 +28,9 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.W) || pressedPlay) {
             super.update(delta)
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            debugDraw = !debugDraw
         }
     }
 
