@@ -10,7 +10,7 @@ enum class AnimationType {
     STAY, RUN, JUMP, FALL, LANDING, SHOOT
 }
 
-class AnimatedSprite(private val animations: Map<AnimationType, Animation<TextureRegion>>): Sprite() {
+class AnimatedSprite(private val animations: Map<AnimationType, Animation<TextureRegion>>): MySprite() {
     private var elapsed = 0f
     private lateinit var playingNow: Animation<TextureRegion>
     private lateinit var playingNowType: AnimationType
@@ -19,7 +19,7 @@ class AnimatedSprite(private val animations: Map<AnimationType, Animation<Textur
         setPlayingType(AnimationType.STAY, true)
     }
 
-    fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {
+    override fun setPlayingType(type: AnimationType, forceReset: Boolean) {
         if (forceReset || type != playingNowType) {
             elapsed = 0f
             playingNowType = type
@@ -35,7 +35,7 @@ class AnimatedSprite(private val animations: Map<AnimationType, Animation<Textur
         setOrigin(width / 2, height / 2)
     }
 
-    fun update(delta: Float) {
+    override fun update(delta: Float) {
         val ind1 = playingNow.getKeyFrameIndex(elapsed)
         elapsed += delta
         val ind2 = playingNow.getKeyFrameIndex(elapsed)
@@ -44,12 +44,5 @@ class AnimatedSprite(private val animations: Map<AnimationType, Animation<Textur
         }
     }
 
-    fun draw(centerX: Float, centerY: Float, batch: Batch, cameraRectangle: Rectangle) {
-        setCenter(centerX, centerY)
-        if (cameraRectangle.overlaps(boundingRectangle)) {
-            super.draw(batch)
-        }
-    }
-
-    fun isAnimationFinished() = playingNow.isAnimationFinished(elapsed)
+    override fun isAnimationFinished() = playingNow.isAnimationFinished(elapsed)
 }
