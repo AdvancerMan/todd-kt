@@ -5,8 +5,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.World
 
 class CircleBodyPattern(world: World, type: BodyDef.BodyType,
-                        var radius: Float, position: Vector2 = Vector2()) :
-        BodyPattern(world, type, position) {
+                        var radius: Float, centerPosition: Vector2 = Vector2()) :
+        BodyPattern(world, type, centerPosition) {
     override fun createBody() =
             BodyFactory.createBody(world, type, position).apply {
                 BodyFactory.addCircle(this, radius)

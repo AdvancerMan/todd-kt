@@ -2,6 +2,7 @@ package com.company.todd.util.box2d
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.company.todd.objects.base.toMeters
 
 object BodyFactory {
     const val DEFAULT_DENSITY = 1f
@@ -12,11 +13,11 @@ object BodyFactory {
     val bodyDef = BodyDef()
     val fixtureDef = FixtureDef()
 
-    fun createBody(world: World, type: BodyDef.BodyType, position: Vector2,
+    fun createBody(world: World, type: BodyDef.BodyType, center: Vector2,
                    fixedRotation: Boolean = true, isBullet: Boolean = false) =
             world.createBody(bodyDef.apply {
                 this.type = type
-                this.position.set(position)
+                this.position.set(center).toMeters()
                 this.fixedRotation = fixedRotation
                 this.bullet = isBullet
                 this.linearDamping = DEFAULT_LINEAR_DAMPING
@@ -36,7 +37,7 @@ object BodyFactory {
                restitution: Float = DEFAULT_RESTITUTION, angle: Float = 0f) {
         PolygonShape().apply {
             // TODO addPolygon() - smooth box
-            setAsBox(width, height, center, angle)
+            setAsBox(width.toMeters() / 2, height.toMeters() / 2, center.cpy().toMeters(), angle)
             createFixture(body, this, density, friction, restitution)
             dispose()
         }
@@ -45,7 +46,7 @@ object BodyFactory {
     fun addPolygon(body: Body, vertices: FloatArray, density: Float = DEFAULT_DENSITY,
                    friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
         PolygonShape().apply {
-            set(vertices)
+            set(vertices.map { it.toMeters() }.toFloatArray())
             createFixture(body, this, density, friction, restitution)
             dispose()
         }
@@ -55,7 +56,8 @@ object BodyFactory {
                   friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
         CircleShape().apply {
             position = center
-            this.radius = radius
+            position.toMeters()
+            this.radius = radius.toMeters()
 
             createFixture(body, this, density, friction, restitution)
             dispose()
@@ -66,7 +68,7 @@ object BodyFactory {
                 density: Float = DEFAULT_DENSITY, friction: Float = DEFAULT_FRICTION,
                 restitution: Float = DEFAULT_RESTITUTION) {
         EdgeShape().apply {
-            set(x1, y1, x2, y2)
+            set(x1.toMeters(), y1.toMeters(), x2.toMeters(), y2.toMeters())
             createFixture(body, this, density, friction, restitution)
             dispose()
         }
@@ -75,7 +77,7 @@ object BodyFactory {
     fun addChain(body: Body, vertices: FloatArray, density: Float = DEFAULT_DENSITY,
                  friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
         ChainShape().apply {
-            createChain(vertices)
+            createChain(vertices.map { it.toMeters() }.toFloatArray())
             createFixture(body, this, density, friction, restitution)
             dispose()
         }
@@ -84,7 +86,7 @@ object BodyFactory {
     fun addLoopChain(body: Body, vertices: FloatArray, density: Float = DEFAULT_DENSITY,
                      friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
         ChainShape().apply {
-            createLoop(vertices)
+            createLoop(vertices.map { it.toMeters() }.toFloatArray())
             createFixture(body, this, density, friction, restitution)
             dispose()
         }
