@@ -18,8 +18,8 @@ class ToddGame: ApplicationAdapter() {
 
     override fun create() {
         batch = SpriteBatch()
-        screenManager = ScreenManager(RainbowScreen(this, 4f, 5f))
         textureManager = TextureManager()
+        screenManager = ScreenManager(RainbowScreen(this, 4f, 5f))
         assetsFolder = if (Gdx.app.type == Application.ApplicationType.Desktop) "android/assets/" else ""
     }
 
