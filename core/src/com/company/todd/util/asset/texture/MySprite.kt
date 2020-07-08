@@ -14,7 +14,7 @@ abstract class MySprite: Sprite() {
     protected fun updateRegion(region: TextureRegion) {
         setRegion(region)
         setSize(region.regionWidth.toFloat(), region.regionHeight.toFloat())
-        setOrigin(width / 2, height / 2)
+        setOriginCenter()
     }
 
     fun draw(center: Vector2, batch: Batch, cameraRectangle: Rectangle) {
