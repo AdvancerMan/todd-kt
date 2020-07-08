@@ -62,6 +62,10 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
         body.setTransform(body.position, angle)
     }
 
+    override fun setOwner(owner: InGameObject) {
+        body.userData = owner
+    }
+
     override fun getAABB() =
             Rectangle().apply {
                 val tmp = Vector2()

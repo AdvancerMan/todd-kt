@@ -39,6 +39,8 @@ interface BodyWrapper {
 
     fun setAngle(angle: Float, resetAngularVelocity: Boolean = true)
 
+    fun setOwner(owner: InGameObject)
+
     fun getAABB(): Rectangle
 
     fun destroy(world: World)
