@@ -15,7 +15,10 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
             Animation(
                     info.frameDuration,
                     *info.bounds
-                            .map { loadTextureRegion(RegionInfo(info.path, it.x, it.y, it.width, it.height)) }
+                            .map { loadTextureRegion(RegionInfo(
+                                    info.path, it.x.toInt(), it.y.toInt(),
+                                    it.width.toInt(), it.height.toInt()
+                            )) }
                             .toTypedArray()
             )
 
