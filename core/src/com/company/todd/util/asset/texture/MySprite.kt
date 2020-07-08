@@ -7,6 +7,14 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 
 abstract class MySprite: Sprite() {
+    var isDirectedToRight = true
+        set(value) {
+            if (value != field) {
+                field = value
+                flip(true, false)
+            }
+        }
+
     open fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {}
     open fun isAnimationFinished() = false
     open fun update(delta: Float) {}
@@ -15,11 +23,14 @@ abstract class MySprite: Sprite() {
         setRegion(region)
         setSize(region.regionWidth.toFloat(), region.regionHeight.toFloat())
         setOriginCenter()
+        if (!isDirectedToRight) {
+            flip(true, false)
+        }
     }
 
     fun draw(center: Vector2, batch: Batch, cameraRectangle: Rectangle) {
-        setCenter(center.x, center.y)
         if (cameraRectangle.overlaps(boundingRectangle)) {
+            setCenter(center.x, center.y)
             super.draw(batch)
         }
     }

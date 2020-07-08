@@ -10,19 +10,15 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.MySprite
 
-// TODO dirToRight
-// TODO flip sprite
-
-// TODO alive
-// TODO isGroundFor ???
-
 private var maxID = 0
 
-fun getNewID() = maxID++
+private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, protected val screen: GameScreen,
                             protected val sprite: MySprite, protected val body: BodyWrapper): Disposable {
     private val id: Int = getNewID()
+    var alive = true
+        private set
 
     init {
         sprite.rotation = body.getAngle()
@@ -47,6 +43,12 @@ abstract class InGameObject(protected val game: ToddGame, protected val screen: 
         sprite.draw(body.getCenter(), batch, cameraRect)
     }
 
+    fun isDirectedToRight() = sprite.isDirectedToRight
+
+    fun setDirectedToRight(value: Boolean) {
+        sprite.isDirectedToRight = value
+    }
+
     open fun takeDamage(amount: Float) {}
 
     open fun beginContact(other: InGameObject, contact: Contact) {}
@@ -55,9 +57,13 @@ abstract class InGameObject(protected val game: ToddGame, protected val screen: 
     open fun postSolve(other: InGameObject, contact: Contact, impulse: ContactImpulse) {}
 
     override fun equals(other: Any?) =
-            other is InGameObject && (other === this || hashCode() == other.hashCode())
+            other is InGameObject && hashCode() == other.hashCode()
 
     override fun hashCode() = id
+
+    fun kill() {
+        alive = false
+    }
 
     override fun dispose() {
         body.destroy(screen.world)
