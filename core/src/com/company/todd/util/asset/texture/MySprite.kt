@@ -4,19 +4,25 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 
-open class MySprite: Sprite {
-    constructor(): super()
-    constructor(region: TextureRegion): super(region)
-
+abstract class MySprite: Sprite() {
     open fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {}
     open fun isAnimationFinished() = false
     open fun update(delta: Float) {}
 
-    fun draw(centerX: Float, centerY: Float, batch: Batch, cameraRectangle: Rectangle) {
-        setCenter(centerX, centerY)
+    protected fun updateRegion(region: TextureRegion) {
+        setRegion(region)
+        setSize(region.regionWidth.toFloat(), region.regionHeight.toFloat())
+        setOrigin(width / 2, height / 2)
+    }
+
+    fun draw(center: Vector2, batch: Batch, cameraRectangle: Rectangle) {
+        setCenter(center.x, center.y)
         if (cameraRectangle.overlaps(boundingRectangle)) {
             super.draw(batch)
         }
     }
+
+    abstract fun dispose(manager: TextureManager)
 }
