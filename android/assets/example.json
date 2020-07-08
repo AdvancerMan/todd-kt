@@ -63,12 +63,15 @@
 // path --- path to picture with file extension (one path is used for all frames)
 // frameDuration --- duration of each frame in ms
 // bounds --- list of "xywh"
+// mode --- play mode: NORMAL, REVERSED, LOOP, LOOP_REVERSED, LOOP_PINGPONG, LOOP_RANDOM
+// no mode ---> default mode ---> NORMAL
 
 {
   "type": "anim",
   "name": "testAnim1",
   "path": "testAnim.png",
   "frameDuration": 100,
+  "mode": "LOOP_PINGPONG",
   "bounds": [
     [0, 0, 10, 10],
     [0, 10, 10, 10],
@@ -84,6 +87,7 @@
   "name": "testAnim2",
   "path": "testAnim.png",
   "frameDuration": 100,
+  "mode": "LOOP_PINGPONG",
   "xywh": [0, 0, 20, 20],
   "r": 2,  // rows
   "c": 2  // columns
@@ -100,6 +104,7 @@
     "RUN": {
       "path": "testAnim.png",
       "frameDuration": 100,
+      "mode": "LOOP",
       "xywh": [0, 0, 20, 10],
       "r": 1,
       "c": 2

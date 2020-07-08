@@ -1,12 +1,16 @@
 package com.company.todd.util.asset.texture
 
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.util.files.crawlJsonListsWithComments
 
 data class RegionInfo(val path: String, val x: Int, val y: Int, val w: Int, val h: Int)
-data class AnimationInfo(val path: String, val frameDuration: Float, val bounds: List<Rectangle>)
+data class AnimationInfo(
+        val path: String, val frameDuration: Float,
+        val mode: Animation.PlayMode, val bounds: List<Rectangle>
+)
 data class AnimationPackInfo(val animations: List<Pair<AnimationType, AnimationInfo>>)
 
 const val texturesPath = "pics/"
@@ -84,12 +88,19 @@ private fun parseAnimInfo(json: JsonValue): AnimationInfo {
 
     return AnimationInfo(
             texturesPath + json["path"].asString(),
-            json["frameDuration"].asFloat() / 1000, bounds
+            json["frameDuration"].asFloat() / 1000,
+            if (json.has("mode")) Animation.PlayMode.valueOf(json["mode"].asString())
+            else Animation.PlayMode.NORMAL,
+            bounds
     )
 }
 
+private fun getJsonErrorMessage(json: JsonValue, message: String) = "$message, json: $json"
+
 private fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (JsonValue) -> Boolean) {
-    val value = json[key] ?: throw IllegalArgumentException("Json should contain $key, json: $json")
+    val value = json[key]
+            ?: throw IllegalArgumentException(getJsonErrorMessage(json, "Json should contain $key"))
+
     require(checker(value)) { "$key should be $shouldBe, json: $json" }
 }
 
@@ -108,9 +119,14 @@ private fun checkReg(json: JsonValue, reg: Map<String, RegionInfo>) {
     checkName(json, reg)
 }
 
+val playModes = Animation.PlayMode.values().toList().map { it.toString() }
+
 private fun checkAnim(json: JsonValue, anim: Map<String, AnimationInfo>?) {
     checkContains(json, "path", "String") { it.isString }
     checkContains(json, "frameDuration", "Float") { it.isDouble || it.isLong }
+    require(!json.has("mode") || (json["mode"].isString && playModes.contains(json["mode"].asString()))) {
+        getJsonErrorMessage(json, "mode should be one of strings $playModes")
+    }
 
     if (json.has("bounds")) {
         checkContains(json, "bounds", "2D Int Array") {
