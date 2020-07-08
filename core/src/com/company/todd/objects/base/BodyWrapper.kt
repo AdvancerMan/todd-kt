@@ -11,7 +11,7 @@ interface BodyWrapper {
 
     fun applyLinearImpulseToCenter(impulse: Vector2)
 
-    fun getPosition(): Vector2
+    fun getCenter(): Vector2
 
     fun getVelocity(): Vector2
 
@@ -26,11 +26,11 @@ interface BodyWrapper {
     fun setXVelocity(xVel: Float) =
             setVelocity(xVel, getVelocity().y)
 
-    fun setCenterPosition(x: Float, y: Float, resetLinearVelocity: Boolean = true)
+    fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean = true)
 
     fun setPosition(x: Float, y: Float, resetSpeed: Boolean = true) =
             getAABB().let {
-                setCenterPosition(x + it.width / 2, y + it.height / 2, resetSpeed)
+                setCenter(x + it.width / 2, y + it.height / 2, resetSpeed)
             }
 
     fun setAngle(angle: Float, resetAngularVelocity: Boolean = true)

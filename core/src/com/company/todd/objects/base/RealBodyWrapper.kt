@@ -36,7 +36,7 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
         body.applyLinearImpulse(impulse.cpy().toMeters(), body.worldCenter, true)
     }
 
-    override fun getPosition() = body.position.cpy().toPix()
+    override fun getCenter() = body.position.cpy().toPix()
 
     override fun getVelocity() = body.linearVelocity.cpy().toPix()
 
@@ -44,7 +44,7 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
         body.linearVelocity = v.toMeters()
     }
 
-    override fun setCenterPosition(x: Float, y: Float, resetLinearVelocity: Boolean) {
+    override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) {
         body.setTransform(x.toMeters(), y.toMeters(), body.angle)
         if (resetLinearVelocity) {
             body.setLinearVelocity(0f, 0f)
