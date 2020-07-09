@@ -3,7 +3,6 @@ package com.company.todd.util.asset.texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 
 abstract class MySprite: Sprite() {
@@ -28,11 +27,9 @@ abstract class MySprite: Sprite() {
         }
     }
 
-    fun draw(center: Vector2, batch: Batch, cameraRectangle: Rectangle) {
-        if (cameraRectangle.overlaps(boundingRectangle)) {
-            setCenter(center.x, center.y)
-            super.draw(batch)
-        }
+    fun draw(center: Vector2, batch: Batch) {
+        setCenter(center.x, center.y)
+        super.draw(batch)
     }
 
     abstract fun dispose(manager: TextureManager)

@@ -1,34 +1,34 @@
 package com.company.todd.screen
 
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 
 open class GameScreen(game: ToddGame): MyScreen(game) {
     val world = World(Vector2(0f, -10f), true)
-    private val objects = mutableListOf<InGameObject>()
-    private val justAddedObjects = mutableListOf<InGameObject>()
+    protected val objects = Group()
+    protected val justAddedObjects = mutableListOf<InGameObject>()
 
-    override fun update(delta: Float) {
-        objects.forEach { it.preUpdate(delta) }
-        world.step(delta, 10, 10)
-        objects.forEach { it.postUpdate(delta) }
-
-        justAddedObjects.forEach { objects.add(it) }
-        justAddedObjects.clear()
+    init {
+        stage.addActor(objects)
     }
 
-    override fun draw(batch: Batch, cameraRect: Rectangle) =
-            objects.forEach { it.draw(batch, cameraRect) }
+    override fun update(delta: Float) {
+        super.update(delta)
+        world.step(delta, 10, 10)
+        objects.children.forEach { (it as InGameObject).postAct(delta) }
+
+        justAddedObjects.forEach { objects.addActor(it) }
+        justAddedObjects.clear()
+    }
 
     override fun dispose() {
         justAddedObjects.forEach { it.dispose() }
         justAddedObjects.clear()
-        objects.forEach { it.dispose() }
-        objects.clear()
+        objects.children.forEach { (it as InGameObject).dispose() }
         world.dispose()
+        super.dispose()
     }
 }

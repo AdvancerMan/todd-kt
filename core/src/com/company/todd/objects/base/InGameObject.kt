@@ -1,10 +1,10 @@
 package com.company.todd.objects.base
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.Manifold
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.GameScreen
@@ -15,7 +15,7 @@ private var maxID = 0
 private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, protected val screen: GameScreen,
-                            protected val sprite: MySprite, protected val body: BodyWrapper): Disposable {
+                            protected val sprite: MySprite, protected val body: BodyWrapper): Group(), Disposable {
     private val id: Int = getNewID()
     var alive = true
         private set
@@ -29,18 +29,21 @@ abstract class InGameObject(protected val game: ToddGame, protected val screen: 
         body.setOwner(this)
     }
 
-    open fun preUpdate(delta: Float) {
+    override fun act(delta: Float) {
         sprite.update(delta)
+        super.act(delta)
     }
 
-    open fun postUpdate(delta: Float) {
+    open fun postAct(delta: Float) {
         if (!body.isFixedRotation()) {
             sprite.rotation = body.getAngle()
         }
     }
 
-    open fun draw(batch: Batch, cameraRect: Rectangle) {
-        sprite.draw(body.getCenter(), batch, cameraRect)
+    override fun draw(batch: Batch, parentAlpha: Float) {
+        sprite.setAlpha(parentAlpha)
+        sprite.draw(body.getCenter(), batch)
+        super.draw(batch, parentAlpha)
     }
 
     fun isDirectedToRight() = sprite.isDirectedToRight
