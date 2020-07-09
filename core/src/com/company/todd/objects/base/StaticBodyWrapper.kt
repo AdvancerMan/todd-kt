@@ -27,6 +27,7 @@ class StaticBodyWrapper(private val aabb: Rectangle, private var angle: Float): 
 
     override fun init(gameScreen: GameScreen) {}
     override fun applyLinearImpulseToCenter(impulse: Vector2) {}
+    override fun applyForceToCenter(force: Vector2) {}
     override fun getVelocity() = Vector2()
     override fun setVelocity(v: Vector2) {}
     override fun setOwner(owner: InGameObject) {}

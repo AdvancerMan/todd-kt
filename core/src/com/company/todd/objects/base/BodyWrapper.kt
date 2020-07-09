@@ -11,6 +11,8 @@ interface BodyWrapper {
 
     fun applyLinearImpulseToCenter(impulse: Vector2)
 
+    fun applyForceToCenter(force: Vector2)
+
     fun isFixedRotation(): Boolean
 
     fun getCenter(): Vector2
