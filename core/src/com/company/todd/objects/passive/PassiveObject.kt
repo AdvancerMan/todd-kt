@@ -6,7 +6,5 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.MySprite
 
-abstract class PassiveObject(
-        game: ToddGame, screen: GameScreen,
-        sprite: MySprite, body: BodyWrapper
-) : InGameObject(game, screen, sprite, body)
+abstract class PassiveObject(game: ToddGame, sprite: MySprite, body: BodyWrapper) :
+        InGameObject(game, sprite, body)

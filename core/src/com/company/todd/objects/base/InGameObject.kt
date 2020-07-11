@@ -14,16 +14,23 @@ private var maxID = 0
 
 private fun getNewID() = maxID++
 
-abstract class InGameObject(protected val game: ToddGame, protected val screen: GameScreen,
-                            protected val sprite: MySprite, protected val body: BodyWrapper): Group(), Disposable {
+abstract class InGameObject(protected val game: ToddGame, protected val sprite: MySprite,
+                            protected val body: BodyWrapper): Group(), Disposable {
     private val id: Int = getNewID()
+    var initialized = false
+        private set
+    protected lateinit var screen: GameScreen
     var alive = true
         private set
 
-    fun init() {
-        body.init(screen)
-        sprite.rotation = body.getAngle()
-        body.setOwner(this)
+    fun init(screen: GameScreen) {
+        if (!initialized) {
+            initialized = true
+            this.screen = screen
+            body.init(screen)
+            sprite.rotation = body.getAngle()
+            body.setOwner(this)
+        }
     }
 
     override fun act(delta: Float) {
@@ -66,7 +73,9 @@ abstract class InGameObject(protected val game: ToddGame, protected val screen: 
     }
 
     override fun dispose() {
-        body.destroy(screen.world)
+        if (initialized) {
+            body.destroy(screen.world)
+        }
         sprite.dispose(game.textureManager)
     }
 

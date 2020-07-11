@@ -9,8 +9,8 @@ class Level(private val levelObjects: MutableList<PassiveObjectInfo> = mutableLi
         levelObjects.add(info)
     }
 
-    fun create(game: ToddGame, screen: GameScreen) {
-        levelObjects.forEach { it.create(game, screen) }
+    fun create(game: ToddGame) {
+        levelObjects.forEach { it.create(game) }
     }
 }
 

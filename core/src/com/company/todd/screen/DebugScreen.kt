@@ -20,13 +20,7 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
         )
                 .map { it.map { x -> x.toFloat() } }
                 .map { Rectangle(it[0], it[1], it[2], it[3]) }
-                .map {
-                    SolidRectanglePlatform(
-                            game, this,
-                            game.textureManager.loadSprite("solid"),
-                            it
-                    )
-                }
+                .map { SolidRectanglePlatform(game, game.textureManager.loadSprite("solid"), it) }
                 .forEach { addObject(it) }
     }
 

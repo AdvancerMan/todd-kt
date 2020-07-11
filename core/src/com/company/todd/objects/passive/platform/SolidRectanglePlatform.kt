@@ -10,10 +10,9 @@ import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.MySprite
 import com.company.todd.util.box2d.RectangleBodyPattern
 
-class SolidRectanglePlatform(game: ToddGame, screen: GameScreen,
-                             sprite: MySprite, aabb: Rectangle) :
+class SolidRectanglePlatform(game: ToddGame, sprite: MySprite, aabb: Rectangle) :
         PassiveObject(
-                game, screen, sprite,
+                game, sprite,
                 RealBodyWrapper(
                         RectangleBodyPattern(
                                 BodyDef.BodyType.StaticBody,
