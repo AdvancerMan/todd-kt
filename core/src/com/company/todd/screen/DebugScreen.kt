@@ -14,7 +14,8 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
     override fun render(delta: Float) {
         update(delta)
         if (debugDraw) {
-            renderer.render(world, stage.camera.projection.cpy().toPix())
+            stage.camera.update()
+            renderer.render(world, stage.camera.combined.cpy().toPix())
         } else {
             draw()
         }

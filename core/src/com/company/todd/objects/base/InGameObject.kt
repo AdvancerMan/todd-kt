@@ -20,12 +20,9 @@ abstract class InGameObject(protected val game: ToddGame, protected val screen: 
     var alive = true
         private set
 
-    init {
-        sprite.rotation = body.getAngle()
-    }
-
     fun init() {
         body.init(screen)
+        sprite.rotation = body.getAngle()
         body.setOwner(this)
     }
 
@@ -72,4 +69,6 @@ abstract class InGameObject(protected val game: ToddGame, protected val screen: 
         body.destroy(screen.world)
         sprite.dispose(game.textureManager)
     }
+
+    fun getCenter() = body.getCenter()
 }

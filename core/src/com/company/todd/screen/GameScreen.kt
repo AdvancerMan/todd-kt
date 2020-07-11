@@ -15,12 +15,16 @@ open class GameScreen(game: ToddGame): MyScreen(game) {
         stage.addActor(objects)
     }
 
+    fun addObject(obj: InGameObject) {
+        justAddedObjects.add(obj)
+    }
+
     override fun update(delta: Float) {
         super.update(delta)
         world.step(delta, 10, 10)
         objects.children.forEach { (it as InGameObject).postAct(delta) }
 
-        justAddedObjects.forEach { objects.addActor(it) }
+        justAddedObjects.forEach { objects.addActor(it.apply { init() }) }
         justAddedObjects.clear()
     }
 

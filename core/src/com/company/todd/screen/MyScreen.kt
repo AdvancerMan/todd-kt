@@ -1,6 +1,8 @@
 package com.company.todd.screen
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
@@ -8,7 +10,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.company.todd.launcher.ToddGame
 
 abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
-    protected val stage = Stage(ScreenViewport())
+    protected val stage = Stage(ScreenViewport(
+            OrthographicCamera().apply { setToOrtho(false) }
+    )).also { Gdx.input.inputProcessor = it }
 
     override fun render(delta: Float) {
         update(delta)
@@ -16,7 +20,8 @@ abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
     }
 
     fun centerCameraAt(x: Float, y: Float) {
-        stage.camera.translate(x - stage.camera.position.x, y - stage.camera.position.y, 0f)
+        stage.camera.position.x = x
+        stage.camera.position.y = y
     }
 
     fun centerCameraAt(v: Vector2) = centerCameraAt(v.x, v.y)

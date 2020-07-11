@@ -16,9 +16,9 @@ class ToddGame: ApplicationAdapter() {
     lateinit var textureManager: TextureManager private set
 
     override fun create() {
+        assetsFolder = if (Gdx.app.type == Application.ApplicationType.Desktop) "android/assets/" else ""
         textureManager = TextureManager()
         screenManager = ScreenManager(RainbowScreen(this, 4f, 5f))
-        assetsFolder = if (Gdx.app.type == Application.ApplicationType.Desktop) "android/assets/" else ""
     }
 
     override fun render() {

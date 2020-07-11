@@ -20,14 +20,14 @@ private fun invokeForBoth(contact: Contact, f: InGameObject.(InGameObject) -> Un
 
 class MyContactListener: ContactListener {
     override fun beginContact(contact: Contact) =
-            invokeForBoth(contact) { this.beginContact(it, contact) }
+            invokeForBoth(contact) { beginContact(it, contact) }
 
     override fun endContact(contact: Contact) =
-            invokeForBoth(contact) { this.endContact(it, contact) }
+            invokeForBoth(contact) { endContact(it, contact) }
 
     override fun preSolve(contact: Contact, oldManifold: Manifold) =
-            invokeForBoth(contact) { this.preSolve(it, contact, oldManifold) }
+            invokeForBoth(contact) { preSolve(it, contact, oldManifold) }
 
     override fun postSolve(contact: Contact, impulse: ContactImpulse) =
-            invokeForBoth(contact) { this.postSolve(it, contact, impulse) }
+            invokeForBoth(contact) { postSolve(it, contact, impulse) }
 }
