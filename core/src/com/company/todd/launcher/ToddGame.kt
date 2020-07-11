@@ -4,7 +4,7 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
-import com.company.todd.screen.RainbowScreen
+import com.company.todd.screen.DebugScreen
 import com.company.todd.util.asset.texture.TextureManager
 import com.company.todd.util.spf
 import kotlin.math.min
@@ -18,7 +18,7 @@ class ToddGame: ApplicationAdapter() {
     override fun create() {
         assetsFolder = if (Gdx.app.type == Application.ApplicationType.Desktop) "android/assets/" else ""
         textureManager = TextureManager()
-        screenManager = ScreenManager(RainbowScreen(this, 4f, 5f))
+        screenManager = ScreenManager(DebugScreen(this))
     }
 
     override fun render() {
