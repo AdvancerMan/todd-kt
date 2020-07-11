@@ -1,24 +1,58 @@
 package com.company.todd.util.asset.texture
 
+import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.company.todd.util.asset.AssetManager
+import java.io.PrintWriter
+import java.io.StringWriter
 
 class TextureManager: AssetManager<Texture>(Texture::class.java) {
-    override fun loadAsset(fileName: String) = Texture(fileName)
+    private val additionalTexture = TextureRegion(createAdditionalTexture())
+    private val additionalTextureInfo = RegionInfo("__additionalTexture", 0, 0, 10, 10)
+    private val regionInfos: Map<String, RegionInfo>
+    private val animationInfos: Map<String, AnimationInfo>
+    private val animationPackInfos: Map<String, AnimationPackInfo>
 
-    fun loadAnimationPack(info: AnimationPackInfo): Map<AnimationType, Animation<TextureRegion>> =
-            info.animations.associate { it.first to loadAnimation(it.second) }
+    init {
+        loadTextureInfos().let {
+            regionInfos = it.first
+            animationInfos = it.second
+            animationPackInfos = it.third
+        }
+    }
 
-    fun loadAnimation(info: AnimationInfo): Animation<TextureRegion> =
+    private fun createAdditionalTexture() =
+            Texture(
+                    Pixmap(10, 10, Pixmap.Format.RGBA8888)
+                            .apply { setColor(0f, 1f, 0f, 1f) }
+            )
+
+    override fun loadAsset(fileName: String) =
+            try {
+                Texture(fileName)
+            } catch(e: GdxRuntimeException) {
+                error("Error while loading $fileName texture:\n" +
+                        StringWriter().let {
+                            e.printStackTrace(PrintWriter(it))
+                            it.toString()
+                        })
+                createAdditionalTexture()
+            }
+
+    private fun load(info: AnimationPackInfo): Map<AnimationType, Animation<TextureRegion>> =
+            info.animations.associate { it.first to load(it.second) }
+
+    private fun load(info: AnimationInfo): Animation<TextureRegion> =
             Animation(
                     info.frameDuration,
                     Array(
                             info.bounds
                                     .map {
-                                        loadTextureRegion(RegionInfo(
+                                        load(RegionInfo(
                                                 info.path, it.x.toInt(), it.y.toInt(),
                                                 it.width.toInt(), it.height.toInt()
                                         ))
@@ -28,15 +62,42 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
                     info.mode
             )
 
-    fun loadTextureRegion(info: RegionInfo) =
+    private fun load(info: RegionInfo) =
             TextureRegion(load(info.path), info.x, info.y, info.w, info.h)
 
-    fun unloadAnimationPack(info: AnimationPackInfo) =
-            info.animations.forEach { unloadAnimation(it.second) }
+    fun unload(info: AnimationPackInfo) {
+        info.animations.forEach { unload(it.second) }
+    }
 
-    fun unloadAnimation(info: AnimationInfo) =
-            unload(info.path, info.bounds.size)
+    fun unload(info: AnimationInfo) {
+        unload(info.path, info.bounds.size)
+    }
 
-    fun unloadTextureRegion(info: RegionInfo) =
+    fun unload(info: RegionInfo) {
+        if (info.path != additionalTextureInfo.path) {
             unload(info.path)
+        }
+    }
+
+    fun loadSprite(name: String) =
+            when (name) {
+                in regionInfos.keys -> regionInfos[name]!!.let {
+                    StaticSprite(it, load(it))
+                }
+                in animationInfos.keys -> animationInfos[name]!!.let {
+                    AnimatedSpriteOneAnimation(it, load(it))
+                }
+                in animationPackInfos.keys -> animationPackInfos[name]!!.let {
+                    AnimatedSpriteManyAnimations(it, load(it))
+                }
+                else -> {
+                    error("Trying to load texture that doesn't exist in infos $name")
+                    StaticSprite(additionalTextureInfo, additionalTexture)
+                }
+            }
+
+    override fun dispose() {
+        additionalTexture.texture.dispose()
+        super.dispose()
+    }
 }
