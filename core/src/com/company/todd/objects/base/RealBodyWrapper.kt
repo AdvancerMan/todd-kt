@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.Shape.Type.*
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.box2d.BodyPattern
+import com.company.todd.util.box2d.bodyPattern.BodyPattern
 
 const val pixInMeter = 30f
 

@@ -6,9 +6,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
-import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.MySprite
-import com.company.todd.util.box2d.RectangleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.RectangleBodyPattern
 
 class SolidRectanglePlatform(game: ToddGame, sprite: MySprite, aabb: Rectangle) :
         PassiveObject(

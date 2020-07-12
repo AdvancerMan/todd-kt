@@ -4,10 +4,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.Creature
-import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.RealBodyWrapper
-import com.company.todd.screen.GameScreen
-import com.company.todd.util.box2d.RectangleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.RectangleBodyPattern
 import com.company.todd.util.input.PlayerInputActor
 
 // TODO hardcoded numbers
