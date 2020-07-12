@@ -17,6 +17,14 @@ abstract class AnimatedSprite : MySprite {
 
     constructor() : super()
 
+    override fun setPlayingType(type: AnimationType, forceReset: Boolean) {
+        if (forceReset || type != playingType) {
+            super.setPlayingType(type, true)
+            elapsed = 0f
+            updateRegion(playingNow.getKeyFrame(elapsed))
+        }
+    }
+
     override fun update(delta: Float) {
         val ind1 = playingNow.getKeyFrameIndex(elapsed)
         elapsed += delta

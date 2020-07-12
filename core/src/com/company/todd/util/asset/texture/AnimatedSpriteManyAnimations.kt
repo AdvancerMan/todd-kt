@@ -6,18 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 class AnimatedSpriteManyAnimations(private val animationPackInfo: AnimationPackInfo,
                                    private val animations: Map<AnimationType, Animation<TextureRegion>>) :
         AnimatedSprite() {
-    private lateinit var playingNowType: AnimationType
-
     init {
         setPlayingType(AnimationType.STAY, true)
     }
 
     override fun setPlayingType(type: AnimationType, forceReset: Boolean) {
-        if (forceReset || type != playingNowType) {
-            elapsed = 0f
-            playingNowType = type
+        if (forceReset || type != playingType) {
             playingNow = animations[type] ?: error("Trying to get non-existing animation $type")
-            updateRegion(playingNow.getKeyFrame(elapsed))
+            super.setPlayingType(type, true)
         }
     }
 
