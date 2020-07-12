@@ -67,7 +67,6 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, body: BodyWrapper,
     }
 
     protected fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {
-        println(type)
         changedAnimation = true
         sprite.setPlayingType(type, forceReset)
     }

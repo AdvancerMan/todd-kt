@@ -19,9 +19,11 @@ class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
         ) {
     override fun think(delta: Float) {
         if (inputActor.isMovingLeft) {
+            sprite.isDirectedToRight = false
             run(false)
         }
         if (inputActor.isMovingRight) {
+            sprite.isDirectedToRight = true
             run(true)
         }
         if (inputActor.isJumping) {
