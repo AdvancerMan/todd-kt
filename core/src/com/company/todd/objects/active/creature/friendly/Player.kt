@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.Creature
 import com.company.todd.objects.base.RealBodyWrapper
-import com.company.todd.util.box2d.bodyPattern.RectangleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.GroundSensorRectangleBodyPattern
 import com.company.todd.util.input.PlayerInputActor
 
 // TODO hardcoded numbers
@@ -13,7 +13,7 @@ class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
         Creature(
                 game,
                 game.textureManager.loadSprite("player"),
-                RealBodyWrapper(RectangleBodyPattern(BodyDef.BodyType.DynamicBody, Vector2(50f, 100f))),
+                RealBodyWrapper(GroundSensorRectangleBodyPattern(BodyDef.BodyType.DynamicBody, Vector2(50f, 100f), Vector2())),
                 300f,
                 500f
         ) {
