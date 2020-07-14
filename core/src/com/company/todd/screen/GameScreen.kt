@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.friendly.Player
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.util.box2d.MyContactListener
 import com.company.todd.util.input.PlayerInputActor
 
 open class GameScreen(game: ToddGame): MyScreen(game) {
@@ -17,6 +18,7 @@ open class GameScreen(game: ToddGame): MyScreen(game) {
 
     init {
         stage.addActor(objects)
+        world.setContactListener(MyContactListener())
     }
 
     fun addObject(obj: InGameObject) {

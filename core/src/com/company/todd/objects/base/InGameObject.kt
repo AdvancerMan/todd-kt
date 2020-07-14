@@ -9,13 +9,14 @@ import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.MySprite
+import com.company.todd.util.box2d.bodyPattern.Sensor
 
 private var maxID = 0
 
 private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, protected val sprite: MySprite,
-                            protected val body: BodyWrapper): Group(), Disposable {
+                            protected val body: BodyWrapper): Group(), Disposable, Sensor {
     private val id: Int = getNewID()
     var initialized = false
         private set
@@ -45,6 +46,7 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
+        // TODO [performance] cooling area for actor
         sprite.setAlpha(parentAlpha)
         sprite.draw(body.getCenter(), batch)
         super.draw(batch, parentAlpha)
@@ -57,11 +59,6 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
     }
 
     open fun takeDamage(amount: Float) {}
-
-    open fun beginContact(other: InGameObject, contact: Contact) {}
-    open fun endContact(other: InGameObject, contact: Contact) {}
-    open fun preSolve(other: InGameObject, contact: Contact, oldManifold: Manifold) {}
-    open fun postSolve(other: InGameObject, contact: Contact, impulse: ContactImpulse) {}
 
     override fun equals(other: Any?) =
             other is InGameObject && hashCode() == other.hashCode()

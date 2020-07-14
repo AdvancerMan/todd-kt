@@ -5,15 +5,26 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.util.box2d.bodyPattern.Sensor
 
-private fun invokeForBoth(contact: Contact, f: InGameObject.(InGameObject) -> Unit) {
+private fun invokeForBoth(contact: Contact, f: Sensor.(InGameObject) -> Unit) {
+    if (contact.fixtureA.isSensor && contact.fixtureB.isSensor) {
+        return
+    }
+
     contact.fixtureA.body.userData.let { a ->
         a as InGameObject
         contact.fixtureB.body.userData.let { b ->
             b as InGameObject
 
-            a.f(b)
-            b.f(a)
+            when {
+                contact.fixtureA.isSensor -> (contact.fixtureA.userData as Sensor).f(b)
+                contact.fixtureB.isSensor -> (contact.fixtureB.userData as Sensor).f(a)
+                else -> {
+                    a.f(b)
+                    b.f(a)
+                }
+            }
         }
     }
 }
