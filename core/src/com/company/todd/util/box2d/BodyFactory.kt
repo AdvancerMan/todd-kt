@@ -34,61 +34,66 @@ object BodyFactory {
 
     fun addBox(body: Body, width: Float, height: Float, center: Vector2 = Vector2(),
                density: Float = DEFAULT_DENSITY, friction: Float = DEFAULT_FRICTION,
-               restitution: Float = DEFAULT_RESTITUTION, angle: Float = 0f) {
-        PolygonShape().apply {
-            // TODO addPolygon() - smooth box
-            setAsBox(width.toMeters() / 2, height.toMeters() / 2, center.cpy().toMeters(), angle)
-            createFixture(body, this, density, friction, restitution)
-            dispose()
-        }
-    }
+               restitution: Float = DEFAULT_RESTITUTION, angle: Float = 0f) =
+            PolygonShape().let {
+                it.setAsBox(width.toMeters() / 2, height.toMeters() / 2, center.cpy().toMeters(), angle)
+                val res = createFixture(body, it, density, friction, restitution)
+                it.dispose()
+                res
+            }
 
+    /**
+     * Vertices are in counter-clockwise order
+     * Maximum vertices count = 8
+     * @see b2_maxPolygonVertices
+     */
     fun addPolygon(body: Body, vertices: FloatArray, density: Float = DEFAULT_DENSITY,
-                   friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
-        PolygonShape().apply {
-            set(vertices.map { it.toMeters() }.toFloatArray())
-            createFixture(body, this, density, friction, restitution)
-            dispose()
-        }
-    }
+                   friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) =
+            PolygonShape().let {
+                it.set(vertices.map { e -> e.toMeters() }.toFloatArray())
+                val res = createFixture(body, it, density, friction, restitution)
+                it.dispose()
+                res
+            }
 
     fun addCircle(body: Body, radius: Float, center: Vector2 = Vector2(), density: Float = DEFAULT_DENSITY,
-                  friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
-        CircleShape().apply {
-            position = center
-            position.toMeters()
-            this.radius = radius.toMeters()
+                  friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) =
+            CircleShape().let {
+                it.position = center
+                it.position.toMeters()
+                it.radius = radius.toMeters()
 
-            createFixture(body, this, density, friction, restitution)
-            dispose()
-        }
-    }
+                val res = createFixture(body, it, density, friction, restitution)
+                it.dispose()
+                res
+            }
 
     fun addEdge(body: Body, x1: Float, y1: Float, x2: Float, y2: Float,
                 density: Float = DEFAULT_DENSITY, friction: Float = DEFAULT_FRICTION,
-                restitution: Float = DEFAULT_RESTITUTION) {
-        EdgeShape().apply {
-            set(x1.toMeters(), y1.toMeters(), x2.toMeters(), y2.toMeters())
-            createFixture(body, this, density, friction, restitution)
-            dispose()
-        }
-    }
+                restitution: Float = DEFAULT_RESTITUTION) =
+            EdgeShape().let {
+                it.set(x1.toMeters(), y1.toMeters(), x2.toMeters(), y2.toMeters())
+                val res = createFixture(body, it, density, friction, restitution)
+                it.dispose()
+                res
+            }
 
     fun addChain(body: Body, vertices: FloatArray, density: Float = DEFAULT_DENSITY,
-                 friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
-        ChainShape().apply {
-            createChain(vertices.map { it.toMeters() }.toFloatArray())
-            createFixture(body, this, density, friction, restitution)
-            dispose()
-        }
-    }
+                 friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) =
+            ChainShape().let {
+                it.createChain(vertices.map { e -> e.toMeters() }.toFloatArray())
+                val res = createFixture(body, it, density, friction, restitution)
+                it.dispose()
+                res
+            }
+
 
     fun addLoopChain(body: Body, vertices: FloatArray, density: Float = DEFAULT_DENSITY,
-                     friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) {
-        ChainShape().apply {
-            createLoop(vertices.map { it.toMeters() }.toFloatArray())
-            createFixture(body, this, density, friction, restitution)
-            dispose()
-        }
-    }
+                     friction: Float = DEFAULT_FRICTION, restitution: Float = DEFAULT_RESTITUTION) =
+            ChainShape().let {
+                it.createLoop(vertices.map { e -> e.toMeters() }.toFloatArray())
+                val res = createFixture(body, it, density, friction, restitution)
+                it.dispose()
+                res
+            }
 }
