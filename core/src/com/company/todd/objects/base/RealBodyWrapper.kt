@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.Shape.Type.*
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.box2d.bodyPattern.BodyPattern
+import com.company.todd.util.box2d.bodyPattern.SimpleBodyPattern
 
 const val pixInMeter = 30f
 
@@ -22,14 +22,11 @@ fun Rectangle.toMeters() = this.set(x.toMeters(), y.toMeters(), width.toMeters()
 
 fun Matrix4.toPix() = this.scl(pixInMeter)!!
 
-class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
+class RealBodyWrapper(private val bodyPattern: SimpleBodyPattern): BodyWrapper {
     private lateinit var body: Body
 
     override fun init(gameScreen: GameScreen) {
-        body = bodyPattern.let {
-            it.world = gameScreen.world
-            it.createBody()
-        }
+        body = bodyPattern.createBody(gameScreen.world)
     }
 
     override fun applyLinearImpulseToCenter(impulse: Vector2) {
@@ -71,6 +68,7 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
     }
 
     override fun getAABB() =
+            // TODO (0, 0) isn't always in AABB
             Rectangle().apply {
                 val tmp = Vector2()
                 body.fixtureList.forEach { merge(tmp, it.shape) }
