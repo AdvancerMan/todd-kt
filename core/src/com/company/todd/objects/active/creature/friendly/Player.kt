@@ -13,7 +13,7 @@ class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
         Creature(
                 game,
                 game.textureManager.loadSprite("player"),
-                RealBodyWrapper(GroundSensorRectangleBodyPattern(BodyDef.BodyType.DynamicBody, Vector2(50f, 100f), Vector2())),
+                GroundSensorRectangleBodyPattern(BodyDef.BodyType.DynamicBody, Vector2(50f, 100f), Vector2()),
                 300f,
                 500f
         ) {

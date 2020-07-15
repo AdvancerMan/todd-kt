@@ -1,19 +1,36 @@
 package com.company.todd.objects.active
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Contact
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.util.asset.texture.AnimationType
 import com.company.todd.util.asset.texture.MySprite
+import com.company.todd.util.box2d.bodyPattern.Sensor
 
-// TODO the can i jump question
+import com.company.todd.util.box2d.bodyPattern.GroundSensorBodyPattern as GSBPattern
 
-abstract class ActiveObject(game: ToddGame, sprite: MySprite, body: BodyWrapper,
+abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPattern,
                             private var speed: Float, private var jumpPower: Float) :
-        InGameObject(game, sprite, body) {
+        InGameObject(game, sprite, RealBodyWrapper(bodyPattern)) {
     private val velocity = Vector2()
     private var changedAnimation = false
+    private var groundsCount = 0
+
+    init {
+        bodyPattern.groundSensor = object : Sensor {
+            override fun beginContact(other: InGameObject, contact: Contact) {
+                super.beginContact(other, contact)
+                groundsCount++
+            }
+
+            override fun endContact(other: InGameObject, contact: Contact) {
+                super.endContact(other, contact)
+                groundsCount--
+            }
+        }
+    }
 
     abstract fun think(delta: Float)
 
@@ -79,5 +96,5 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, body: BodyWrapper,
         body.setYVelocity(velocity.y)
     }
 
-    fun isOnGround() = true
+    fun isOnGround() = groundsCount > 0
 }

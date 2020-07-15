@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.Shape.Type.*
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.box2d.bodyPattern.SimpleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.BodyPattern
 
 const val pixInMeter = 30f
 
@@ -22,7 +22,7 @@ fun Rectangle.toMeters() = this.set(x.toMeters(), y.toMeters(), width.toMeters()
 
 fun Matrix4.toPix() = this.scl(pixInMeter)!!
 
-class RealBodyWrapper(private val bodyPattern: SimpleBodyPattern): BodyWrapper {
+class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
     private lateinit var body: Body
 
     override fun init(gameScreen: GameScreen) {

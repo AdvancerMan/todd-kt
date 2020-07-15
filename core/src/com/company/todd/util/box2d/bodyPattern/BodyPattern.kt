@@ -8,12 +8,13 @@ import com.company.todd.util.box2d.BodyFactory
 
 interface BodyPattern {
     fun addFixtures(body: Body)
-
-    fun createBody(world: World, type: BodyDef.BodyType, center: Vector2) =
-            BodyFactory.createBody(world, type, center).also { addFixtures(it) }
+    fun createBody(world: World): Body
 }
 
 fun BodyPattern.combine(addMoreFixtures: (Body) -> Unit) = object : BodyPattern {
+    override fun createBody(world: World) =
+            this@combine.createBody(world).apply(addMoreFixtures)
+
     override fun addFixtures(body: Body) {
         this@combine.addFixtures(body)
         addMoreFixtures(body)
@@ -23,5 +24,6 @@ fun BodyPattern.combine(addMoreFixtures: (Body) -> Unit) = object : BodyPattern 
 fun BodyPattern.combine(other: BodyPattern) = combine { other.addFixtures(it) }
 
 abstract class SimpleBodyPattern(var type: BodyDef.BodyType, var center: Vector2) : BodyPattern {
-    fun createBody(world: World) = createBody(world, type, center)
+    override fun createBody(world: World) =
+            BodyFactory.createBody(world, type, center).also { addFixtures(it) }
 }
