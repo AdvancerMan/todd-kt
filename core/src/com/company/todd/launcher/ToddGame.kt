@@ -1,7 +1,7 @@
 package com.company.todd.launcher
 
 import com.badlogic.gdx.Application
-import com.badlogic.gdx.ApplicationAdapter
+import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.company.todd.screen.DebugScreen
@@ -11,7 +11,7 @@ import kotlin.math.min
 
 lateinit var assetsFolder: String private set
 
-class ToddGame: ApplicationAdapter() {
+class ToddGame: ApplicationListener {
     lateinit var screenManager: ScreenManager private set
     lateinit var textureManager: TextureManager private set
 
@@ -26,6 +26,18 @@ class ToddGame: ApplicationAdapter() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         screenManager.render(min(Gdx.graphics.deltaTime, spf))
+    }
+
+    override fun resize(width: Int, height: Int) {
+        screenManager.resize(width, height)
+    }
+
+    override fun pause() {
+        screenManager.pause()
+    }
+
+    override fun resume() {
+        screenManager.resume()
     }
 
     override fun dispose() {

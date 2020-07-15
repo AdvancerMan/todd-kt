@@ -16,7 +16,12 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
     init {
         listOf(
                 listOf(-50, -50, 100, 25),
-                listOf(-50, 100, 100, 25)
+                listOf(-150, -50, 100, 25),
+                listOf(50, 0, 500, 100),
+                listOf(550, 1, 500, 100),
+                listOf(750, 101, 50, 50),
+                listOf(1050, 2, 500, 100),
+                listOf(-650, 0, 500, 100)
         )
                 .map { it.map { x -> x.toFloat() } }
                 .map { Rectangle(it[0], it[1], it[2], it[3]) }

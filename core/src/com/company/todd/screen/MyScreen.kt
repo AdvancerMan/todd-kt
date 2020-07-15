@@ -34,7 +34,10 @@ abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
         stage.draw()
     }
 
-    override fun resize(width: Int, height: Int) {}
+    override fun resize(width: Int, height: Int) {
+        stage.camera.viewportWidth = width.toFloat()
+        stage.camera.viewportHeight = height.toFloat()
+    }
 
     override fun pause() {}
     override fun resume() {}
