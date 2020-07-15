@@ -12,12 +12,15 @@ import com.company.todd.util.input.PlayerInputActor
 open class GameScreen(game: ToddGame): MyScreen(game) {
     val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
-    private val playerInputActor = PlayerInputActor().also { stage.addListener(it.createListener()) }
+    private val playerInputActor = PlayerInputActor()
     protected val justAddedObjects = mutableListOf<InGameObject>()
-    protected val player = Player(game, playerInputActor).also { addObject(it) }
+    protected val player = Player(game, playerInputActor)
 
     init {
+        addObject(player)
         stage.addActor(objects)
+        stage.addActor(playerInputActor)
+        stage.addListener(playerInputActor.createListener())
         world.setContactListener(MyContactListener())
     }
 
@@ -37,6 +40,7 @@ open class GameScreen(game: ToddGame): MyScreen(game) {
     }
 
     override fun dispose() {
+        playerInputActor.dispose()
         justAddedObjects.forEach { it.dispose() }
         justAddedObjects.clear()
         objects.children.forEach { (it as InGameObject).dispose() }

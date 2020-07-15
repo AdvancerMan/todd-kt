@@ -11,7 +11,7 @@ abstract class AssetManager<T: Disposable>(clazz: Class<T>): Disposable {
     private val unloadingQueue = Queue<Pair<Pair<String, Float>, Int>>()
     private var secondsFromCreation = 0f
 
-    private val logTag = "AssetManager " + clazz.simpleName
+    private val logTag = "AssetManager<${clazz.simpleName}>"
 
     protected fun error(message: String) =
             Gdx.app.error(logTag, message)

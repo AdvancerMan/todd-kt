@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException
 import com.company.todd.util.asset.AssetManager
 import java.io.PrintWriter
 import java.io.StringWriter
+import kotlin.random.Random
 
 class TextureManager: AssetManager<Texture>(Texture::class.java) {
     private val additionalTexture = TextureRegion(createAdditionalTexture())
@@ -28,7 +29,14 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
     private fun createAdditionalTexture() =
             Texture(
                     Pixmap(10, 10, Pixmap.Format.RGBA8888)
-                            .apply { setColor(0f, 1f, 0f, 1f) }
+                            .apply {
+                                when (Random.nextInt(3)) {
+                                    0 -> setColor(1f, 0f, 0f, 1f)
+                                    1 -> setColor(0f, 1f, 0f, 1f)
+                                    2 -> setColor(0f, 0f, 1f, 1f)
+                                }
+                                fill()
+                            }
             )
 
     override fun loadAsset(fileName: String) =
@@ -91,7 +99,7 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
                     AnimatedSpriteManyAnimations(it, load(it))
                 }
                 else -> {
-                    error("Trying to load texture that doesn't exist in infos $name")
+                    error("Trying to load texture that doesn't exist in infos: $name")
                     StaticSprite(additionalTextureInfo, additionalTexture)
                 }
             }
