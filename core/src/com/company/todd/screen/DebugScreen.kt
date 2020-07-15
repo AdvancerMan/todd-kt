@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.toPix
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
+import com.company.todd.util.input.MovingInputType
 
 class DebugScreen(game: ToddGame): GameScreen(game) {
     private val renderer = Box2DDebugRenderer()
@@ -40,13 +41,19 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
     }
 
     override fun update(delta: Float) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            playerInputActor.setInputActor(MovingInputType.SLIDER)
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            playerInputActor.setInputActor(MovingInputType.TOUCHPAD)
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             pressedPlay = !pressedPlay
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.W) || pressedPlay) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.R) || pressedPlay) {
             super.update(delta)
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
             debugDraw = !debugDraw
         }
     }

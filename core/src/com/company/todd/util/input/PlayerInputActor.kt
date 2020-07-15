@@ -66,6 +66,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
     }
 
     fun setInputActor(type: MovingInputType) {
+        reset()
         inputActorIndex = type.i
     }
 
@@ -73,6 +74,22 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         setPosition(stage.camera.position.x - stage.camera.viewportWidth / 2 + 30f,
                 stage.camera.position.y - stage.camera.viewportHeight / 2 + 30f)
         super.draw(batch, parentAlpha)
+    }
+
+    private fun reset() {
+        isMovingLeft = false
+        isMovingRight = false
+        isJumping = false
+
+        val actor = actors[inputActorIndex]
+        when (MovingInputType.values()[inputActorIndex]) {
+            MovingInputType.SLIDER -> {
+                actor as Slider
+                actor.value = (actor.maxValue + actor.minValue) / 2
+            }
+
+            else -> {}
+        }
     }
 
     fun createInputListener() =

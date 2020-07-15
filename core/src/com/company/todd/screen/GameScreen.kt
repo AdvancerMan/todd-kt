@@ -12,7 +12,7 @@ import com.company.todd.util.input.PlayerInputActor
 open class GameScreen(game: ToddGame): MyScreen(game) {
     val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
-    private val playerInputActor = PlayerInputActor(game)
+    protected val playerInputActor = PlayerInputActor(game)
     protected val justAddedObjects = mutableListOf<InGameObject>()
     protected val player = Player(game, playerInputActor)
 
