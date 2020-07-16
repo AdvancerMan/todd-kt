@@ -31,29 +31,26 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
     }
 
     override fun render(delta: Float) {
-        update(delta)
+        super.render(delta)
         if (debugDraw) {
-            stage.camera.update()
             renderer.render(world, stage.camera.combined.cpy().toPix())
-        } else {
-            draw()
         }
     }
 
     override fun update(delta: Float) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             playerInputActor.setInputActor(MovingInputType.SLIDER)
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
             playerInputActor.setInputActor(MovingInputType.TOUCHPAD)
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             pressedPlay = !pressedPlay
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.R) || pressedPlay) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.F) || pressedPlay) {
             super.update(delta)
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             debugDraw = !debugDraw
         }
     }
