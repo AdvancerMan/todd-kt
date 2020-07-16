@@ -30,10 +30,16 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
             Texture(
                     Pixmap(10, 10, Pixmap.Format.RGBA8888)
                             .apply {
-                                when (Random.nextInt(3)) {
+                                when (Random.nextInt(9)) {
                                     0 -> setColor(1f, 0f, 0f, 1f)
                                     1 -> setColor(0f, 1f, 0f, 1f)
                                     2 -> setColor(0f, 0f, 1f, 1f)
+                                    3 -> setColor(1f, 1f, 0f, 1f)
+                                    4 -> setColor(0f, 1f, 1f, 1f)
+                                    5 -> setColor(1f, 0f, 1f, 1f)
+                                    6 -> setColor(1f, 0.5f, 0.5f, 1f)
+                                    7 -> setColor(0.5f, 1f, 0.5f, 1f)
+                                    8 -> setColor(0.5f, 0.5f, 1f, 1f)
                                 }
                                 fill()
                             }

@@ -50,10 +50,9 @@ abstract class AssetManager<T: Disposable>(clazz: Class<T>): Disposable {
     }
 
     fun load(fileName: String): T {
-        var asset = assets[fileName]
-        if (asset == null) {
+        val asset = assets[fileName] ?: Asset(loadAsset(fileName)).also {
+            assets[fileName] = it
             debug("Loading asset: $fileName")
-            asset = Asset(loadAsset(fileName))
         }
         asset.refCount++
         return asset.asset

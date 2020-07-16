@@ -25,7 +25,9 @@ class ToddGame: ApplicationListener {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        screenManager.render(min(Gdx.graphics.deltaTime, SPF))
+        val delta = min(Gdx.graphics.deltaTime, SPF)
+        screenManager.render(delta)
+        textureManager.update(delta)
     }
 
     override fun resize(width: Int, height: Int) {
