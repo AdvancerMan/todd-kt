@@ -3,11 +3,11 @@ package com.company.todd.util.input
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.*
-
+import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
 import com.badlogic.gdx.scenes.scene2d.ui.Slider
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.util.*
@@ -23,65 +23,84 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         private set
     var isJumping = false
         private set
+        get() = jumpButton.isPressed || field
 
     private val resources = listOf(
-            game.textureManager.loadSprite("sliderBackground"),
-            game.textureManager.loadSprite("sliderKnob"),
-            game.textureManager.loadSprite("touchpadBackground"),
-            game.textureManager.loadSprite("touchpadKnob")
-    )
+            "moveSliderBackground",
+            "moveSliderKnob",
+            "moveTouchpadBackground",
+            "moveTouchpadKnob",
+            "jumpButtonUp",
+            "jumpButtonDown"
+    ).map { game.textureManager.loadSprite(it) }
 
-    private val actors = listOf(
+    private val movingActors = listOf(
             Slider(
                     0f, 100f, 1f, false,
-                    Slider.SliderStyle(TextureRegionDrawable(resources[0]), TextureRegionDrawable(resources[1]))
+                    Slider.SliderStyle(SpriteDrawable(resources[0]), SpriteDrawable(resources[1]))
             ).apply {
                 width = MOVING_INPUT_SLIDER_WIDTH
                 height = MOVING_INPUT_SLIDER_HEIGHT
                 value = (maxValue + minValue) / 2
+                val position = calculatePosition(MOVING_INPUT_SLIDER_POSITION)
+                setPosition(position.x, position.y)
+                userObject = MovingInputType.SLIDER
             },
+
             Touchpad(
                     0f,
-                    Touchpad.TouchpadStyle(TextureRegionDrawable(resources[2]), TextureRegionDrawable(resources[3]))
+                    Touchpad.TouchpadStyle(SpriteDrawable(resources[2]), SpriteDrawable(resources[3]))
             ).apply {
                 width = MOVING_INPUT_TOUCHPAD_WIDTH
                 height = MOVING_INPUT_TOUCHPAD_HEIGHT
+                val position = calculatePosition(MOVING_INPUT_TOUCHPAD_POSITION)
+                setPosition(position.x, position.y)
+                userObject = MovingInputType.TOUCHPAD
             }
     )
 
     private var inputActorIndex = MOVING_INPUT_DEFAULT_ACTOR_INDEX
         set(value) {
-            actors[field].isVisible = false
-            actors[value].isVisible = true
+            resetMovingActor()
+            movingActors[field].isVisible = false
+            movingActors[value].isVisible = true
             field = value
         }
 
+    private val jumpButton = Button(SpriteDrawable(resources[4]), SpriteDrawable(resources[5])).apply {
+        val position = calculatePosition(JUMP_BUTTON_POSITION)
+        setPosition(position.x, position.y)
+        width = JUMP_BUTTON_WIDTH
+        height = JUMP_BUTTON_HEIGHT
+    }
+
     init {
-        actors.forEach {
+        movingActors.forEach {
             addActor(it)
             it.isVisible = false
         }
-        actors[inputActorIndex].isVisible = true
+        movingActors[inputActorIndex].isVisible = true
         addListener(createChangeListener())
+
+        addActor(jumpButton)
     }
 
     fun setInputActor(type: MovingInputType) {
-        reset()
         inputActorIndex = type.i
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        setPosition(stage.camera.position.x - stage.camera.viewportWidth / 2 + 30f,
-                stage.camera.position.y - stage.camera.viewportHeight / 2 + 30f)
+        setPosition(stage.camera.position.x - stage.camera.viewportWidth / 2,
+                stage.camera.position.y - stage.camera.viewportHeight / 2)
         super.draw(batch, parentAlpha)
     }
 
-    private fun reset() {
+    private fun resetMovingActor() {
         isMovingLeft = false
         isMovingRight = false
         isJumping = false
 
-        val actor = actors[inputActorIndex]
+        val actor = movingActors[inputActorIndex]
         when (MovingInputType.values()[inputActorIndex]) {
             MovingInputType.SLIDER -> {
                 actor as Slider
@@ -124,20 +143,22 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
     fun createChangeListener() =
             object : ChangeListener() {
                 override fun changed(event: ChangeEvent, actor: Actor) {
-                    val inputActor = actors[inputActorIndex]
-                    when (MovingInputType.values()[inputActorIndex]) {
+                    when (actor.userObject) {
                         MovingInputType.SLIDER -> {
-                            inputActor as Slider
-                            isMovingLeft = inputActor.percent * 100f <= MOVING_INPUT_SLIDER_ACTIVATION_THRESHOLD_PERCENT
-                            isMovingRight = inputActor.percent * 100f >= 100f - MOVING_INPUT_SLIDER_ACTIVATION_THRESHOLD_PERCENT
+                            actor as Slider
+                            isMovingLeft = actor.percent * 100f <= MOVING_INPUT_SLIDER_ACTIVATION_THRESHOLD_PERCENT
+                            isMovingRight = actor.percent * 100f >= 100f - MOVING_INPUT_SLIDER_ACTIVATION_THRESHOLD_PERCENT
                         }
 
                         MovingInputType.TOUCHPAD -> {
-                            inputActor as Touchpad
-                            isMovingLeft = inputActor.knobPercentX < 0
-                            isMovingRight = inputActor.knobPercentX > 0
+                            actor as Touchpad
+                            isMovingLeft = actor.knobPercentX < 0
+                            isMovingRight = actor.knobPercentX > 0
                         }
+
+                        else -> return
                     }
+                    event.handle()
                 }
             }
 
