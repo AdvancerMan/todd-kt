@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.viewport.ScreenViewport
+import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.company.todd.launcher.ToddGame
+import com.company.todd.util.SCREEN_HEIGHT
+import com.company.todd.util.SCREEN_WIDTH
 
 abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
-    protected val stage = Stage(ScreenViewport(
+    protected val stage = Stage(StretchViewport(
+            SCREEN_WIDTH.toFloat(), SCREEN_HEIGHT.toFloat(),
             OrthographicCamera().apply { setToOrtho(false) }
     )).also { Gdx.input.inputProcessor = it }
 
@@ -35,8 +38,7 @@ abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
     }
 
     override fun resize(width: Int, height: Int) {
-        stage.camera.viewportWidth = width.toFloat()
-        stage.camera.viewportHeight = height.toFloat()
+        stage.viewport.update(width, height)
     }
 
     override fun pause() {}

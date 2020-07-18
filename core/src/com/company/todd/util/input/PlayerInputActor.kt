@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
 import com.badlogic.gdx.scenes.scene2d.ui.Slider
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
@@ -72,6 +73,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         setPosition(position.x, position.y)
         width = JUMP_BUTTON_WIDTH
         height = JUMP_BUTTON_HEIGHT
+        setMyClickListener(this)
     }
 
     init {
@@ -156,7 +158,12 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
                             isMovingRight = actor.knobPercentX > 0
                         }
 
-                        else -> return
+                        else -> {
+                            println(actor)
+                            println(event)
+                            println()
+                            return
+                        }
                     }
                     event.handle()
                 }
@@ -166,3 +173,16 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         resources.forEach { it.dispose(game.textureManager) }
     }
 }
+
+private fun setMyClickListener(button: Button) =
+        button.apply {
+            removeListener(clickListener)
+            Button::class.java.getDeclaredField("clickListener").let {
+                it.isAccessible = true
+                // changing behaviour: button should be pressed if touchDragged() is called and mouse is not over the actor
+                it.set(this, object : ClickListener() {
+                    override fun touchDragged(event: InputEvent?, x: Float, y: Float, pointer: Int) {}
+                })
+            }
+            addListener(clickListener)
+        }
