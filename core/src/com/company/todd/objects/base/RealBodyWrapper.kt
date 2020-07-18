@@ -71,7 +71,11 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
             // TODO (0, 0) isn't always in AABB
             Rectangle().apply {
                 val tmp = Vector2()
-                body.fixtureList.forEach { merge(tmp, it.shape) }
+                body.fixtureList.forEach {
+                    if (!it.isSensor) {
+                        merge(tmp, it.shape)
+                    }
+                }
                 setCenter(body.position).toPix()
             }
 

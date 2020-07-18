@@ -58,6 +58,7 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
         sprite.isDirectedToRight = value
     }
 
+    open fun isGroundFor(other: InGameObject) = true
     open fun takeDamage(amount: Float) {}
 
     override fun equals(other: Any?) =
@@ -77,4 +78,5 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
     }
 
     fun getCenter() = body.getCenter()
+    fun getAABB() = body.getAABB()
 }

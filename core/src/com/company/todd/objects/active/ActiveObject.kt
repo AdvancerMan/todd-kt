@@ -2,6 +2,7 @@ package com.company.todd.objects.active
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
+import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
@@ -16,18 +17,21 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
         InGameObject(game, sprite, RealBodyWrapper(bodyPattern)) {
     private val velocity = Vector2()
     private var changedAnimation = false
-    private var groundsCount = 0
+    private var isOnGround = false
+    private val grounds = mutableMapOf<InGameObject, Int>()
 
     init {
         bodyPattern.groundSensor = object : Sensor {
             override fun beginContact(other: InGameObject, contact: Contact) {
                 super.beginContact(other, contact)
-                groundsCount++
+                grounds[other] = grounds.getOrPut(other) { 0 } + 1
             }
 
             override fun endContact(other: InGameObject, contact: Contact) {
                 super.endContact(other, contact)
-                groundsCount--
+                if (grounds[other]!!.dec() == 0) {
+                    grounds.remove(other)
+                }
             }
         }
     }
@@ -38,6 +42,7 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
         super.act(delta)
 
         velocity.setZero()
+        isOnGround = grounds.any { it.key.isGroundFor(this) }
         think(delta)
         updateXVelocity()
         if (!velocity.epsilonEquals(velocity.x, 0f)) {
@@ -47,11 +52,11 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
 
     protected fun updateAnimation() {
         if (sprite.playingType == AnimationType.JUMP && body.getVelocity().y <= 0f ||
-                sprite.playingType != AnimationType.JUMP && !isOnGround()) {
+                sprite.playingType != AnimationType.JUMP && !isOnGround) {
             setPlayingType(AnimationType.FALL)
         }
 
-        if (isOnGround() && (sprite.playingType == AnimationType.FALL || sprite.playingType == AnimationType.JUMP)) {
+        if (isOnGround && (sprite.playingType == AnimationType.FALL || sprite.playingType == AnimationType.JUMP)) {
             setPlayingType(AnimationType.LANDING)
         }
 
@@ -68,7 +73,7 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
     }
 
     fun jump() {
-        if (isOnGround()) {
+        if (isOnGround) {
             setPlayingType(AnimationType.JUMP, true)
             velocity.y = jumpPower
         }
@@ -95,6 +100,4 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
     protected fun updateYVelocity() {
         body.setYVelocity(velocity.y)
     }
-
-    fun isOnGround() = groundsCount > 0
 }

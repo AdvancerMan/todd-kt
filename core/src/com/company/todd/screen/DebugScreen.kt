@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.toPix
+import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
 import com.company.todd.util.input.MovingInputType
 
@@ -18,7 +19,7 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
         listOf(
                 listOf(-50, -50, 100, 25),
                 listOf(-150, -50, 100, 25),
-                listOf(50, 0, 500, 100),
+                listOf(50, -10, 500, 100),
                 listOf(550, 1, 500, 100),
                 listOf(750, 101, 50, 50),
                 listOf(1050, 2, 500, 100),
@@ -26,7 +27,7 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
         )
                 .map { it.map { x -> x.toFloat() } }
                 .map { Rectangle(it[0], it[1], it[2], it[3]) }
-                .map { SolidRectanglePlatform(game, game.textureManager.loadSprite("solid"), it) }
+                .map { HalfCollidedPlatform(game, game.textureManager.loadSprite("solid"), it) }
                 .forEach { addObject(it) }
     }
 
