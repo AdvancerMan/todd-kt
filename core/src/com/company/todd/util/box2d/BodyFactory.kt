@@ -6,7 +6,7 @@ import com.company.todd.objects.base.toMeters
 
 object BodyFactory {
     const val DEFAULT_DENSITY = 1f
-    const val DEFAULT_FRICTION = 0.2f
+    const val DEFAULT_FRICTION = 0f
     const val DEFAULT_RESTITUTION = 0f
     const val DEFAULT_LINEAR_DAMPING = 0.5f
 
