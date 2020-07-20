@@ -1,17 +1,14 @@
 package com.company.todd.objects.passive.level
 
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.passive.PassiveObjectInfo
-import com.company.todd.screen.GameScreen
+import com.company.todd.objects.passive.PassiveObject
 
-class Level(private val levelObjects: MutableList<PassiveObjectInfo> = mutableListOf()) {
-    fun addObject(info: PassiveObjectInfo) {
-        levelObjects.add(info)
+class Level(val name: String,
+            private val levelObjects: MutableList<(ToddGame) -> PassiveObject> = mutableListOf()) {
+    fun addObject(objectCreator: (ToddGame) -> PassiveObject) {
+        levelObjects.add(objectCreator)
     }
 
-    fun create(game: ToddGame) {
-        levelObjects.forEach { it.create(game) }
-    }
+    fun create(game: ToddGame) =
+            levelObjects.map { it(game) }
 }
-
-fun levelOf(vararg levelObjects: PassiveObjectInfo) = Level(levelObjects.toMutableList())

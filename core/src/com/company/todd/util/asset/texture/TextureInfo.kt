@@ -95,22 +95,22 @@ private fun parseAnimInfo(json: JsonValue): AnimationInfo {
     )
 }
 
-private fun getJsonErrorMessage(json: JsonValue, message: String) = "$message, json: $json"
+fun getJsonErrorMessage(json: JsonValue, message: String) = "$message, json: $json"
 
-private fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (JsonValue) -> Boolean) {
+fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (JsonValue) -> Boolean) {
     val value = json[key]
             ?: throw IllegalArgumentException(getJsonErrorMessage(json, "Json should contain $key"))
 
     require(checker(value)) { "$key should be $shouldBe, json: $json" }
 }
 
-private fun <T> checkName(json: JsonValue, map: Map<String, T>) {
+fun <T> checkName(json: JsonValue, map: Map<String, T>) {
     checkContains(json, "name", "String (probably this name was already used)") {
         it.isString && !map.containsKey(it.asString())
     }
 }
 
-private fun checkRectangle(json: JsonValue) =
+fun checkRectangle(json: JsonValue) =
         json.isArray && json.size == 4 && !json.any { it.type() != JsonValue.ValueType.longValue }
 
 private fun checkReg(json: JsonValue, reg: Map<String, RegionInfo>) {
