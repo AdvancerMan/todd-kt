@@ -79,4 +79,5 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
 
     fun getCenter() = body.getCenter()
     fun getAABB() = body.getAABB()
+    fun setYVelocity(amount: Float) = body.setYVelocity(amount)
 }

@@ -19,6 +19,9 @@ open class HalfCollidedPlatform(game: ToddGame, sprite: MySprite, aabb: Rectangl
         super.preSolve(other, contact, oldManifold)
         if (!isGroundFor(other)) {
             contact.isEnabled = false
+            processContact(other, contact, oldManifold)
         }
     }
+
+    protected open fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {}
 }
