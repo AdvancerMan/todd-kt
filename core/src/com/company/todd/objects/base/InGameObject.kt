@@ -75,6 +75,7 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
         sprite.dispose(game.textureManager)
     }
 
+    fun setPosition(x: Float, y: Float, resetSpeed: Boolean = true) = body.setPosition(x, y, resetSpeed)
     fun getCenter() = body.getCenter()
     fun getAABB() = body.getAABB()
     fun setYVelocity(amount: Float) = body.setYVelocity(amount)
