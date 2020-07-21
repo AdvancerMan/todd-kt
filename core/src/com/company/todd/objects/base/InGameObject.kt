@@ -1,9 +1,7 @@
 package com.company.todd.objects.base
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.physics.box2d.Contact
-import com.badlogic.gdx.physics.box2d.ContactImpulse
-import com.badlogic.gdx.physics.box2d.Manifold
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
@@ -80,4 +78,5 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
     fun getCenter() = body.getCenter()
     fun getAABB() = body.getAABB()
     fun setYVelocity(amount: Float) = body.setYVelocity(amount)
+    fun applyLinearImpulseToCenter(impulse: Vector2) = body.applyLinearImpulseToCenter(impulse)
 }
