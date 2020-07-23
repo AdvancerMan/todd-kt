@@ -2,6 +2,7 @@ package com.company.todd.objects.base
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
@@ -14,7 +15,7 @@ private var maxID = 0
 private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, protected val sprite: MySprite,
-                            protected val body: BodyWrapper): Group(), Disposable, Sensor {
+                            private val body: BodyWrapper): Group(), Disposable, Sensor, BodyWrapper {
     private val id: Int = getNewID()
     var initialized = false
         private set
@@ -22,11 +23,11 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
     var alive = true
         private set
 
-    fun init(screen: GameScreen) {
+    override fun init(gameScreen: GameScreen) {
         if (!initialized) {
             initialized = true
-            this.screen = screen
-            body.init(screen)
+            this.screen = gameScreen
+            body.init(gameScreen)
             sprite.rotation = body.getAngle()
             body.setOwner(this)
         }
@@ -75,9 +76,20 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
         sprite.dispose(game.textureManager)
     }
 
-    fun setPosition(x: Float, y: Float, resetSpeed: Boolean = true) = body.setPosition(x, y, resetSpeed)
-    fun getCenter() = body.getCenter()
-    fun getAABB() = body.getAABB()
-    fun setYVelocity(amount: Float) = body.setYVelocity(amount)
-    fun applyLinearImpulseToCenter(impulse: Vector2) = body.applyLinearImpulseToCenter(impulse)
+    // delegating BodyWrapper implementation to body
+    final override fun applyLinearImpulseToCenter(impulse: Vector2) = body.applyLinearImpulseToCenter(impulse)
+    final override fun applyForceToCenter(force: Vector2) = body.applyForceToCenter(force)
+    final override fun isFixedRotation() = body.isFixedRotation()
+    final override fun getCenter() = body.getCenter()
+    final override fun getVelocity() = body.getVelocity()
+    final override fun getAngle() = body.getAngle()
+    final override fun setVelocity(v: Vector2) = body.setVelocity(v)
+    final override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) = body.setCenter(x, y, resetLinearVelocity)
+    final override fun setAngle(angle: Float, resetAngularVelocity: Boolean) = body.setAngle(angle, resetAngularVelocity)
+    final override fun setOwner(owner: InGameObject) = body.setOwner(owner)
+    final override fun getAABB() = body.getAABB()
+
+    final override fun destroy(world: World) {
+        throw UnsupportedOperationException("To free IGO native resources dispose() should be called")
+    }
 }

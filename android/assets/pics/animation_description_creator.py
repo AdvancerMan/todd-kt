@@ -1,7 +1,7 @@
 import os
 import os.path
 import json
-import PIL.Image
+import cv2
 
 animation_types = [
     "STAY", "RUN", "JUMP", "FALL", "LANDING", "SHOOT"
@@ -14,12 +14,12 @@ loop_animation_types = {
 animation_file_names = [name.lower() + ".png" for name in animation_types]
 
 def add_to_anims(anims, path, anim_type):
-    size = PIL.Image.open(path).size
+    size = cv2.imread(path).shape
     anims[anim_type] = {
         "path": path,
         "frameDuration": 100,
         "mode": "NORMAL" if anim_type not in loop_animation_types else "LOOP",
-        "xywh": [0, 0, size[0], size[1]],
+        "xywh": [0, 0, size[1], size[0]],
         "r": 1,
         "c": 1
     }

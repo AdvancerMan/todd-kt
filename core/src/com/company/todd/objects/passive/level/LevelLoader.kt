@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KVisibility
 
-private fun <T : PassiveObject> getPassiveConstructor(clazz: KClass<T>) : KFunction<T> {
+private fun <T : PassiveObject> getPassiveConstructor(clazz: KClass<T>): KFunction<T> {
     require(clazz.constructors.count { it.visibility == KVisibility.PUBLIC } == 1) {
         "To use ${clazz.simpleName} in level should have only 1 public constructor"
     }
@@ -52,15 +52,21 @@ private fun jsonToObjectInfo(json: JsonValue): (ToddGame) -> PassiveObject {
         PassiveObjectInfo
                 .valueOf(json["type"].asString())
                 .constructor.let { constructor ->
-                    constructor.call(game,
+                    constructor.call(
                             *constructor.parameters
                                     .map {
                                         require(it.type.classifier is KClass<*>) {
                                             "${it.type.classifier} should be KClass " +
                                                     "(for ${PassiveObjectInfo.valueOf(json["type"].asString())} constructor)"
                                         }
-                                        // TODO parse List<Rectangle> etc
-                                        jsonToObject(game, it.type.classifier as KClass<*>, json[it.index + 1])
+
+                                        val type = it.type.classifier as KClass<*>
+                                        if (type == ToddGame::class) {
+                                            game
+                                        } else {
+                                            // TODO parse List<Rectangle> etc
+                                            jsonToObject(type, json[it.index + 1])
+                                        }
                                     }
                                     .toTypedArray()
                     )
@@ -86,7 +92,7 @@ private val argumentConstructors: Map<KClass<*>, Array<JsonType>> = mapOf(
         Float::class to arrayOf(JsonType.FLOAT)
 )
 
-private fun <T : Any> jsonToObject(game: ToddGame, clazz: KClass<T>, json: JsonValue): T =
+private fun <T : Any> jsonToObject(clazz: KClass<T>, json: JsonValue): T =
         argumentConstructors
                 .getOrElse(clazz) { error("$argumentConstructors should contain $clazz as key") }
                 .let { types ->
