@@ -82,12 +82,25 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
                         merge(tmp, it.shape)
                     }
                 }
+                rotate(body.angle)
                 setCenter(body.position).toPix()
             }
 
     override fun destroy(world: World) {
         world.destroyBody(body)
     }
+}
+
+private fun Rectangle.rotate(angleRad: Float) {
+    listOf(
+            Vector2(x, y),
+            Vector2(x + width, y),
+            Vector2(x, y + height),
+            Vector2(x + width, y + height)
+    )
+            .map { it.rotateRad(angleRad) }
+            .also { this.set(it[0].x, it[0].y, 0f, 0f) }
+            .forEach { merge(it) }
 }
 
 private fun Rectangle.merge(tmp: Vector2, shape: Shape) {

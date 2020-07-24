@@ -1,6 +1,7 @@
 package com.company.todd.objects.base
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
@@ -48,7 +49,7 @@ abstract class InGameObject(protected val game: ToddGame,
 
     open fun postAct(delta: Float) {
         body.getCenter().let { setPosition(it.x, it.y, Align.center) }
-        this.rotation = body.getAngle()
+        this.rotation = MathUtils.radiansToDegrees * body.getAngle()
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
