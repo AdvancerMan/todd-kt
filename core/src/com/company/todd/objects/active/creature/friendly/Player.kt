@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.Creature
-import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.util.box2d.bodyPattern.GroundSensorRectangleBodyPattern
 import com.company.todd.util.input.PlayerInputActor
 
@@ -19,11 +18,11 @@ class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
         ) {
     override fun think(delta: Float) {
         if (inputActor.isMovingLeft) {
-            sprite.isDirectedToRight = false
+            setDirectedToRight(false)
             run(false)
         }
         if (inputActor.isMovingRight) {
-            sprite.isDirectedToRight = true
+            setDirectedToRight(true)
             run(true)
         }
         if (inputActor.isJumping) {

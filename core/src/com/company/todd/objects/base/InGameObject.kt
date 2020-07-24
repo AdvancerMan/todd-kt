@@ -4,18 +4,24 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.asset.texture.MySprite
+import com.company.todd.util.asset.texture.AnimationType
+import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.asset.texture.MyDrawableI
+import com.company.todd.util.asset.texture.TextureManager
 import com.company.todd.util.box2d.bodyPattern.Sensor
 
 private var maxID = 0
 
 private fun getNewID() = maxID++
 
-abstract class InGameObject(protected val game: ToddGame, protected val sprite: MySprite,
-                            private val body: BodyWrapper): Group(), Disposable, Sensor, BodyWrapper {
+abstract class InGameObject(protected val game: ToddGame,
+                            private val drawable: MyDrawable,
+                            private val body: BodyWrapper):
+        Group(), Disposable, Sensor, BodyWrapper, MyDrawableI {
     private val id: Int = getNewID()
     var initialized = false
         private set
@@ -28,33 +34,31 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
             initialized = true
             this.screen = gameScreen
             body.init(gameScreen)
-            sprite.rotation = body.getAngle()
             body.setOwner(this)
+            body.getAABB().let { setSize(it.width, it.height) }
+            setOrigin(Align.center)
+            setScale(1f)
         }
     }
 
     override fun act(delta: Float) {
-        sprite.update(delta)
+        drawable.update(delta)
         super.act(delta)
     }
 
     open fun postAct(delta: Float) {
-        if (!body.isFixedRotation()) {
-            sprite.rotation = body.getAngle()
-        }
+        body.getCenter().let { setPosition(it.x, it.y, Align.center) }
+        this.rotation = body.getAngle()
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         // TODO [performance] cooling area for actor
-        sprite.setAlpha(parentAlpha * color.a)
-        sprite.draw(body.getCenter(), batch)
+        val batchColor = batch.color.cpy()
+        batch.color = color.apply { a *= parentAlpha }
+        drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
+        color.a /= parentAlpha
+        batch.color = batchColor
         super.draw(batch, parentAlpha)
-    }
-
-    fun isDirectedToRight() = sprite.isDirectedToRight
-
-    fun setDirectedToRight(value: Boolean) {
-        sprite.isDirectedToRight = value
     }
 
     open fun isGroundFor(other: InGameObject) = true
@@ -73,23 +77,37 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
         if (initialized) {
             body.destroy(screen.world)
         }
-        sprite.dispose(game.textureManager)
+        drawable.dispose(game.textureManager)
+    }
+
+    // delegating MyDrawable implementation to drawable
+    override fun isDirectedToRight() = drawable.isDirectedToRight()
+    override fun setDirectedToRight(directedToRight: Boolean) = drawable.setDirectedToRight(directedToRight)
+    override fun setPlayingType(type: AnimationType, forceReset: Boolean) = drawable.setPlayingType(type, forceReset)
+    override fun getPlayingType() = drawable.getPlayingType()
+
+    final override fun update(delta: Float) {
+        throw UnsupportedOperationException("To update IGO act(Float) should be called")
+    }
+
+    final override fun dispose(manager: TextureManager) {
+        throw UnsupportedOperationException("To free IGO native resources dispose() should be called")
     }
 
     // delegating BodyWrapper implementation to body
-    final override fun applyLinearImpulseToCenter(impulse: Vector2) = body.applyLinearImpulseToCenter(impulse)
-    final override fun applyForceToCenter(force: Vector2) = body.applyForceToCenter(force)
-    final override fun isFixedRotation() = body.isFixedRotation()
-    final override fun getCenter() = body.getCenter()
-    final override fun getVelocity() = body.getVelocity()
-    final override fun getAngle() = body.getAngle()
-    final override fun setVelocity(v: Vector2) = body.setVelocity(v)
-    final override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) = body.setCenter(x, y, resetLinearVelocity)
-    final override fun setAngle(angle: Float, resetAngularVelocity: Boolean) = body.setAngle(angle, resetAngularVelocity)
-    final override fun setOwner(owner: InGameObject) = body.setOwner(owner)
-    final override fun getAABB() = body.getAABB()
-    final override fun isActive() = body.isActive()
-    final override fun setActive(value: Boolean) = body.setActive(value)
+    override fun applyLinearImpulseToCenter(impulse: Vector2) = body.applyLinearImpulseToCenter(impulse)
+    override fun applyForceToCenter(force: Vector2) = body.applyForceToCenter(force)
+    override fun isFixedRotation() = body.isFixedRotation()
+    override fun getCenter() = body.getCenter()
+    override fun getVelocity() = body.getVelocity()
+    override fun getAngle() = body.getAngle()
+    override fun setVelocity(v: Vector2) = body.setVelocity(v)
+    override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) = body.setCenter(x, y, resetLinearVelocity)
+    override fun setAngle(angle: Float, resetAngularVelocity: Boolean) = body.setAngle(angle, resetAngularVelocity)
+    override fun setOwner(owner: InGameObject) = body.setOwner(owner)
+    override fun getAABB() = body.getAABB()
+    override fun isActive() = body.isActive()
+    override fun setActive(value: Boolean) = body.setActive(value)
 
     final override fun destroy(world: World) {
         throw UnsupportedOperationException("To free IGO native resources dispose() should be called")

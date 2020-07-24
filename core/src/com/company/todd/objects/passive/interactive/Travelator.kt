@@ -7,14 +7,14 @@ import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
-import com.company.todd.util.asset.texture.MySprite
+import com.company.todd.util.asset.texture.MyDrawable
 import kotlin.math.abs
 
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
-class Travelator(game: ToddGame, sprite: MySprite,
-                 aabb: Rectangle, private val pushPower: Float) : HalfCollidedPlatform(game, sprite, aabb) {
+class Travelator(game: ToddGame, drawable: MyDrawable,
+                 aabb: Rectangle, private val pushPower: Float) : HalfCollidedPlatform(game, drawable, aabb) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         val impulseMap = if (pushPower > 0) objectToTravolatorPositiveImpulse else objectToTravolatorNegativeImpulse

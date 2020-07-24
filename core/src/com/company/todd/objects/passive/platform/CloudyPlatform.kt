@@ -5,12 +5,12 @@ import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
-import com.company.todd.util.asset.texture.MySprite
+import com.company.todd.util.asset.texture.MyDrawable
 
-class CloudyPlatform(game: ToddGame, sprite: MySprite, aabb: Rectangle,
+class CloudyPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
                      private val sinceContactTillInactive: Float,
                      sinceInactiveTillActive: Float) :
-        HalfCollidedPlatform(game, sprite, aabb) {
+        HalfCollidedPlatform(game, drawable, aabb) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1
 

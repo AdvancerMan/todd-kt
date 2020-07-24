@@ -38,7 +38,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
     private val movingActors = listOf(
             Slider(
                     0f, 100f, 1f, false,
-                    Slider.SliderStyle(SpriteDrawable(resources[0]), SpriteDrawable(resources[1]))
+                    Slider.SliderStyle(resources[0], resources[1])
             ).apply {
                 width = MOVING_INPUT_SLIDER_WIDTH
                 height = MOVING_INPUT_SLIDER_HEIGHT
@@ -50,7 +50,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
 
             Touchpad(
                     0f,
-                    Touchpad.TouchpadStyle(SpriteDrawable(resources[2]), SpriteDrawable(resources[3]))
+                    Touchpad.TouchpadStyle(resources[2], resources[3])
             ).apply {
                 width = MOVING_INPUT_TOUCHPAD_WIDTH
                 height = MOVING_INPUT_TOUCHPAD_HEIGHT
@@ -68,7 +68,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
             field = value
         }
 
-    private val jumpButton = Button(SpriteDrawable(resources[4]), SpriteDrawable(resources[5])).apply {
+    private val jumpButton = Button(resources[4], resources[5]).apply {
         val position = calculatePosition(JUMP_BUTTON_POSITION)
         setPosition(position.x, position.y)
         width = JUMP_BUTTON_WIDTH

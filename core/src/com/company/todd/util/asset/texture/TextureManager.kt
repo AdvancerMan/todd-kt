@@ -96,17 +96,17 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
     fun loadSprite(name: String) =
             when (name) {
                 in regionInfos.keys -> regionInfos[name]!!.let {
-                    StaticSprite(it, load(it))
+                    StaticSprite(it, load(it)).toMyDrawable()
                 }
                 in animationInfos.keys -> animationInfos[name]!!.let {
-                    AnimatedSpriteOneAnimation(it, load(it))
+                    AnimatedSpriteOneAnimation(it, load(it)).toMyDrawable()
                 }
                 in animationPackInfos.keys -> animationPackInfos[name]!!.let {
-                    AnimatedSpriteManyAnimations(it, load(it))
+                    AnimatedSpriteManyAnimations(it, load(it)).toMyDrawable()
                 }
                 else -> {
                     error("Trying to load texture that doesn't exist in infos: $name")
-                    StaticSprite(additionalTextureInfo, additionalTexture)
+                    StaticSprite(additionalTextureInfo, additionalTexture).toMyDrawable()
                 }
             }
 

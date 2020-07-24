@@ -6,14 +6,14 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.util.asset.texture.AnimationType
-import com.company.todd.util.asset.texture.MySprite
+import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.Sensor
 
 import com.company.todd.util.box2d.bodyPattern.GroundSensorBodyPattern as GSBPattern
 
-abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPattern,
+abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: GSBPattern,
                             private var speed: Float, private var jumpPower: Float) :
-        InGameObject(game, sprite, RealBodyWrapper(bodyPattern)) {
+        InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var changedAnimation = false
     private var isOnGround = false
@@ -50,16 +50,16 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
     }
 
     protected fun updateAnimation() {
-        if (sprite.playingType == AnimationType.JUMP && getVelocity().y <= 0f ||
-                sprite.playingType != AnimationType.JUMP && !isOnGround) {
+        if (getPlayingType() == AnimationType.JUMP && getVelocity().y <= 0f ||
+                getPlayingType() != AnimationType.JUMP && !isOnGround) {
             setPlayingType(AnimationType.FALL)
         }
 
-        if (isOnGround && (sprite.playingType == AnimationType.FALL || sprite.playingType == AnimationType.JUMP)) {
+        if (isOnGround && (getPlayingType() == AnimationType.FALL || getPlayingType() == AnimationType.JUMP)) {
             setPlayingType(AnimationType.LANDING)
         }
 
-        if (!changedAnimation && sprite.playingType != AnimationType.JUMP && sprite.playingType != AnimationType.FALL) {
+        if (!changedAnimation && getPlayingType() != AnimationType.JUMP && getPlayingType() != AnimationType.FALL) {
             setPlayingType(AnimationType.STAY)
         }
 
@@ -87,9 +87,9 @@ abstract class ActiveObject(game: ToddGame, sprite: MySprite, bodyPattern: GSBPa
         preVelocity.x += if (toRight) speed else -speed
     }
 
-    protected fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {
+    override fun setPlayingType(type: AnimationType, forceReset: Boolean) {
         changedAnimation = true
-        sprite.setPlayingType(type, forceReset)
+        super.setPlayingType(type, forceReset)
     }
 
     protected fun updateXVelocity() {
