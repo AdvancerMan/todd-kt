@@ -39,6 +39,8 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
 
     override fun isFixedRotation() = body.isFixedRotation
 
+    override fun isActive() = body.isActive
+
     override fun getAngle() = body.angle
 
     override fun getCenter() = body.position.cpy().toPix()
@@ -65,6 +67,10 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
 
     override fun setOwner(owner: InGameObject) {
         body.userData = owner
+    }
+
+    override fun setActive(value: Boolean) {
+        body.isActive = value
     }
 
     override fun getAABB() =

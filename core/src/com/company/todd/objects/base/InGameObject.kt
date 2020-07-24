@@ -46,7 +46,7 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         // TODO [performance] cooling area for actor
-        sprite.setAlpha(parentAlpha)
+        sprite.setAlpha(parentAlpha * color.a)
         sprite.draw(body.getCenter(), batch)
         super.draw(batch, parentAlpha)
     }
@@ -88,6 +88,8 @@ abstract class InGameObject(protected val game: ToddGame, protected val sprite: 
     final override fun setAngle(angle: Float, resetAngularVelocity: Boolean) = body.setAngle(angle, resetAngularVelocity)
     final override fun setOwner(owner: InGameObject) = body.setOwner(owner)
     final override fun getAABB() = body.getAABB()
+    final override fun isActive() = body.isActive()
+    final override fun setActive(value: Boolean) = body.setActive(value)
 
     final override fun destroy(world: World) {
         throw UnsupportedOperationException("To free IGO native resources dispose() should be called")

@@ -9,6 +9,7 @@ class StaticBodyWrapper(private val aabb: Rectangle, private var angle: Float): 
     constructor(x: Float, y: Float, w: Float, h: Float, angle: Float) : this(Rectangle(x, y, w, h), angle)
 
     override fun isFixedRotation() = true
+    override fun isActive() = false
 
     override fun getAngle() = angle
 
@@ -31,5 +32,7 @@ class StaticBodyWrapper(private val aabb: Rectangle, private var angle: Float): 
     override fun getVelocity() = Vector2()
     override fun setVelocity(v: Vector2) {}
     override fun setOwner(owner: InGameObject) {}
+    override fun setActive(value: Boolean) {}
+
     override fun destroy(world: World) {}
 }

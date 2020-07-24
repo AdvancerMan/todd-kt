@@ -15,6 +15,8 @@ interface BodyWrapper {
 
     fun isFixedRotation(): Boolean
 
+    fun isActive(): Boolean
+
     fun getCenter(): Vector2
 
     fun getVelocity(): Vector2
@@ -42,6 +44,8 @@ interface BodyWrapper {
     fun setAngle(angle: Float, resetAngularVelocity: Boolean = true)
 
     fun setOwner(owner: InGameObject)
+
+    fun setActive(value: Boolean)
 
     fun getAABB(): Rectangle
 

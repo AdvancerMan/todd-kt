@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.toPix
+import com.company.todd.objects.passive.platform.CloudyPlatform
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
 import com.company.todd.util.input.MovingInputType
@@ -27,14 +28,23 @@ class DebugScreen(game: ToddGame): GameScreen(game) {
         )
                 .map { it.map { x -> x.toFloat() } }
                 .map { Rectangle(it[0], it[1], it[2], it[3]) }
-                .map { HalfCollidedPlatform(game, game.textureManager.loadSprite("solid"), it) }
+                .map { CloudyPlatform(game, game.textureManager.loadSprite("solid"), it, 1f, 1f) }
                 .forEach { addObject(it) }
+        addObject(
+                SolidRectanglePlatform(
+                        game, game.textureManager.loadSprite("solid"),
+                        Rectangle(-50f, -50f, 100f, 25f)
+                )
+        )
     }
 
     override fun render(delta: Float) {
         super.render(delta)
         if (debugDraw) {
             renderer.render(world, stage.camera.combined.cpy().toPix())
+        }
+        if (player.getCenter().y < -200f) {
+            player.setCenter(0f, 0f)
         }
     }
 
