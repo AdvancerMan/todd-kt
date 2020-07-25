@@ -1,5 +1,6 @@
 package com.company.todd.util.asset.texture.drawable
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
@@ -7,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
 import kotlin.math.max
 
 class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: Int) :
-        BaseDrawable(), TransformDrawable {
+        BaseDrawable(), FlipTransformDrawable {
     private val luCorner = TextureRegion(region, 0, 0, lw, uh)
     private val ruCorner = TextureRegion(region, region.regionWidth - rw, 0, rw, uh)
     private val rdCorner = TextureRegion(region, region.regionWidth - rw, region.regionHeight - dh, rw, dh)
@@ -59,5 +60,12 @@ class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: In
         rTile.draw(batch, rx, my, originX + x - rx, originY + y - my, rw, mh, scaleX, scaleY, rotation)
         dTile.draw(batch, mx, dy, originX + x - mx, originY + y - dy, mw, dh, scaleX, scaleY, rotation)
         mTile.draw(batch, mx, my, originX + x - mx, originY + y - my, mw, mh, scaleX, scaleY, rotation)
+    }
+
+    override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float, flipX: Boolean, flipY: Boolean) {
+        if (flipX || flipY) {
+            Gdx.app.error("NineTiledDrawable", "Flip is not supported")
+        }
+        draw(batch, x, y, width, originX, originY, height, scaleX, scaleY, rotation)
     }
 }

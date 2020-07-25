@@ -5,13 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 
-class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region) {
+class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), FlipTransformDrawable {
     private val temp: Color = Color()
 
     /**
      * @see TiledDrawable.draw(Batch, Float, Float, Float, Float)
      */
     override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float) {
+        region.flip(region.isFlipX, region.isFlipY)
+
         val batchColor = batch.color
         temp.set(batchColor)
         batch.color = batchColor.mul(color)
@@ -74,5 +76,10 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region) {
         region.regionHeight = regionHeight.toInt()
 
         batch.color = temp
+    }
+
+    override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float, flipX: Boolean, flipY: Boolean) {
+        region.flip(region.isFlipX != flipX, region.isFlipY != flipY)
+        draw(batch, x, y, width, originX, originY, height, scaleX, scaleY, rotation)
     }
 }

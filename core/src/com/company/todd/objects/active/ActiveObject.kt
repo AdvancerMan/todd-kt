@@ -79,7 +79,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
     }
 
     fun run() {
-        run(isDirectedToRight())
+        run(isDirectedToRight)
     }
 
     fun run(toRight: Boolean) {

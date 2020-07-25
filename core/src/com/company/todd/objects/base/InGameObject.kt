@@ -1,5 +1,6 @@
 package com.company.todd.objects.base
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
@@ -29,6 +30,7 @@ abstract class InGameObject(protected val game: ToddGame,
     protected lateinit var screen: GameScreen
     var alive = true
         private set
+    var isDirectedToRight = true
 
     override fun init(gameScreen: GameScreen) {
         if (!initialized) {
@@ -56,7 +58,7 @@ abstract class InGameObject(protected val game: ToddGame,
         // TODO [performance] cooling area for actor
         val batchColor = batch.color.cpy()
         batch.color = color.apply { a *= parentAlpha }
-        drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
+        drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, !isDirectedToRight, false)
         color.a /= parentAlpha
         batch.color = batchColor
         super.draw(batch, parentAlpha)
@@ -82,17 +84,15 @@ abstract class InGameObject(protected val game: ToddGame,
     }
 
     // delegating MyDrawable implementation to drawable
-    override fun isDirectedToRight() = drawable.isDirectedToRight()
-    override fun setDirectedToRight(directedToRight: Boolean) = drawable.setDirectedToRight(directedToRight)
     override fun setPlayingType(type: AnimationType, forceReset: Boolean) = drawable.setPlayingType(type, forceReset)
     override fun getPlayingType() = drawable.getPlayingType()
 
     final override fun update(delta: Float) {
-        throw UnsupportedOperationException("To update IGO act(Float) should be called")
+        Gdx.app.error("IGO", "To update IGO act(Float) should be called")
     }
 
     final override fun dispose(manager: TextureManager) {
-        throw UnsupportedOperationException("To free IGO native resources dispose() should be called")
+        Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
     }
 
     // delegating BodyWrapper implementation to body
@@ -111,6 +111,6 @@ abstract class InGameObject(protected val game: ToddGame,
     override fun setActive(value: Boolean) = body.setActive(value)
 
     final override fun destroy(world: World) {
-        throw UnsupportedOperationException("To free IGO native resources dispose() should be called")
+        Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
     }
 }
