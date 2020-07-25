@@ -21,10 +21,3 @@ val MOVING_INPUT_DEFAULT_ACTOR_INDEX = MovingInputType.TOUCHPAD.i
 val JUMP_BUTTON_POSITION = -90f to 30f
 const val JUMP_BUTTON_WIDTH = 50f
 const val JUMP_BUTTON_HEIGHT = JUMP_BUTTON_WIDTH
-
-fun calculatePosition(position: Float, width: Float) =
-        if (position >= 0) position else width + position
-
-fun calculatePosition(position: Pair<Float, Float>) =
-        Vector2(calculatePosition(position.first, Gdx.graphics.width.toFloat()),
-                calculatePosition(position.second, Gdx.graphics.height.toFloat()))

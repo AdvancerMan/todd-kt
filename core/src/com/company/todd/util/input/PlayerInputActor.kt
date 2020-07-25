@@ -1,7 +1,9 @@
 package com.company.todd.util.input
 
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.*
 import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
@@ -43,8 +45,6 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
                 width = MOVING_INPUT_SLIDER_WIDTH
                 height = MOVING_INPUT_SLIDER_HEIGHT
                 value = (maxValue + minValue) / 2
-                val position = calculatePosition(MOVING_INPUT_SLIDER_POSITION)
-                setPosition(position.x, position.y)
                 userObject = MovingInputType.SLIDER
             },
 
@@ -54,8 +54,6 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
             ).apply {
                 width = MOVING_INPUT_TOUCHPAD_WIDTH
                 height = MOVING_INPUT_TOUCHPAD_HEIGHT
-                val position = calculatePosition(MOVING_INPUT_TOUCHPAD_POSITION)
-                setPosition(position.x, position.y)
                 userObject = MovingInputType.TOUCHPAD
             }
     )
@@ -69,8 +67,6 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         }
 
     private val jumpButton = Button(resources[4], resources[5]).apply {
-        val position = calculatePosition(JUMP_BUTTON_POSITION)
-        setPosition(position.x, position.y)
         width = JUMP_BUTTON_WIDTH
         height = JUMP_BUTTON_HEIGHT
         setMyClickListener(this)
@@ -85,6 +81,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         addListener(createChangeListener())
 
         addActor(jumpButton)
+        updatePosition()
     }
 
     fun setInputActor(type: MovingInputType) {
@@ -111,6 +108,20 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
 
             else -> {}
         }
+    }
+
+    fun resize(width: Float, height: Float) {
+        setSize(width, height)
+        updatePosition()
+    }
+
+    private fun calculatePosition(pos: Pair<Float, Float>) =
+            Vector2((width + pos.first) % width, (height + pos.second) % height)
+
+    private fun updatePosition() {
+        calculatePosition(JUMP_BUTTON_POSITION).let { jumpButton.setPosition(it.x, it.y) }
+        calculatePosition(MOVING_INPUT_SLIDER_POSITION).let { movingActors[0].setPosition(it.x, it.y) }
+        calculatePosition(MOVING_INPUT_TOUCHPAD_POSITION).let { movingActors[1].setPosition(it.x, it.y) }
     }
 
     fun createInputListener() =
@@ -158,12 +169,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
                             isMovingRight = actor.knobPercentX > 0
                         }
 
-                        else -> {
-                            println(actor)
-                            println(event)
-                            println()
-                            return
-                        }
+                        else -> return
                     }
                     event.handle()
                 }

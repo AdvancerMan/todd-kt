@@ -39,6 +39,11 @@ open class GameScreen(game: ToddGame): MyScreen(game) {
         centerCameraAt(player.getCenter())
     }
 
+    override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
+        playerInputActor.resize(stage.camera.viewportWidth, stage.camera.viewportHeight)
+    }
+
     override fun dispose() {
         playerInputActor.dispose()
         justAddedObjects.forEach { it.dispose() }
