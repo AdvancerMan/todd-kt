@@ -17,6 +17,7 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region) {
         batch.color = batchColor.mul(color)
 
         val region = region
+        val regionY = region.regionY
         val regionWidth = region.regionWidth.toFloat()
         val regionHeight = region.regionHeight.toFloat()
         val fullX = (width / regionWidth).toInt()
@@ -46,6 +47,7 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region) {
             }
 
             if (remainingY > 0) {
+                region.regionY = regionY + (regionHeight - remainingY).toInt()
                 region.regionHeight = remainingY.toInt()
                 batch.draw(
                         region, x + endX, y + endY,
@@ -56,7 +58,9 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region) {
         }
 
         region.regionWidth = regionWidth.toInt()
+
         if (remainingY > 0) {
+            region.regionY = regionY + (regionHeight - remainingY).toInt()
             region.regionHeight = remainingY.toInt()
             for (i in 0 until fullX) {
                 batch.draw(
@@ -66,6 +70,7 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region) {
                 )
             }
         }
+        region.regionY = regionY
         region.regionHeight = regionHeight.toInt()
 
         batch.color = temp
