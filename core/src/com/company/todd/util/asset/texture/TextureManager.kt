@@ -7,6 +7,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.company.todd.util.asset.AssetManager
+import com.company.todd.util.asset.texture.drawable.toMyDrawable
+import com.company.todd.util.asset.texture.sprite.AnimatedSpriteManyAnimations
+import com.company.todd.util.asset.texture.sprite.AnimatedSpriteOneAnimation
+import com.company.todd.util.asset.texture.sprite.AnimationType
+import com.company.todd.util.asset.texture.sprite.StaticSprite
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.random.Random

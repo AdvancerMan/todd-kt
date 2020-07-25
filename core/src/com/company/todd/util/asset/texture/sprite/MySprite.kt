@@ -1,9 +1,10 @@
-package com.company.todd.util.asset.texture
+package com.company.todd.util.asset.texture.sprite
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.company.todd.util.asset.texture.TextureManager
 
 abstract class MySprite: Sprite() {
     var playingType = AnimationType.STAY

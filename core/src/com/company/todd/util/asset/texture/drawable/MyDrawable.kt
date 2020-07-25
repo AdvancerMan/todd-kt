@@ -1,8 +1,11 @@
-package com.company.todd.util.asset.texture
+package com.company.todd.util.asset.texture.drawable
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
+import com.company.todd.util.asset.texture.TextureManager
+import com.company.todd.util.asset.texture.sprite.AnimationType
+import com.company.todd.util.asset.texture.sprite.MySprite
 
 interface MyDrawableI {
     fun update(delta: Float)

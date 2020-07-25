@@ -1,4 +1,4 @@
-package com.company.todd.util.asset.texture
+package com.company.todd.util.asset.texture.sprite
 
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion

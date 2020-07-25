@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.assetsFolder
+import com.company.todd.util.asset.texture.sprite.AnimationType
 import com.company.todd.util.files.crawlJsonListsWithComments
 
 data class RegionInfo(val path: String, val x: Int, val y: Int, val w: Int, val h: Int)

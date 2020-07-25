@@ -5,8 +5,8 @@ import com.badlogic.gdx.physics.box2d.Contact
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
-import com.company.todd.util.asset.texture.AnimationType
-import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.asset.texture.sprite.AnimationType
+import com.company.todd.util.asset.texture.drawable.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.Sensor
 
 import com.company.todd.util.box2d.bodyPattern.GroundSensorBodyPattern as GSBPattern
