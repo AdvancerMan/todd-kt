@@ -4,32 +4,23 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.company.todd.util.asset.AssetManager
+import com.company.todd.util.asset.texture.drawable.CoveredTiledDrawable
+import com.company.todd.util.asset.texture.drawable.NineTiledDrawable
 import com.company.todd.util.asset.texture.drawable.toMyDrawable
 import com.company.todd.util.asset.texture.sprite.AnimatedSpriteManyAnimations
 import com.company.todd.util.asset.texture.sprite.AnimatedSpriteOneAnimation
 import com.company.todd.util.asset.texture.sprite.AnimationType
-import com.company.todd.util.asset.texture.sprite.StaticSprite
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.random.Random
 
 class TextureManager: AssetManager<Texture>(Texture::class.java) {
     private val additionalTexture = TextureRegion(createAdditionalTexture())
-    private val additionalTextureInfo = RegionInfo("__additionalTexture", 0, 0, 10, 10)
-    private val regionInfos: Map<String, RegionInfo>
-    private val animationInfos: Map<String, AnimationInfo>
-    private val animationPackInfos: Map<String, AnimationPackInfo>
-
-    init {
-        loadTextureInfos().let {
-            regionInfos = it.first
-            animationInfos = it.second
-            animationPackInfos = it.third
-        }
-    }
+    private val infos = loadTextureInfos()
 
     private fun createAdditionalTexture() =
             Texture(
@@ -82,7 +73,9 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
             )
 
     private fun load(info: RegionInfo) =
-            TextureRegion(load(info.path), info.x, info.y, info.w, info.h)
+            load(info.path).let {
+                TextureRegion(it, info.x, it.height - info.y - info.h, info.w, info.h)
+            }
 
     fun unload(info: AnimationPackInfo) {
         info.animations.forEach { unload(it.second) }
@@ -93,25 +86,36 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
     }
 
     fun unload(info: RegionInfo) {
-        if (info.path != additionalTextureInfo.path) {
-            unload(info.path)
-        }
+        unload(info.path)
     }
 
     fun loadSprite(name: String) =
-            when (name) {
-                in regionInfos.keys -> regionInfos[name]!!.let {
-                    StaticSprite(it, load(it)).toMyDrawable()
-                }
-                in animationInfos.keys -> animationInfos[name]!!.let {
-                    AnimatedSpriteOneAnimation(it, load(it)).toMyDrawable()
-                }
-                in animationPackInfos.keys -> animationPackInfos[name]!!.let {
-                    AnimatedSpriteManyAnimations(it, load(it)).toMyDrawable()
-                }
-                else -> {
-                    error("Trying to load texture that doesn't exist in infos: $name")
-                    StaticSprite(additionalTextureInfo, additionalTexture).toMyDrawable()
+            infos[name].let { info ->
+                when (info) {
+                    is CoveredTiledRegionInfo -> {
+                        load(info).let {
+                            CoveredTiledDrawable(
+                                    TextureRegion(it, 0, it.regionHeight - info.uh, it.regionWidth, info.uh),
+                                    it.apply { regionHeight -= info.uh }
+                            )
+                        }.toMyDrawable({ mng -> mng.unload(info) })
+                    }
+                    is NineTiledRegionInfo -> {
+                        NineTiledDrawable(load(info), info.lw, info.rw, info.uh, info.dh).toMyDrawable({ mng -> mng.unload(info) })
+                    }
+                    is RegionInfo -> {
+                        TextureRegionDrawable(load(info)).toMyDrawable({ mng -> mng.unload(info) })
+                    }
+                    is AnimationInfo -> {
+                        AnimatedSpriteOneAnimation(info, load(info)).toMyDrawable()
+                    }
+                    is AnimationPackInfo -> {
+                        AnimatedSpriteManyAnimations(info, load(info)).toMyDrawable()
+                    }
+                    else -> {
+                        error("Trying to load texture that doesn't exist in infos: $name")
+                        TextureRegionDrawable(additionalTexture).toMyDrawable({})
+                    }
                 }
             }
 

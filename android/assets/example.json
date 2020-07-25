@@ -51,12 +51,38 @@
 // reg:
 // path --- path to picture with file extension
 // xywh --- bounding rectangle for texture region (x, y, width, height)
+// regType --- region type (@see RegionInfoTypes): REGION, NINE_TILED, COVERED_TILED
+//             default is REGION
 
 {
   "type": "reg",
-  "name": "test",
+  "name": "testReg",
   "path": "very/long/path/testPic.png",
   "xywh": [10, 20, 10, 10]
+}
+
+// regType = COVERED_TILED
+// uh --- height of upper side
+
+{
+  "type": "reg",
+  "name": "testCoveredTiled",
+  "path": "coveredTiled.png",
+  "xywh": [10, 20, 10, 10],
+  "regType": "COVERED_TILED",
+  "uh": 3
+}
+
+// regType = NINE_TILED
+// lrud --- array of length 4, width (or height) of left side, right side, upper side, lower (d for down) side
+
+{
+  "type": "reg",
+  "name": "testNineTiled",
+  "path": "nineTiled.png",
+  "xywh": [10, 20, 10, 10],
+  "regType": "NINE_TILED",
+  "lrud": [3, 3, 3, 3]
 }
 
 // anim:

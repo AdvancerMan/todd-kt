@@ -4,60 +4,84 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.assetsFolder
+import com.company.todd.util.asset.texture.RegionInfoTypes.*
 import com.company.todd.util.asset.texture.sprite.AnimationType
 import com.company.todd.util.files.crawlJsonListsWithComments
 
-data class RegionInfo(val path: String, val x: Int, val y: Int, val w: Int, val h: Int)
+interface TextureInfo
+
+enum class RegionInfoTypes {
+    REGION, NINE_TILED, COVERED_TILED
+}
+
+open class RegionInfo(val path: String, val x: Int, val y: Int, val w: Int, val h: Int) : TextureInfo
+
+class NineTiledRegionInfo(
+        path: String, x: Int, y: Int, w: Int, h: Int,
+        val lw: Int, val rw: Int, val uh: Int, val dh: Int
+) : RegionInfo(path, x, y, w, h)
+
+class CoveredTiledRegionInfo(
+        path: String, x: Int, y: Int,
+        w: Int, h: Int, val uh: Int
+) : RegionInfo(path, x, y, w, h)
+
 data class AnimationInfo(
         val path: String, val frameDuration: Float,
         val mode: Animation.PlayMode, val bounds: List<Rectangle>
-)
-data class AnimationPackInfo(val animations: List<Pair<AnimationType, AnimationInfo>>)
+) : TextureInfo
+
+data class AnimationPackInfo(val animations: List<Pair<AnimationType, AnimationInfo>>) : TextureInfo
 
 const val texturesPath = "pics/"
 
-fun loadTextureInfos(): Triple<
-        Map<String, RegionInfo>,
-        Map<String, AnimationInfo>,
-        Map<String, AnimationPackInfo>
-        > {
-    val json = crawlJsonListsWithComments(assetsFolder + texturesPath)
-    val reg = mutableMapOf<String, RegionInfo>()
-    val anim = mutableMapOf<String, AnimationInfo>()
-    val anims = mutableMapOf<String, AnimationPackInfo>()
+// TODO load NineTiledRegionInfo and CoveredTiledRegionInfo
+fun loadTextureInfos(): Map<String, TextureInfo> {
+    val res = mutableMapOf<String, TextureInfo>()
 
-    json.forEach {
-        checkContains(it, "type", "reg, anim or anims") { json ->
-            json.isString && json.asString() in listOf("reg", "anim", "anims")
+    crawlJsonListsWithComments(assetsFolder + texturesPath).forEach { json ->
+        checkContains(json, "type", "reg, anim or anims") {
+            it.isString && it.asString() in listOf("reg", "anim", "anims")
         }
-        when(it["type"].asString()) {
+        checkName(json, res.keys)
+
+        when (json["type"].asString()) {
             "reg" -> {
-                checkReg(it, reg)
-                val xywh = it["xywh"].asIntArray()
-                reg[it["name"].asString()] = RegionInfo(
-                        texturesPath + it["path"].asString(),
+                checkReg(json)
+                val xywh = json["xywh"].asIntArray()
+                res[json["name"].asString()] = parseRegInfo(
+                        json, texturesPath + json["path"].asString(),
                         xywh[0], xywh[1], xywh[2], xywh[3]
                 )
             }
 
             "anim" -> {
-                checkAnim(it, anim)
-                anim[it["name"].asString()] = parseAnimInfo(it)
+                checkAnim(json)
+                res[json["name"].asString()] = parseAnimInfo(json)
             }
 
             "anims" -> {
-                checkAnims(it, anims)
-                anims[it["name"].asString()] = AnimationPackInfo(
-                        it["anims"].map { anim ->
-                            AnimationType.valueOf(anim.name) to parseAnimInfo(anim)
+                checkAnims(json)
+                res[json["name"].asString()] = AnimationPackInfo(
+                        json["anims"].map {
+                            AnimationType.valueOf(it.name) to parseAnimInfo(it)
                         }
                 )
             }
         }
     }
 
-    return Triple(reg, anim, anims)
+    return res
 }
+
+private fun parseRegInfo(json: JsonValue, path: String, x: Int, y: Int, w: Int, h: Int) =
+        when (if (json.has("regType")) valueOf(json["regType"].asString()) else REGION) {
+            REGION -> RegionInfo(path, x, y, w, h)
+            COVERED_TILED -> CoveredTiledRegionInfo(path, x, y, w, h, json["uh"].asInt())
+            NINE_TILED -> json["lrud"].asIntArray().let {
+                NineTiledRegionInfo(path, x, y, w, h, it[0], it[1], it[2], it[3])
+            }
+        }
 
 private fun parseAnimInfo(json: JsonValue): AnimationInfo {
     val bounds =
@@ -105,24 +129,41 @@ fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (Json
     require(checker(value)) { "$key should be $shouldBe, json: $json" }
 }
 
-fun <T> checkName(json: JsonValue, map: Map<String, T>) {
+fun checkName(json: JsonValue, set: Set<String>) {
     checkContains(json, "name", "String (probably this name was already used)") {
-        it.isString && !map.containsKey(it.asString())
+        it.isString && !set.contains(it.asString())
     }
 }
 
-fun checkRectangle(json: JsonValue) =
+fun checkIntRectangle(json: JsonValue) =
         json.isArray && json.size == 4 && !json.any { it.type() != JsonValue.ValueType.longValue }
 
-private fun checkReg(json: JsonValue, reg: Map<String, RegionInfo>) {
+private fun checkReg(json: JsonValue) {
     checkContains(json, "path", "String") { it.isString }
-    checkContains(json, "xywh", "Int Array") { checkRectangle(it) }
-    checkName(json, reg)
+    checkContains(json, "xywh", "Int Array") { checkIntRectangle(it) }
+    if (json.has("regType")) {
+        checkContains(json, "regType", "element of ${values().map { info -> info.toString() }}") {
+            it.isString && it.asString() in values().map { info -> info.toString() }
+        }
+        when (valueOf(json["regType"].asString())) {
+            COVERED_TILED -> {
+                checkContains(json, "uh", "Integer") {
+                    it.isLong
+                }
+            }
+            NINE_TILED -> {
+                checkContains(json, "lrud", "4 element integer array") {
+                    checkIntRectangle(it)
+                }
+            }
+            REGION -> {}
+        }
+    }
 }
 
 val playModes = Animation.PlayMode.values().toList().map { it.toString() }
 
-private fun checkAnim(json: JsonValue, anim: Map<String, AnimationInfo>?) {
+private fun checkAnim(json: JsonValue) {
     checkContains(json, "path", "String") { it.isString }
     checkContains(json, "frameDuration", "Float") { it.isDouble || it.isLong }
     require(!json.has("mode") || (json["mode"].isString && playModes.contains(json["mode"].asString()))) {
@@ -131,25 +172,20 @@ private fun checkAnim(json: JsonValue, anim: Map<String, AnimationInfo>?) {
 
     if (json.has("bounds")) {
         checkContains(json, "bounds", "2D Int Array") {
-            it.isArray && !it.any { e -> !checkRectangle(e) }
+            it.isArray && !it.any { e -> !checkIntRectangle(e) }
         }
     } else {
-        checkContains(json, "xywh", "Int Array") { checkRectangle(it) }
+        checkContains(json, "xywh", "Int Array") { checkIntRectangle(it) }
         checkContains(json, "r", "Integer") { it.isLong }
         checkContains(json, "c", "Integer") { it.isLong }
-    }
-
-    if (anim != null) {
-        checkName(json, anim)
     }
 }
 
 val animTypes = AnimationType.values().toList().map { it.toString() }
 
-private fun checkAnims(json: JsonValue, anims: Map<String, AnimationPackInfo>) {
+private fun checkAnims(json: JsonValue) {
     checkContains(json, "anims", "map, keys are $animTypes") {
         it.isObject && !it.any { json -> !animTypes.contains(json.name) }
     }
-    json["anims"].forEach { checkAnim(it, null) }
-    checkName(json, anims)
+    json["anims"].forEach { checkAnim(it) }
 }
