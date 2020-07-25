@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
+import kotlin.math.ceil
 
 class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), FlipTransformDrawable {
     private val temp: Color = Color()
@@ -12,8 +13,6 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), Fli
      * @see TiledDrawable.draw(Batch, Float, Float, Float, Float)
      */
     override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float) {
-        region.flip(region.isFlipX, region.isFlipY)
-
         val batchColor = batch.color
         temp.set(batchColor)
         batch.color = batchColor.mul(color)
@@ -24,8 +23,8 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), Fli
         val regionHeight = region.regionHeight.toFloat()
         val fullX = (width / regionWidth).toInt()
         val fullY = (height / regionHeight).toInt()
-        val remainingX = (width - regionWidth * fullX).toInt().toFloat()
-        val remainingY = (height - regionHeight * fullY).toInt().toFloat()
+        val remainingX = ceil(width - regionWidth * fullX)
+        val remainingY = ceil(height - regionHeight * fullY)
         val endX = fullX * regionWidth
         val endY = fullY * regionHeight
         for (i in 0 until fullX) {
@@ -80,6 +79,7 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), Fli
 
     override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float, flipX: Boolean, flipY: Boolean) {
         region.flip(region.isFlipX != flipX, region.isFlipY != flipY)
-        draw(batch, x, y, width, originX, originY, height, scaleX, scaleY, rotation)
+        draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
+        region.flip(region.isFlipX, region.isFlipY)
     }
 }

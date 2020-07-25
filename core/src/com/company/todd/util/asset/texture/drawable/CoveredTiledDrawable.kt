@@ -31,6 +31,6 @@ class CoveredTiledDrawable(coverTile: TextureRegion, bodyTile: TextureRegion) : 
         if (flipX || flipY) {
             Gdx.app.error("CoveredTiledDrawable", "Flip is not supported")
         }
-        draw(batch, x, y, width, originX, originY, height, scaleX, scaleY, rotation)
+        draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
     }
 }

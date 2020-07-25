@@ -90,7 +90,6 @@ fun TransformDrawable.toMyDrawable(
 
             override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float, flipX: Boolean, flipY: Boolean) {
                 flipDraw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, flipX, flipY)
-//                this@toMyDrawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, flipX, flipY)
             }
 
             override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float) {

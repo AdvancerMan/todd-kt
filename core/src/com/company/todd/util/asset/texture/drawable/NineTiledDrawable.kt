@@ -66,6 +66,6 @@ class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: In
         if (flipX || flipY) {
             Gdx.app.error("NineTiledDrawable", "Flip is not supported")
         }
-        draw(batch, x, y, width, originX, originY, height, scaleX, scaleY, rotation)
+        draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
     }
 }
