@@ -3,7 +3,6 @@ package com.company.todd.util.asset.texture.drawable
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
 import kotlin.math.max
 
@@ -14,19 +13,19 @@ class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: In
     private val rdCorner = TextureRegion(region, region.regionWidth - rw, region.regionHeight - dh, rw, dh)
     private val ldCorner = TextureRegion(region, 0, region.regionHeight - dh, lw, dh)
 
-    private val lTile = TiledDrawable(TextureRegion(
+    private val lTile = TransformTiledDrawable(TextureRegion(
             region, 0, uh, lw, region.regionHeight - uh - dh
     ))
-    private val uTile = TiledDrawable(TextureRegion(
+    private val uTile = TransformTiledDrawable(TextureRegion(
             region, lw, 0, region.regionWidth - lw - rw, uh
     ))
-    private val rTile = TiledDrawable(TextureRegion(
+    private val rTile = TransformTiledDrawable(TextureRegion(
             region, region.regionWidth - rw, uh, rw, region.regionHeight - uh - dh
     ))
-    private val dTile = TiledDrawable(TextureRegion(
+    private val dTile = TransformTiledDrawable(TextureRegion(
             region, lw, region.regionHeight - dh, region.regionWidth - lw - rw, dh
     ))
-    private val mTile = TiledDrawable(TextureRegion(
+    private val mTile = TransformTiledDrawable(TextureRegion(
             region, lw, uh, region.regionWidth - lw - rw, region.regionHeight - uh - dh
     ))
 
@@ -51,15 +50,14 @@ class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: In
         val uh = luCorner.regionHeight.toFloat()
         val mh = max(0f, height - dh - uh)
 
-        batch.draw(ldCorner, lx, dy, originX, originY, lw, dh, scaleX, scaleY, rotation)
-        batch.draw(luCorner, lx, uy, originX, originY, lw, uh, scaleX, scaleY, rotation)
-        batch.draw(ruCorner, rx, uy, originX, originY, rw, uh, scaleX, scaleY, rotation)
-        batch.draw(rdCorner, rx, dy, originX, originY, rw, dh, scaleX, scaleY, rotation)
-        // TODO MyTiledDrawable to draw rotated/scaled tiles
-        lTile.draw(batch, lx, my /*, originX, originY */, lw, mh /*, scaleX, scaleY, rotation */)
-        uTile.draw(batch, mx, uy /*, originX, originY */, mw, uh /*, scaleX, scaleY, rotation */)
-        rTile.draw(batch, rx, my /*, originX, originY */, rw, mh /*, scaleX, scaleY, rotation */)
-        dTile.draw(batch, mx, dy /*, originX, originY */, mw, dh /*, scaleX, scaleY, rotation */)
-        mTile.draw(batch, mx, my /*, originX, originY */, mw, mh /*, scaleX, scaleY, rotation */)
+        batch.draw(ldCorner, lx, dy, originX + x - lx, originY + y - dy, lw, dh, scaleX, scaleY, rotation)
+        batch.draw(luCorner, lx, uy, originX + x - lx, originY + y - uy, lw, uh, scaleX, scaleY, rotation)
+        batch.draw(ruCorner, rx, uy, originX + x - rx, originY + y - uy, rw, uh, scaleX, scaleY, rotation)
+        batch.draw(rdCorner, rx, dy, originX + x - rx, originY + y - dy, rw, dh, scaleX, scaleY, rotation)
+        lTile.draw(batch, lx, my, originX + x - lx, originY + y - my, lw, mh, scaleX, scaleY, rotation)
+        uTile.draw(batch, mx, uy, originX + x - mx, originY + y - uy, mw, uh, scaleX, scaleY, rotation)
+        rTile.draw(batch, rx, my, originX + x - rx, originY + y - my, rw, mh, scaleX, scaleY, rotation)
+        dTile.draw(batch, mx, dy, originX + x - mx, originY + y - dy, mw, dh, scaleX, scaleY, rotation)
+        mTile.draw(batch, mx, my, originX + x - mx, originY + y - my, mw, mh, scaleX, scaleY, rotation)
     }
 }
