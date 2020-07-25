@@ -51,7 +51,7 @@
 // reg:
 // path --- path to picture with file extension
 // xywh --- bounding rectangle for texture region (x, y, width, height)
-// regType --- region type (@see RegionInfoTypes): REGION, NINE_TILED, COVERED_TILED
+// regType --- region type (@see RegionInfoTypes): REGION, TILED, NINE_TILED, COVERED_TILED
 //             default is REGION
 
 {
@@ -59,6 +59,17 @@
   "name": "testReg",
   "path": "very/long/path/testPic.png",
   "xywh": [10, 20, 10, 10]
+}
+
+// regType = TILED
+// no additional parameters
+
+{
+  "type": "reg",
+  "name": "testTiled",
+  "path": "tiled.png",
+  "xywh": [10, 20, 10, 10],
+  "regType": "TILED"
 }
 
 // regType = COVERED_TILED

@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException
 import com.company.todd.util.asset.AssetManager
 import com.company.todd.util.asset.texture.drawable.CoveredTiledDrawable
 import com.company.todd.util.asset.texture.drawable.NineTiledDrawable
+import com.company.todd.util.asset.texture.drawable.TransformTiledDrawable
 import com.company.todd.util.asset.texture.drawable.toMyDrawable
 import com.company.todd.util.asset.texture.sprite.AnimatedSpriteManyAnimations
 import com.company.todd.util.asset.texture.sprite.AnimatedSpriteOneAnimation
@@ -92,6 +93,9 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
     fun loadSprite(name: String) =
             infos[name].let { info ->
                 when (info) {
+                    is TiledRegionInfo -> {
+                        TransformTiledDrawable(load(info)).toMyDrawable({ mng -> mng.unload(info) })
+                    }
                     is CoveredTiledRegionInfo -> {
                         load(info).let {
                             CoveredTiledDrawable(

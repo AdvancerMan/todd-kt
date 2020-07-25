@@ -11,10 +11,12 @@ import com.company.todd.util.files.crawlJsonListsWithComments
 interface TextureInfo
 
 enum class RegionInfoTypes {
-    REGION, NINE_TILED, COVERED_TILED
+    REGION, TILED, COVERED_TILED, NINE_TILED
 }
 
 open class RegionInfo(val path: String, val x: Int, val y: Int, val w: Int, val h: Int) : TextureInfo
+
+class TiledRegionInfo(path: String, x: Int, y: Int, w: Int, h: Int) : RegionInfo(path, x, y, w, h)
 
 class NineTiledRegionInfo(
         path: String, x: Int, y: Int, w: Int, h: Int,
@@ -77,6 +79,7 @@ fun loadTextureInfos(): Map<String, TextureInfo> {
 private fun parseRegInfo(json: JsonValue, path: String, x: Int, y: Int, w: Int, h: Int) =
         when (if (json.has("regType")) valueOf(json["regType"].asString()) else REGION) {
             REGION -> RegionInfo(path, x, y, w, h)
+            TILED -> TiledRegionInfo(path, x, y, w, h)
             COVERED_TILED -> CoveredTiledRegionInfo(path, x, y, w, h, json["uh"].asInt())
             NINE_TILED -> json["lrud"].asIntArray().let {
                 NineTiledRegionInfo(path, x, y, w, h, it[0], it[1], it[2], it[3])
@@ -156,6 +159,7 @@ private fun checkReg(json: JsonValue) {
                     checkIntRectangle(it)
                 }
             }
+            TILED -> {}
             REGION -> {}
         }
     }
