@@ -1,0 +1,47 @@
+{
+  "name": "testLevel",
+  "objects": [
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [-50, -75, 100, 25]
+      ]
+    },
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [-150, -75, 100, 25]
+      ]
+    },
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [50, -35, 500, 100]
+      ]
+    },
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [550, -24, 500, 100]
+      ]
+    },
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [750, 76, 50, 50]
+      ]
+    },
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [1050, -23, 500, 100]
+      ]
+    },
+    {
+      "type": "ARENA_SOLID",
+      "args": [
+        [-650, -25, 500, 100]
+      ]
+    }
+  ]
+}

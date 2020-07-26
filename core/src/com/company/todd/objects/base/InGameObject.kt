@@ -55,7 +55,7 @@ abstract class InGameObject(protected val game: ToddGame,
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        // TODO [performance] cooling area for actor
+        // TODO [performance] culling area for actor
         val batchColor = batch.color.cpy()
         batch.color = color.apply { a *= parentAlpha }
         drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, !isDirectedToRight, false)

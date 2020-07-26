@@ -13,7 +13,7 @@ import kotlin.math.abs
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
-class Travelator(game: ToddGame, drawable: MyDrawable,
+class Travolator(game: ToddGame, drawable: MyDrawable,
                  aabb: Rectangle, private val pushPower: Float) : HalfCollidedPlatform(game, drawable, aabb) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)

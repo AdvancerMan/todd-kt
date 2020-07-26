@@ -3,8 +3,7 @@ package com.company.todd.objects.passive.level
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.passive.PassiveObject
 
-class Level(val name: String,
-            private val levelObjects: MutableList<(ToddGame) -> PassiveObject> = mutableListOf()) {
+data class Level(val name: String, private val levelObjects: MutableList<(ToddGame) -> PassiveObject> = mutableListOf()) {
     fun addObject(objectCreator: (ToddGame) -> PassiveObject) {
         levelObjects.add(objectCreator)
     }
