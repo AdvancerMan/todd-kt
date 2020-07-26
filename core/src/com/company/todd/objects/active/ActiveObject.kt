@@ -11,12 +11,17 @@ import com.company.todd.util.box2d.bodyPattern.Sensor
 
 import com.company.todd.util.box2d.bodyPattern.GroundSensorBodyPattern as GSBPattern
 
+const val JUMP_COOLDOWN = 1 / 30f
+
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: GSBPattern,
                             private var speed: Float, private var jumpPower: Float) :
         InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var changedAnimation = false
+    private var sinceJump = JUMP_COOLDOWN + 1
     private var isOnGround = false
+        get() = field && sinceJump >= JUMP_COOLDOWN
+
     private val grounds = mutableMapOf<InGameObject, Int>()
 
     init {
@@ -39,6 +44,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
 
     override fun act(delta: Float) {
         super.act(delta)
+        sinceJump += delta
 
         preVelocity.setZero()
         isOnGround = grounds.any { it.key.isGroundFor(this) }
@@ -73,6 +79,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
 
     fun jump() {
         if (isOnGround) {
+            sinceJump = 0f
             setPlayingType(AnimationType.JUMP, true)
             preVelocity.y = jumpPower
         }
@@ -83,7 +90,9 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
     }
 
     fun run(toRight: Boolean) {
-        setPlayingType(AnimationType.RUN)
+        if (getPlayingType() != AnimationType.JUMP) {
+            setPlayingType(AnimationType.RUN)
+        }
         preVelocity.x += if (toRight) speed else -speed
     }
 
