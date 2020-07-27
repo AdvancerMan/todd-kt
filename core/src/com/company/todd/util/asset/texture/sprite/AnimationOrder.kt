@@ -36,6 +36,7 @@ private object AnimationOrders {
         run.then(stay) { _, _ -> true }
 
         listOf(jump, preFall, fall, fallAfterGround).forEach {
+            it.then(jump) { _, t -> t == AnimationType.JUMP }
             it.then(run) { o, t -> o.isOnGround && t == AnimationType.RUN }
             it.then(stay) { o, _ -> o.isOnGround }
         }
