@@ -1,5 +1,6 @@
 package com.company.todd.util.asset.texture.sprite
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.company.todd.util.asset.texture.AnimationPackInfo
@@ -14,8 +15,10 @@ class AnimatedSpriteManyAnimations(private val animationPackInfo: AnimationPackI
 
     override fun setPlayingType(type: AnimationType, forceReset: Boolean) {
         if (forceReset || type != playingType) {
-            playingNow = animations[type] ?: error("Trying to get non-existing animation $type")
-            super.setPlayingType(type, true)
+            animations[type]?.let {
+                playingNow = it
+                super.setPlayingType(type, true)
+            } ?: Gdx.app.error("AnimatedSprite", "Trying to get non-existing animation $type")
         }
     }
 

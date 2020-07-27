@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 enum class AnimationType {
-    STAY, RUN, JUMP, FALL, LANDING, SHOOT
+    STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, SHOOT
 }
 
 abstract class AnimatedSprite : MySprite {

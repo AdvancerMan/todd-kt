@@ -132,7 +132,7 @@
 
 // anims:
 // (parameter) anims --- map: animation type TO anim without name and type (look at the example)
-// animation types: STAY, RUN, JUMP, FALL, LANDING, SHOOT
+// animation types: STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, SHOOT
 
 {
   "type": "anims",

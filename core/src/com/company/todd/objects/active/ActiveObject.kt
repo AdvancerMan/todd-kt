@@ -7,6 +7,7 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.util.asset.texture.sprite.AnimationType
 import com.company.todd.util.asset.texture.drawable.MyDrawable
+import com.company.todd.util.asset.texture.sprite.stayAnimation
 import com.company.todd.util.box2d.bodyPattern.Sensor
 
 import com.company.todd.util.box2d.bodyPattern.GroundSensorBodyPattern as GSBPattern
@@ -17,10 +18,12 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
                             private var speed: Float, private var jumpPower: Float) :
         InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
-    private var changedAnimation = false
+    private var preferredAnimationType = AnimationType.STAY
+    protected var animationTypeNow = stayAnimation()
     private var sinceJump = JUMP_COOLDOWN + 1
-    private var isOnGround = false
+    var isOnGround = false
         get() = field && sinceJump >= JUMP_COOLDOWN
+        private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()
 
@@ -46,6 +49,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
         super.act(delta)
         sinceJump += delta
 
+        preferredAnimationType = AnimationType.STAY
         preVelocity.setZero()
         isOnGround = grounds.any { it.key.isGroundFor(this) }
         think(delta)
@@ -55,32 +59,16 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
         }
     }
 
-    protected fun updateAnimation() {
-        if (getPlayingType() == AnimationType.JUMP && getVelocity().y <= 0f ||
-                getPlayingType() != AnimationType.JUMP && !isOnGround) {
-            setPlayingType(AnimationType.FALL)
-        }
-
-        if (isOnGround && (getPlayingType() == AnimationType.FALL || getPlayingType() == AnimationType.JUMP)) {
-            setPlayingType(AnimationType.LANDING)
-        }
-
-        if (!changedAnimation && getPlayingType() != AnimationType.JUMP && getPlayingType() != AnimationType.FALL) {
-            setPlayingType(AnimationType.STAY)
-        }
-
-        changedAnimation = false
-    }
-
     override fun postAct(delta: Float) {
         super.postAct(delta)
-        updateAnimation()
+        animationTypeNow = animationTypeNow.next(this, preferredAnimationType)
+        setPlayingType(animationTypeNow.type)
     }
 
     fun jump() {
         if (isOnGround) {
             sinceJump = 0f
-            setPlayingType(AnimationType.JUMP, true)
+            preferredAnimationType = AnimationType.JUMP
             preVelocity.y = jumpPower
         }
     }
@@ -91,14 +79,9 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
 
     fun run(toRight: Boolean) {
         if (getPlayingType() != AnimationType.JUMP) {
-            setPlayingType(AnimationType.RUN)
+            preferredAnimationType = AnimationType.RUN
         }
         preVelocity.x += if (toRight) speed else -speed
-    }
-
-    override fun setPlayingType(type: AnimationType, forceReset: Boolean) {
-        changedAnimation = true
-        super.setPlayingType(type, forceReset)
     }
 
     protected fun updateXVelocity() {

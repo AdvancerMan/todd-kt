@@ -4,7 +4,7 @@ import json
 import cv2
 
 animation_types = [
-    "STAY", "RUN", "JUMP", "FALL", "LANDING", "SHOOT"
+    "STAY", "RUN", "JUMP", "PRE_FALL", "FALL", "FALL_AFTER_GROUND", "SHOOT"
 ]
 
 loop_animation_types = {
