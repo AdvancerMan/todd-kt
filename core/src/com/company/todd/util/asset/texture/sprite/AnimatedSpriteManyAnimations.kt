@@ -18,7 +18,16 @@ class AnimatedSpriteManyAnimations(private val animationPackInfo: AnimationPackI
             animations[type]?.let {
                 playingNow = it
                 super.setPlayingType(type, true)
-            } ?: Gdx.app.error("AnimatedSprite", "Trying to get non-existing animation $type")
+            } ?: Gdx.app.error(
+                    "AnimatedSprite",
+                    "Trying to get non-existing animation $type for "
+                            + animationPackInfo.animations
+                            .map {
+                                it.second.path + it.second.bounds
+                                        .take(4)
+                                        .map { r -> listOf(r.x, r.y, r.width, r.height).map(Float::toInt) }
+                            }
+            )
         }
     }
 

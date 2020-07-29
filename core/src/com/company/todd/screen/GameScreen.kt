@@ -6,10 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.friendly.Player
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.objects.passive.level.Level
 import com.company.todd.util.box2d.MyContactListener
 import com.company.todd.util.input.PlayerInputActor
 
-open class GameScreen(game: ToddGame): MyScreen(game) {
+open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
     val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
     protected val playerInputActor = PlayerInputActor(game)
@@ -17,6 +18,7 @@ open class GameScreen(game: ToddGame): MyScreen(game) {
     protected val player = Player(game, playerInputActor)
 
     init {
+        level?.create(game)?.forEach { addObject(it) }
         addObject(player)
         stage.addActor(objects)
         stage.addActor(playerInputActor)
