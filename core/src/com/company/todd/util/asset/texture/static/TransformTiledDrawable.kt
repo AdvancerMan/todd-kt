@@ -1,12 +1,15 @@
-package com.company.todd.util.asset.texture.drawable
+package com.company.todd.util.asset.texture.static
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
+import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.asset.texture.TextureManager
+import com.company.todd.util.asset.texture.TiledRegionInfo
 import kotlin.math.ceil
 
-class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), FlipTransformDrawable {
+class TransformTiledDrawable(private val info: TiledRegionInfo?, region: TextureRegion) : TiledDrawable(region), MyDrawable {
     private val temp: Color = Color()
 
     /**
@@ -81,5 +84,9 @@ class TransformTiledDrawable(region: TextureRegion) : TiledDrawable(region), Fli
         region.flip(region.isFlipX != flipX, region.isFlipY != flipY)
         draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
         region.flip(region.isFlipX, region.isFlipY)
+    }
+
+    override fun dispose(manager: TextureManager) {
+        info?.let { manager.unload(it) }
     }
 }

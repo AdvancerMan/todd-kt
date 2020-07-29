@@ -1,4 +1,4 @@
-package com.company.todd.util.asset.texture.sprite
+package com.company.todd.util.asset.texture.animated
 
 import com.company.todd.objects.active.ActiveObject
 

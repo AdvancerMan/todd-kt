@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
-import com.company.todd.util.asset.texture.drawable.MyDrawable
+import com.company.todd.util.asset.texture.MyDrawable
 
 class Jumper(game: ToddGame, drawable: MyDrawable,
              aabb: Rectangle, private val pushPower: Float) :

@@ -11,7 +11,7 @@ import com.company.todd.util.input.PlayerInputActor
 class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
         Creature(
                 game,
-                game.textureManager.loadSprite("player"),
+                game.textureManager.loadDrawable("player"),
                 GroundSensorRectangleBodyPattern(BodyDef.BodyType.DynamicBody, Vector2(50f, 100f), Vector2()),
                 300f,
                 500f

@@ -1,32 +1,39 @@
-package com.company.todd.util.asset.texture.drawable
+package com.company.todd.util.asset.texture.static
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
+import com.company.todd.util.asset.texture.FlipTransformDrawable
+import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.asset.texture.NineTiledRegionInfo
+import com.company.todd.util.asset.texture.TextureManager
 import kotlin.math.max
 
-class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: Int) :
-        BaseDrawable(), FlipTransformDrawable {
+class NineTiledDrawable(private val info: NineTiledRegionInfo,
+                        region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: Int) :
+        BaseDrawable(), MyDrawable {
+    constructor(info: NineTiledRegionInfo, region: TextureRegion) :
+            this(info, region, info.lw, info.rw, info.uh, info.dh)
+
     private val luCorner = TextureRegion(region, 0, 0, lw, uh)
     private val ruCorner = TextureRegion(region, region.regionWidth - rw, 0, rw, uh)
     private val rdCorner = TextureRegion(region, region.regionWidth - rw, region.regionHeight - dh, rw, dh)
     private val ldCorner = TextureRegion(region, 0, region.regionHeight - dh, lw, dh)
 
-    private val lTile = TransformTiledDrawable(TextureRegion(
+    private val lTile = TransformTiledDrawable(null, TextureRegion(
             region, 0, uh, lw, region.regionHeight - uh - dh
     ))
-    private val uTile = TransformTiledDrawable(TextureRegion(
+    private val uTile = TransformTiledDrawable(null, TextureRegion(
             region, lw, 0, region.regionWidth - lw - rw, uh
     ))
-    private val rTile = TransformTiledDrawable(TextureRegion(
+    private val rTile = TransformTiledDrawable(null, TextureRegion(
             region, region.regionWidth - rw, uh, rw, region.regionHeight - uh - dh
     ))
-    private val dTile = TransformTiledDrawable(TextureRegion(
+    private val dTile = TransformTiledDrawable(null, TextureRegion(
             region, lw, region.regionHeight - dh, region.regionWidth - lw - rw, dh
     ))
-    private val mTile = TransformTiledDrawable(TextureRegion(
+    private val mTile = TransformTiledDrawable(null, TextureRegion(
             region, lw, uh, region.regionWidth - lw - rw, region.regionHeight - uh - dh
     ))
 
@@ -67,5 +74,9 @@ class NineTiledDrawable(region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: In
             Gdx.app.error("NineTiledDrawable", "Flip is not supported")
         }
         draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
+    }
+
+    override fun dispose(manager: TextureManager) {
+        manager.unload(info)
     }
 }

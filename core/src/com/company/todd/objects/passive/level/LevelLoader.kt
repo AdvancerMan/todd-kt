@@ -26,5 +26,5 @@ private fun jsonToObjectInfo(objectJson: JsonValue): (ToddGame) -> PassiveObject
     checkContains(objectJson, "args", "array of $info arguments") { it.isArray }
     val argsJson = objectJson["args"]
 
-    return { info.constructor(it, it.textureManager.loadSprite(info.drawableName), argsJson) }
+    return { info.constructor(it, it.textureManager.loadDrawable(info.drawableName), argsJson) }
 }

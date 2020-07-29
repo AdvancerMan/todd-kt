@@ -1,15 +1,26 @@
-package com.company.todd.util.asset.texture.drawable
+package com.company.todd.util.asset.texture.static
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
+import com.company.todd.util.asset.texture.CoveredTiledRegionInfo
+import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.asset.texture.TextureManager
 import kotlin.math.min
 
-class CoveredTiledDrawable(coverTile: TextureRegion, bodyTile: TextureRegion) : BaseDrawable(), FlipTransformDrawable {
-    private val cover = TransformTiledDrawable(coverTile)
-    private val body = TransformTiledDrawable(bodyTile)
+class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo,
+                           coverTile: TextureRegion, bodyTile: TextureRegion) :
+        BaseDrawable(), MyDrawable {
+    constructor(info: CoveredTiledRegionInfo, region: TextureRegion) :
+            this(
+                    info,
+                    TextureRegion(region, 0, region.regionHeight - info.uh, region.regionWidth, info.uh),
+                    region.apply { regionHeight -= info.uh }
+            )
+
+    private val cover = TransformTiledDrawable(null, coverTile)
+    private val body = TransformTiledDrawable(null, bodyTile)
 
     override fun draw(batch: Batch, x: Float, y: Float, width: Float, height: Float) {
         val h = min(cover.minHeight, height)
@@ -32,5 +43,9 @@ class CoveredTiledDrawable(coverTile: TextureRegion, bodyTile: TextureRegion) : 
             Gdx.app.error("CoveredTiledDrawable", "Flip is not supported")
         }
         draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
+    }
+
+    override fun dispose(manager: TextureManager) {
+        manager.unload(info)
     }
 }

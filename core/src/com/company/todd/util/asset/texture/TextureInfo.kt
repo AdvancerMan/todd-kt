@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.util.asset.texture.RegionInfoTypes.*
-import com.company.todd.util.asset.texture.sprite.AnimationType
+import com.company.todd.util.asset.texture.animated.AnimationType
 import com.company.todd.util.files.crawlJsonListsWithComments
 
 interface TextureInfo
@@ -188,8 +188,8 @@ private fun checkAnim(json: JsonValue) {
 val animTypes = AnimationType.values().toList().map { it.toString() }
 
 private fun checkAnims(json: JsonValue) {
-    checkContains(json, "anims", "map, keys are $animTypes") {
-        it.isObject && !it.any { json -> !animTypes.contains(json.name) }
+    checkContains(json, "anims", "non-empty map, keys are $animTypes") {
+        it.isObject && !it.any { json -> !animTypes.contains(json.name) } && it.notEmpty()
     }
     json["anims"].forEach { checkAnim(it) }
 }

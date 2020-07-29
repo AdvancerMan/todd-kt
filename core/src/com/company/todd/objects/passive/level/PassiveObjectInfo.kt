@@ -13,7 +13,7 @@ import com.company.todd.objects.passive.platform.CloudyPlatform
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.objects.passive.platform.SolidPolygonPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
-import com.company.todd.util.asset.texture.drawable.MyDrawable
+import com.company.todd.util.asset.texture.MyDrawable
 
 private val FLOAT = { json: JsonValue -> json.asFloat() }
 private val VECTOR = { json: JsonValue -> json.asFloatArray().let { Vector2(it[0], it[1]) } }

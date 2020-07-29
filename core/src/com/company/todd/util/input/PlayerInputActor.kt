@@ -1,7 +1,6 @@
 package com.company.todd.util.input
 
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.*
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
 import com.badlogic.gdx.scenes.scene2d.ui.Slider
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.util.*
@@ -35,7 +33,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
             "moveTouchpadKnob",
             "jumpButtonUp",
             "jumpButtonDown"
-    ).map { game.textureManager.loadSprite(it) }
+    ).map { game.textureManager.loadDrawable(it) }
 
     private val movingActors = listOf(
             Slider(
