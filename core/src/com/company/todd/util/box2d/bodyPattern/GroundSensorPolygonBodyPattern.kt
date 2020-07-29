@@ -13,9 +13,11 @@ open class GroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: B
         super.addFixtures(body)
 
         if (groundSensor != null) {
-            BodyFactory.addPolygon(body, getGroundSensorPolygon(localVertices)).apply {
-                userData = groundSensor
-                isSensor = true
+            getGroundSensorPolygons(localVertices).forEach {
+                BodyFactory.addPolygon(body, it).apply {
+                    userData = groundSensor
+                    isSensor = true
+                }
             }
         }
     }
@@ -24,16 +26,19 @@ open class GroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: B
 const val groundSensorOffset = 2f
 const val groundSensorCuttingCoefficient = 0.9f
 
-private fun getGroundSensorPolygon(vertices: FloatArray) =
+private fun getGroundSensorPolygons(vertices: FloatArray) =
         List(vertices.size / 2) { Vector2(vertices[it * 2], vertices[it * 2 + 1]) }.let {
             it
                     .takeEdges()
                     .ifEmpty { listOf(it.minBy { e -> e.y }!!) }
                     .map { e -> e.cpy().sub(0f, groundSensorOffset) }
-                    .atLeast3()
+                    .atLeast2()
+                    .shiftToMakeNonCyclic()
                     .cutCorners()
-                    .flatMap { e -> listOf(e.x, e.y) }
-                    .toFloatArray()
+                    .toEdges()
+                    .map { edge ->
+                        edge.flatMap { e -> listOf(e.x, e.y) }.toFloatArray()
+                    }
         }
 
 // taking edges with [-legsAngle, legsAngle] angle in degrees
@@ -50,40 +55,31 @@ private fun List<Vector2>.takeEdges() =
                     || edgeK.angle() < legsAngle
         }
 
-private fun List<Vector2>.atLeast3() =
-        when (size) {
-            2 -> listOf(
-                    this[0], this[1],
-                    Vector2(this[0].x, this[0].y - groundSensorOffset),
-                    Vector2(this[1].x, this[1].y - groundSensorOffset)
-            )
-
-            1 -> listOf(
+private fun List<Vector2>.atLeast2() =
+        if (size == 1) {
+            listOf(
                     this[0],
                     Vector2(this[0].x + 1f, this[0].y - groundSensorOffset),
                     Vector2(this[0].x - 1f, this[0].y - groundSensorOffset)
             )
-
-            else -> this
+        } else {
+            this
         }
 
-// cutting corners to fix wall jumping problem
-private fun List<Vector2>.cutCorners(): List<Vector2> {
+private fun List<Vector2>.shiftToMakeNonCyclic(): List<Vector2> {
     var leftCornerI = 0
-    var rightCornerI = 0
-
     for (i in 0 until size) {
         if (this[i].x < this[leftCornerI].x || this[i].y > this[leftCornerI].y) {
             leftCornerI = i
         }
-        if (this[i].x > this[rightCornerI].x || this[i].y > this[rightCornerI].y) {
-            rightCornerI = i
-        }
     }
 
-    return cutCorners(leftCornerI, (leftCornerI + 1) % size)
-            .cutCorners(rightCornerI, (rightCornerI + size - 1) % size)
+    return List(size) { this[(it + leftCornerI) % size] }
 }
+
+// cutting corners to fix wall jumping problem
+private fun List<Vector2>.cutCorners() =
+        cutCorners(0, 1).cutCorners(size - 1, size - 2)
 
 private fun List<Vector2>.cutCorners(i: Int, j: Int) =
         apply {
@@ -91,4 +87,13 @@ private fun List<Vector2>.cutCorners(i: Int, j: Int) =
                     .sub(this[j])
                     .scl(groundSensorCuttingCoefficient)
                     .add(this[j])
+        }
+
+private fun List<Vector2>.toEdges() =
+        List(size - 1) {
+            listOf(
+                    this[it], this[it + 1],
+                    this[it + 1].cpy().add(0f, 2 * groundSensorOffset),
+                    this[it].cpy().add(0f, 2 * groundSensorOffset)
+            )
         }

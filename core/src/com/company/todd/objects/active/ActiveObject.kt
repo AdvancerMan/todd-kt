@@ -31,13 +31,16 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: G
         bodyPattern.groundSensor = object : Sensor {
             override fun beginContact(other: InGameObject, contact: Contact) {
                 super.beginContact(other, contact)
-                grounds[other] = grounds.getOrPut(other) { 0 } + 1
+                grounds[other] = grounds.getOrElse(other) { 0 } + 1
             }
 
             override fun endContact(other: InGameObject, contact: Contact) {
                 super.endContact(other, contact)
-                if (grounds[other]!!.dec() == 0) {
+                val cnt = grounds[other]!! - 1
+                if (cnt == 0) {
                     grounds.remove(other)
+                } else {
+                    grounds[other] = cnt
                 }
             }
         }
