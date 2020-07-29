@@ -86,6 +86,7 @@ abstract class InGameObject(protected val game: ToddGame,
     // delegating MyDrawable implementation to drawable
     override fun setPlayingType(type: AnimationType, forceReset: Boolean) = drawable.setPlayingType(type, forceReset)
     override fun getPlayingType() = drawable.getPlayingType()
+    override fun isAnimationFinished() = drawable.isAnimationFinished()
 
     final override fun update(delta: Float) {
         Gdx.app.error("IGO", "To update IGO act(Float) should be called")
