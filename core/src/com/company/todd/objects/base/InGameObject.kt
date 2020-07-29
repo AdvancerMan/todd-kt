@@ -3,6 +3,7 @@ package com.company.todd.objects.base
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
@@ -55,14 +56,27 @@ abstract class InGameObject(protected val game: ToddGame,
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        // TODO [performance] culling area for actor
-        val batchColor = batch.color.cpy()
-        batch.color = color.apply { a *= parentAlpha }
-        drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, !isDirectedToRight, false)
-        color.a /= parentAlpha
-        batch.color = batchColor
-        super.draw(batch, parentAlpha)
+        if (getActorAABB().overlaps(screen.getCameraAABB())) {
+            val batchColor = batch.color.cpy()
+            batch.color = color.apply { a *= parentAlpha }
+            drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, !isDirectedToRight, false)
+            color.a /= parentAlpha
+            batch.color = batchColor
+            super.draw(batch, parentAlpha)
+        }
     }
+
+    fun getActorAABB() =
+            listOf(
+                    Vector2(x, y),
+                    Vector2(x + width, y),
+                    Vector2(x, y + height),
+                    Vector2(x + width, y + height)
+            )
+                    .map { it.rotateAround(Vector2(x + originX, y + originY), rotation) }
+                    .let {
+                        it.fold(Rectangle(it[0].x, it[0].y, 0f, 0f)) { r, v -> r.merge(v) }
+                    }
 
     open fun isGroundFor(other: InGameObject) = true
     open fun takeDamage(amount: Float) {}

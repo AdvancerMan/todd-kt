@@ -3,6 +3,7 @@ package com.company.todd.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
@@ -21,6 +22,13 @@ abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
         update(delta)
         draw()
     }
+
+    fun getCameraAABB() =
+            Rectangle(
+                    stage.camera.position.x - stage.camera.viewportWidth / 2,
+                    stage.camera.position.y - stage.camera.viewportHeight / 2,
+                    stage.camera.viewportWidth, stage.camera.viewportHeight
+            )
 
     fun centerCameraAt(x: Float, y: Float) {
         stage.camera.position.x = x
