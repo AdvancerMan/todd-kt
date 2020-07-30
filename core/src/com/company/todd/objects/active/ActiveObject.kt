@@ -8,9 +8,9 @@ import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.util.asset.texture.animated.AnimationType
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.asset.texture.animated.stayAnimation
-import com.company.todd.util.box2d.bodyPattern.BodyPattern
-import com.company.todd.util.box2d.bodyPattern.Sensor
-import com.company.todd.util.box2d.bodyPattern.SensorName
+import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.util.box2d.bodyPattern.base.SensorName
 
 const val JUMP_COOLDOWN = 1 / 30f
 
@@ -28,7 +28,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
     private val grounds = mutableMapOf<InGameObject, Int>()
 
     init {
-        bodyPattern.sensors[SensorName.GROUND_SENSOR] = object : Sensor {
+        bodyPattern.sensors[SensorName.BOTTOM_GROUND_SENSOR] = object : Sensor {
             override fun beginContact(other: InGameObject, contact: Contact) {
                 super.beginContact(other, contact)
                 grounds[other] = grounds.getOrElse(other) { 0 } + 1

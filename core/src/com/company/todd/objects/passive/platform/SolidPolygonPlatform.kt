@@ -6,14 +6,14 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.PolygonBodyPattern
+import com.company.todd.util.box2d.bodyPattern.sensor.createPolygonBPWithTGS
 
 class SolidPolygonPlatform(game: ToddGame, drawable: MyDrawable,
                            localVertices: Array<Vector2>, worldCenter: Vector2) :
         PassiveObject(
                 game, drawable,
                 RealBodyWrapper(
-                        PolygonBodyPattern(
+                        createPolygonBPWithTGS(
                                 localVertices,
                                 BodyDef.BodyType.StaticBody,
                                 worldCenter

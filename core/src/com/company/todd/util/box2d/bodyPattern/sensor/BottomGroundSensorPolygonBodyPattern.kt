@@ -1,17 +1,20 @@
-package com.company.todd.util.box2d.bodyPattern
+package com.company.todd.util.box2d.bodyPattern.sensor
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.util.box2d.BodyFactory
+import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.util.box2d.bodyPattern.base.PolygonBodyPattern
+import com.company.todd.util.box2d.bodyPattern.base.SensorName
+import com.company.todd.util.box2d.bodyPattern.base.legsAngle
 
-open class GroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType, center: Vector2) :
-        SimpleBodyPattern(type, center), BodyPattern {
-    private val localVertices = localVertices.flatMap { listOf(it.x, it.y) }.toFloatArray()
+open class BottomGroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType, center: Vector2) :
+        PolygonBodyPattern(localVertices, type, center), BodyPattern {
 
     override fun addFixtures(body: Body) {
-        sensors[SensorName.GROUND_SENSOR]?.let { sensor ->
-            getGroundSensorPolygons(localVertices).forEach {
+        sensors[SensorName.BOTTOM_GROUND_SENSOR]?.let { sensor ->
+            getBottomSensorPolygons(localVertices).forEach {
                 BodyFactory.addPolygon(body, it).apply {
                     userData = sensor
                     isSensor = true
@@ -21,22 +24,20 @@ open class GroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: B
     }
 }
 
-const val groundSensorOffset = 2f
-const val groundSensorCuttingCoefficient = 0.9f
+const val bottomSensorOffset = 2f
+const val bottomSensorCuttingCoefficient = 0.9f
 
-private fun getGroundSensorPolygons(vertices: FloatArray) =
+fun getBottomSensorPolygons(vertices: FloatArray) =
         List(vertices.size / 2) { Vector2(vertices[it * 2], vertices[it * 2 + 1]) }.let {
             it
                     .takeEdges()
                     .ifEmpty { listOf(it.minBy { e -> e.y }!!) }
-                    .map { e -> e.cpy().sub(0f, groundSensorOffset) }
+                    .map { e -> e.cpy().sub(0f, bottomSensorOffset) }
                     .atLeast2()
                     .shiftToMakeNonCyclic()
                     .cutCorners()
                     .toEdges()
-                    .map { edge ->
-                        edge.flatMap { e -> listOf(e.x, e.y) }.toFloatArray()
-                    }
+                    .map { edge -> edge.flatMap { e -> listOf(e.x, e.y) }.toFloatArray() }
         }
 
 // taking edges with [-legsAngle, legsAngle] angle in degrees
@@ -57,8 +58,8 @@ private fun List<Vector2>.atLeast2() =
         if (size == 1) {
             listOf(
                     this[0],
-                    Vector2(this[0].x + 1f, this[0].y - groundSensorOffset),
-                    Vector2(this[0].x - 1f, this[0].y - groundSensorOffset)
+                    Vector2(this[0].x + 1f, this[0].y - bottomSensorOffset),
+                    Vector2(this[0].x - 1f, this[0].y - bottomSensorOffset)
             )
         } else {
             this
@@ -83,7 +84,7 @@ private fun List<Vector2>.cutCorners(i: Int, j: Int) =
         apply {
             this[i]
                     .sub(this[j])
-                    .scl(groundSensorCuttingCoefficient)
+                    .scl(bottomSensorCuttingCoefficient)
                     .add(this[j])
         }
 
@@ -91,7 +92,7 @@ private fun List<Vector2>.toEdges() =
         List(size - 1) {
             listOf(
                     this[it], this[it + 1],
-                    this[it + 1].cpy().add(0f, 2 * groundSensorOffset),
-                    this[it].cpy().add(0f, 2 * groundSensorOffset)
+                    this[it + 1].cpy().add(0f, 2 * bottomSensorOffset),
+                    this[it].cpy().add(0f, 2 * bottomSensorOffset)
             )
         }

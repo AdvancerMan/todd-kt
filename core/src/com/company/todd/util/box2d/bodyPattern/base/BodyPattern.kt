@@ -1,13 +1,14 @@
-package com.company.todd.util.box2d.bodyPattern
+package com.company.todd.util.box2d.bodyPattern.base
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.World
 import com.company.todd.util.box2d.BodyFactory
+import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
 enum class SensorName {
-    GROUND_SENSOR
+    BOTTOM_GROUND_SENSOR, TOP_GROUND_SENSOR
 }
 
 /**

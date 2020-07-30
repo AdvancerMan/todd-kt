@@ -15,7 +15,7 @@ import com.company.todd.util.asset.texture.animated.AnimationType
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.asset.texture.MyDrawableI
 import com.company.todd.util.asset.texture.TextureManager
-import com.company.todd.util.box2d.bodyPattern.Sensor
+import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
 private var maxID = 0
 

@@ -1,4 +1,4 @@
-package com.company.todd.util.box2d.bodyPattern
+package com.company.todd.util.box2d.bodyPattern.sensor
 
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse

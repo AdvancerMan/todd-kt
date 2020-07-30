@@ -7,13 +7,13 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.RectangleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.sensor.createRectangleBPWithTGS
 
 open class SolidRectanglePlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle) :
         PassiveObject(
                 game, drawable,
                 RealBodyWrapper(
-                        RectangleBodyPattern(
+                        createRectangleBPWithTGS(
                                 BodyDef.BodyType.StaticBody,
                                 aabb.getSize(Vector2()),
                                 aabb.getPosition(Vector2())

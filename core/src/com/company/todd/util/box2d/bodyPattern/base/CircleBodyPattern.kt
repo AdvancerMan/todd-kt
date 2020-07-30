@@ -1,9 +1,10 @@
-package com.company.todd.util.box2d.bodyPattern
+package com.company.todd.util.box2d.bodyPattern.base
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.util.box2d.BodyFactory
+import com.company.todd.util.box2d.bodyPattern.base.SimpleBodyPattern
 
 class CircleBodyPattern(type: BodyDef.BodyType, val radius: Float,
                         bodyCenter: Vector2 = Vector2(), val circleCenter: Vector2 = Vector2()):

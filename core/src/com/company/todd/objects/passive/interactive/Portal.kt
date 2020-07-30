@@ -10,7 +10,7 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.CircleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.base.CircleBodyPattern
 
 class Portal(game: ToddGame, drawable: MyDrawable, position: Vector2, radius: Float,
              private val teleportTo: Vector2, private val teleportDelay: Float) :

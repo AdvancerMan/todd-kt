@@ -1,4 +1,4 @@
-package com.company.todd.util.box2d.bodyPattern
+package com.company.todd.util.box2d.bodyPattern.base
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef

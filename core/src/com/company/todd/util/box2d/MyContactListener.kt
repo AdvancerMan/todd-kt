@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.objects.base.InGameObject
-import com.company.todd.util.box2d.bodyPattern.Sensor
+import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
 private fun invokeForBoth(contact: Contact, f: Sensor.(InGameObject) -> Unit) {
     if (contact.fixtureA.isSensor && contact.fixtureB.isSensor) {
