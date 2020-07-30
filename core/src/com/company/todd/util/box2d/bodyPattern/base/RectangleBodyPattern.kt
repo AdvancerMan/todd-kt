@@ -16,16 +16,20 @@ const val legsAngle = 61f
 // tan(PI / 3)
 const val tanLegsAngle = 1.7320508075688767f
 const val smoothCoefficient = 0.1f
+const val maxSmoothness = 3f
 
 fun createSmoothRectangle(center: Vector2, size: Vector2): Array<Vector2> {
     val a = min(size.x * smoothCoefficient, size.y * smoothCoefficient / tanLegsAngle)
+            .coerceAtMost(maxSmoothness)
     val b = a * tanLegsAngle
     val halfH = size.y / 2
     val halfW = size.x / 2
 
     return listOf(
-            Vector2(halfW, halfH),
-            Vector2(-halfW, halfH),
+            Vector2(halfW, halfH - b),
+            Vector2(halfW - a, halfH),
+            Vector2(a - halfW, halfH),
+            Vector2(-halfW, halfH - b),
             Vector2(-halfW, b - halfH),
             Vector2(a - halfW, -halfH),
             Vector2(halfW - a, -halfH),
