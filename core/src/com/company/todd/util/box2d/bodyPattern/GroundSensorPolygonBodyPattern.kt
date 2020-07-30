@@ -6,16 +6,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.util.box2d.BodyFactory
 
 open class GroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType, center: Vector2) :
-        PolygonBodyPattern(localVertices, type, center), GroundSensorBodyPattern {
-    override var groundSensor: Sensor? = null
+        SimpleBodyPattern(type, center), BodyPattern {
+    private val localVertices = localVertices.flatMap { listOf(it.x, it.y) }.toFloatArray()
 
     override fun addFixtures(body: Body) {
-        super.addFixtures(body)
-
-        if (groundSensor != null) {
+        sensors[SensorName.GROUND_SENSOR]?.let { sensor ->
             getGroundSensorPolygons(localVertices).forEach {
                 BodyFactory.addPolygon(body, it).apply {
-                    userData = groundSensor
+                    userData = sensor
                     isSensor = true
                 }
             }

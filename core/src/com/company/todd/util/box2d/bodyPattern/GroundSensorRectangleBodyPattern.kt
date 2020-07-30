@@ -10,3 +10,8 @@ class GroundSensorRectangleBodyPattern(type: BodyDef.BodyType, size: Vector2,
                 type,
                 position.cpy().add(size.x / 2, size.y / 2)
         )
+
+fun createRectangleBPWithGS(type: BodyDef.BodyType, size: Vector2,
+                               position: Vector2, localCenter: Vector2 = Vector2()) =
+        GroundSensorRectangleBodyPattern(type, size, position, localCenter)
+                .combine(RectangleBodyPattern(type, size, position, localCenter))
