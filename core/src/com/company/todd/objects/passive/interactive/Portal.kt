@@ -11,14 +11,13 @@ import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.base.CircleBodyPattern
+import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
 class Portal(game: ToddGame, drawable: MyDrawable, position: Vector2, radius: Float,
              private val teleportTo: Vector2, private val teleportDelay: Float) :
         PassiveObject(game, drawable, RealBodyWrapper(CircleBodyPattern(BodyDef.BodyType.StaticBody, radius, position))) {
     private val delayedObjects = Queue<Pair<InGameObject, Float>>()
     private var timeSinceCreation = 0f
-
-    override fun isGroundFor(other: InGameObject) = false
 
     override fun act(delta: Float) {
         timeSinceCreation += delta
@@ -28,13 +27,15 @@ class Portal(game: ToddGame, drawable: MyDrawable, position: Vector2, radius: Fl
         super.act(delta)
     }
 
-    override fun beginContact(other: InGameObject, contact: Contact) {
-        super.beginContact(other, contact)
-        delayedObjects.addLast(other to timeSinceCreation + teleportDelay)
+    override fun beginContact(otherSensor: Sensor, other: InGameObject, contact: Contact) {
+        super.beginContact(otherSensor, other, contact)
+        if (otherSensor === other) {
+            delayedObjects.addLast(other to timeSinceCreation + teleportDelay)
+        }
     }
 
-    override fun preSolve(other: InGameObject, contact: Contact, oldManifold: Manifold) {
-        super.preSolve(other, contact, oldManifold)
+    override fun preSolve(otherSensor: Sensor, other: InGameObject, contact: Contact, oldManifold: Manifold) {
+        super.preSolve(otherSensor, other, contact, oldManifold)
         contact.isEnabled = false
     }
 }

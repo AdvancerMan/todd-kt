@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
 
 class CloudyPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
                      private val sinceContactTillInactive: Float,
@@ -18,19 +20,21 @@ class CloudyPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
         sinceContact += delta
 
         if (sinceContact < sinceContactTillInactive) {
-            color = color.apply { a = 1 - sinceContact / sinceContactTillInactive }
+            color.a = 1 - sinceContact / sinceContactTillInactive
         } else {
             setActive(sinceContact >= sinceContactTillActive)
-            color = color.apply { a = if (sinceContact >= sinceContactTillActive) 1f else 0f }
+            color.a = if (sinceContact >= sinceContactTillActive) 1f else 0f
         }
 
         super.act(delta)
     }
 
-    override fun postSolve(other: InGameObject, contact: Contact, impulse: ContactImpulse) {
-        super.postSolve(other, contact, impulse)
-        if (contact.isEnabled && sinceContact > sinceContactTillActive) {
-            sinceContact = 0f
+    override fun postSolve(otherSensor: Sensor, other: InGameObject, contact: Contact, impulse: ContactImpulse) {
+        super.postSolve(otherSensor, other, contact, impulse)
+        if (otherSensor === other) {
+            if (contact.isEnabled && sinceContact > sinceContactTillActive) {
+                sinceContact = 0f
+            }
         }
     }
 }

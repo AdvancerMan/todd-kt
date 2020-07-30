@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.objects.base.InGameObject
 
 interface Sensor {
-    fun beginContact(other: InGameObject, contact: Contact) {}
-    fun endContact(other: InGameObject, contact: Contact) {}
-    fun preSolve(other: InGameObject, contact: Contact, oldManifold: Manifold) {}
-    fun postSolve(other: InGameObject, contact: Contact, impulse: ContactImpulse) {}
+    fun beginContact(otherSensor: Sensor, other: InGameObject, contact: Contact) {}
+    fun endContact(otherSensor: Sensor, other: InGameObject, contact: Contact) {}
+    fun preSolve(otherSensor: Sensor, other: InGameObject, contact: Contact, oldManifold: Manifold) {}
+    fun postSolve(otherSensor: Sensor, other: InGameObject, contact: Contact, impulse: ContactImpulse) {}
 }

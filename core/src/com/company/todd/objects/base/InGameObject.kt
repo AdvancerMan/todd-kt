@@ -75,7 +75,6 @@ abstract class InGameObject(protected val game: ToddGame,
                     .map { it.rotateAround(Vector2(x + originX, y + originY), rotation) }
                     .let { it.fold(Rectangle(it[0].x, it[0].y, 0f, 0f)) { r, v -> r.merge(v) } }
 
-    open fun isGroundFor(other: InGameObject) = true
     open fun takeDamage(amount: Float) {}
 
     override fun equals(other: Any?) =

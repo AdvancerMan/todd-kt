@@ -11,6 +11,7 @@ import com.company.todd.util.asset.texture.animated.stayAnimation
 import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.util.box2d.bodyPattern.base.SensorName
+import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
 
 const val JUMP_COOLDOWN = 1 / 30f
 
@@ -29,18 +30,22 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
 
     init {
         bodyPattern.sensors[SensorName.BOTTOM_GROUND_SENSOR] = object : Sensor {
-            override fun beginContact(other: InGameObject, contact: Contact) {
-                super.beginContact(other, contact)
-                grounds[other] = grounds.getOrElse(other) { 0 } + 1
+            override fun beginContact(otherSensor: Sensor, other: InGameObject, contact: Contact) {
+                super.beginContact(otherSensor, other, contact)
+                if (otherSensor is TopGroundSensor) {
+                    grounds[other] = grounds.getOrElse(other) { 0 } + 1
+                }
             }
 
-            override fun endContact(other: InGameObject, contact: Contact) {
-                super.endContact(other, contact)
-                val cnt = grounds[other]!! - 1
-                if (cnt == 0) {
-                    grounds.remove(other)
-                } else {
-                    grounds[other] = cnt
+            override fun endContact(otherSensor: Sensor, other: InGameObject, contact: Contact) {
+                super.endContact(otherSensor, other, contact)
+                if (otherSensor is TopGroundSensor) {
+                    val cnt = grounds[other]!! - 1
+                    if (cnt == 0) {
+                        grounds.remove(other)
+                    } else {
+                        grounds[other] = cnt
+                    }
                 }
             }
         }
@@ -54,7 +59,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
 
         preferredAnimationType = AnimationType.STAY
         preVelocity.setZero()
-        isOnGround = grounds.any { it.key.isGroundFor(this) }
+        isOnGround = grounds.isNotEmpty()
         think(delta)
         updateXVelocity()
         if (!preVelocity.epsilonEquals(preVelocity.x, 0f)) {
