@@ -58,9 +58,8 @@ abstract class InGameObject(protected val game: ToddGame,
     override fun draw(batch: Batch, parentAlpha: Float) {
         if (getActorAABB().overlaps(screen.getCameraAABB())) {
             val batchColor = batch.color.cpy()
-            batch.color = color.apply { a *= parentAlpha }
+            batch.color = batch.color.mul(color).apply { a *= parentAlpha }
             drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, !isDirectedToRight, false)
-            color.a /= parentAlpha
             batch.color = batchColor
             super.draw(batch, parentAlpha)
         }
@@ -74,9 +73,7 @@ abstract class InGameObject(protected val game: ToddGame,
                     Vector2(x + width, y + height)
             )
                     .map { it.rotateAround(Vector2(x + originX, y + originY), rotation) }
-                    .let {
-                        it.fold(Rectangle(it[0].x, it[0].y, 0f, 0f)) { r, v -> r.merge(v) }
-                    }
+                    .let { it.fold(Rectangle(it[0].x, it[0].y, 0f, 0f)) { r, v -> r.merge(v) } }
 
     open fun isGroundFor(other: InGameObject) = true
     open fun takeDamage(amount: Float) {}
