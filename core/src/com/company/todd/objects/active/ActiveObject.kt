@@ -16,6 +16,7 @@ import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
 
 const val JUMP_COOLDOWN = 1 / 30f
+const val yVelJumpThreshold = 1f
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
                             private var speed: Float, private var jumpPower: Float) :
@@ -25,7 +26,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
     protected var animationTypeNow = stayAnimation()
     private var sinceJump = JUMP_COOLDOWN + 1
     var isOnGround = false
-        get() = field && sinceJump >= JUMP_COOLDOWN
+        get() = field && getVelocity().y <= yVelJumpThreshold && sinceJump >= JUMP_COOLDOWN
         private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()

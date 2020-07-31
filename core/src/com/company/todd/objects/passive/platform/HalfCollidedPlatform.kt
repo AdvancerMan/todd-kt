@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.launcher.ToddGame
+import com.company.todd.objects.active.yVelJumpThreshold
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.util.SPF
@@ -45,7 +46,7 @@ open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rect
 
     protected open fun isGroundInContact(otherSensor: Sensor, other: InGameObject, myFixture: Fixture,
                                          otherFixture: Fixture, contact: Contact, oldManifold: Manifold) =
-            other.getVelocity().y <= 1f
+            other.getVelocity().y <= yVelJumpThreshold
                     && (groundFor.containsKey(other)
                     || contact.worldManifold.numberOfContactPoints == 2
                     && contact.worldManifold.points
