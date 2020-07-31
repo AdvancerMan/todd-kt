@@ -27,7 +27,7 @@ class DebugScreen(game: ToddGame): GameScreen(game, loadLevels().find { it.name 
             stage.batch.end()
         }
         if (player.getCenter().y < -200f) {
-            player.setCenter(0f, 0f)
+            player.setPosition(0f, 0f, true)
         }
     }
 

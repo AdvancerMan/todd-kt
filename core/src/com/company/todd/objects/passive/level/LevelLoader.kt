@@ -23,7 +23,10 @@ private fun jsonToObjectInfo(objectJson: JsonValue): (ToddGame) -> PassiveObject
         it.isString && stringInfos.contains(it.asString())
     }
     val info = PassiveObjectInfo.valueOf(objectJson["type"].asString())
-    checkContains(objectJson, "args", "array of $info arguments") { it.isArray }
+    checkContains(
+            objectJson, "args",
+            "array or map (but used as values array) of $info arguments"
+    ) { it.isArray || it.isObject }
     val argsJson = objectJson["args"]
 
     return { info.constructor(it, it.textureManager.loadDrawable(info.drawableName), argsJson) }

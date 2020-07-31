@@ -1,51 +1,5 @@
-////////// INTRODUCTION //////////
-
-// Hello! It's a comment
-// WARNING: usually json doesn't have comments
-//          this application is an exception
-
-{
-  "kek": "kek",
-  "lol": "lol",
-  "string": "string",
-  "null": null,
-  "number": 123,
-  "negative": -123,
-  "true": true,
-  "false": false,
-  "double": 123.321,
-  123: "not only strings as keys",
-  "myArray": [
-    "arrays",
-    "are",
-    "allowed",
-    "too",
-    {
-      "im object": "hello",
-      "arrays aren't strongly typed": 42
-    }
-    "and"
-    "commas"
-    "aren't"
-    "necessary", // <-- no error
-  ]
-  "no": "commas"
-  "LoL": 101
-  101: "lol"
-}
-
-// no newline --> error
-
-{
-  "and": "more",
-  "objects": "in",
-  "one": "file"
-}
-
-////////// TEXTURE INFOS //////////
-
 // parameters:
-// name --- you should ALWAYS give a name to an object
+// name --- unique info id, game gets info finding it by name
 // type --- reg (texture region), anim (animation), anims (animations)
 
 // reg:

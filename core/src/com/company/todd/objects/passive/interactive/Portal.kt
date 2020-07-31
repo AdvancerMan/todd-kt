@@ -14,9 +14,9 @@ import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.base.CircleBodyPattern
 import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
-class Portal(game: ToddGame, drawable: MyDrawable, position: Vector2, radius: Float,
+class Portal(game: ToddGame, drawable: MyDrawable, center: Vector2, radius: Float,
              private val teleportTo: Vector2, private val teleportDelay: Float) :
-        PassiveObject(game, drawable, RealBodyWrapper(CircleBodyPattern(BodyDef.BodyType.StaticBody, radius, position))) {
+        PassiveObject(game, drawable, RealBodyWrapper(CircleBodyPattern(BodyDef.BodyType.StaticBody, radius, center))) {
     private val delayedObjects = Queue<Pair<InGameObject, Float>>()
     private var timeSinceCreation = 0f
 

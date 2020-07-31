@@ -1,0 +1,71 @@
+// parameters:
+// name --- level name that will be shown in "choose level" menu or level editor
+// objects --- array of objects on a level
+
+// each element of `objects` parameter has:
+// type --- type of object, available types can be seen in PassiveObjectInfo class in PassiveObjectInfo.kt file
+// args --- array or map (but used as array of values) of argument to the object of type `type`
+//          argument list for each type can be seen in PassiveObjectInfo.kt file
+
+// example:
+
+{
+  "name": "testName",
+  "objects": [
+    {
+      "type": "ARENA_SOLID_RECTANGLE",
+      "args": {
+        "xywh": [0, -50, 200, 50]
+      }
+    },
+
+    {
+      "type": "ARENA_HALF_COLLIDED",
+      "args": {
+        "xywh": [200, -50, 200, 50],
+      }
+    },
+
+    {
+      "type": "ARENA_CLOUDY",
+      "args": {
+        "xywh": [400, -50, 200, 50],
+        "sinceContactTillInactive": 1,
+        "sinceInactiveTillActive": 1
+      }
+    },
+
+    {
+      "type": "ARENA_JUMPER",
+      "args": {
+        "xywh": [600, -50, 200, 50],
+        "pushPower": 800
+      }
+    },
+
+    {
+      "type": "ARENA_PORTAL",
+      "args": {
+        "center": [850, -25],
+        "radius": 50,
+        "teleportTo": [0, 0],
+        "teleportDelay": 0.1
+      }
+    },
+
+    {
+      "type": "ARENA_TRAMPOLINE",
+      "args": {
+        "xywh": [900, -50, 200, 50]
+      }
+    },
+
+    {
+      "type": "ARENA_TRAVOLATOR",
+      "args": {
+        "xywh": [1100, -50, 200, 50],
+        "pushPower": 200
+      }
+    }
+  ]
+}
