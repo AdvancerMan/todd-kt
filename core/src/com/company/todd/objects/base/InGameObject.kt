@@ -16,6 +16,7 @@ import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.asset.texture.MyDrawableI
 import com.company.todd.util.asset.texture.TextureManager
 import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundListener
 
 private var maxID = 0
 
@@ -24,7 +25,7 @@ private fun getNewID() = maxID++
 abstract class InGameObject(protected val game: ToddGame,
                             private val drawable: MyDrawable,
                             private val body: BodyWrapper):
-        Group(), Disposable, Sensor, BodyWrapper, MyDrawableI {
+        Group(), Disposable, Sensor, BodyWrapper, MyDrawableI, TopGroundListener {
     private val id: Int = getNewID()
     var initialized = false
         private set

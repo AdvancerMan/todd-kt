@@ -3,11 +3,11 @@ package com.company.todd.objects.passive.platform
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
+import com.badlogic.gdx.physics.box2d.Fixture
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
 
 class CloudyPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
                      private val sinceContactTillInactive: Float,
@@ -29,8 +29,9 @@ class CloudyPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
         super.act(delta)
     }
 
-    override fun postSolve(otherSensor: Sensor, other: InGameObject, contact: Contact, impulse: ContactImpulse) {
-        super.postSolve(otherSensor, other, contact, impulse)
+    override fun postSolve(otherSensor: Sensor, other: InGameObject, myFixture: Fixture,
+                           otherFixture: Fixture, contact: Contact, impulse: ContactImpulse) {
+        super.postSolve(otherSensor, other, myFixture, otherFixture, contact, impulse)
         if (otherSensor === other) {
             if (contact.isEnabled && sinceContact > sinceContactTillActive) {
                 sinceContact = 0f

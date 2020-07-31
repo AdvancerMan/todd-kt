@@ -24,7 +24,7 @@ open class BottomGroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, t
     }
 }
 
-const val bottomSensorOffset = 2f
+const val bottomSensorOffset = 1f
 const val bottomSensorCuttingCoefficient = 0.9f
 
 fun getBottomSensorPolygons(vertices: FloatArray) =
