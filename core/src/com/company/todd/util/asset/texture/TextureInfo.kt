@@ -37,7 +37,6 @@ data class AnimationPackInfo(val animations: List<Pair<AnimationType, AnimationI
 
 const val texturesPath = "pics/"
 
-// TODO load NineTiledRegionInfo and CoveredTiledRegionInfo
 fun loadTextureInfos(): Map<String, TextureInfo> {
     val res = mutableMapOf<String, TextureInfo>()
 

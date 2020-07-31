@@ -10,7 +10,6 @@ open class PolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyT
     protected val localVertices = localVertices.flatMap { listOf(it.x, it.y) }.toFloatArray()
 
     override fun addFixtures(body: Body) {
-        // TODO check polygon on vertices is convex
         BodyFactory.addPolygon(body, localVertices)
     }
 }

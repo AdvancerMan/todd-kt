@@ -10,7 +10,7 @@ import com.company.todd.util.box2d.bodyPattern.base.SensorName
 import com.company.todd.util.box2d.bodyPattern.base.legsAngle
 
 open class BottomGroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType, center: Vector2) :
-        PolygonBodyPattern(localVertices, type, center), BodyPattern {
+        PolygonBodyPattern(localVertices, type, center) {
 
     override fun addFixtures(body: Body) {
         sensors[SensorName.BOTTOM_GROUND_SENSOR]?.let { sensor ->
