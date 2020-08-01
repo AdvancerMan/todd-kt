@@ -1,17 +1,24 @@
 package com.company.todd.screen
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Fixture
+import com.badlogic.gdx.physics.box2d.QueryCallback
+import com.badlogic.gdx.physics.box2d.RayCastCallback
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.friendly.Player
+import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.objects.base.toMeters
+import com.company.todd.objects.base.toPix
 import com.company.todd.objects.passive.level.Level
 import com.company.todd.util.box2d.MyContactListener
+import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.util.input.PlayerInputActor
 
 open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
-    val world = World(Vector2(0f, -30f), true)
+    protected val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
     protected val playerInputActor = PlayerInputActor(game)
     protected val justAddedObjects = mutableListOf<InGameObject>()
@@ -54,4 +61,26 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
         world.dispose()
         super.dispose()
     }
+
+    // world methods
+    fun destroyBody(body: BodyWrapper) =
+            body.destroy(world)
+
+    fun createBody(pattern: BodyPattern) =
+            pattern.createBody(world)
+
+    fun getGravity() =
+            world.gravity.cpy().toPix()
+
+    fun queryAABB(lowerX: Float, lowerY: Float, upperX: Float, upperY: Float, callback: (Fixture) -> Boolean) =
+            world.QueryAABB(callback, lowerX.toMeters(), lowerY.toMeters(), upperX.toMeters(), upperY.toMeters())
+
+    fun queryAABB(lowerX: Float, lowerY: Float, upperX: Float, upperY: Float, callback: QueryCallback) =
+            world.QueryAABB(callback, lowerX.toMeters(), lowerY.toMeters(), upperX.toMeters(), upperY.toMeters())
+
+    fun rayCast(point1X: Float, point1Y: Float, point2X: Float, point2Y: Float, callback: RayCastCallback) =
+            world.rayCast(callback, point1X.toMeters(), point1Y.toMeters(), point2X.toMeters(), point2Y.toMeters())
+
+    fun rayCast(point1X: Float, point1Y: Float, point2X: Float, point2Y: Float, callback: (Fixture, Vector2, Vector2, Float) -> Float) =
+            world.rayCast(callback, point1X.toMeters(), point1Y.toMeters(), point2X.toMeters(), point2Y.toMeters())
 }

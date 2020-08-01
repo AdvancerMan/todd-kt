@@ -26,7 +26,7 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
     private lateinit var body: Body
 
     override fun init(gameScreen: GameScreen) {
-        body = bodyPattern.createBody(gameScreen.world)
+        body = gameScreen.createBody(bodyPattern)
     }
 
     override fun applyLinearImpulseToCenter(impulse: Vector2) {

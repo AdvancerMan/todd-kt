@@ -89,7 +89,7 @@ abstract class InGameObject(protected val game: ToddGame,
 
     override fun dispose() {
         if (initialized) {
-            body.destroy(screen.world)
+            screen.destroyBody(body)
         }
         drawable.dispose(game.textureManager)
     }
