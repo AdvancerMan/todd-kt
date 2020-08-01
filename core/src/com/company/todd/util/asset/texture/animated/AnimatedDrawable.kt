@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.company.todd.util.asset.texture.static.MyTextureRegionDrawable
 
 enum class AnimationType {
-    STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, SHOOT
+    STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, ACTION
 }
 
 abstract class AnimatedDrawable(playingNow: Animation<TextureRegion>) :

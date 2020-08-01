@@ -14,6 +14,7 @@ abstract class MeleeWeapon(protected val screen: GameScreen,
                            protected val attackAABB: Rectangle) :
         HandWeapon(weaponDrawable, handDrawable, weaponPosition, handPosition) {
     override fun attack() {
+        super.attack()
         val attacked = mutableSetOf<InGameObject>()
         worldAABBFor(Rectangle(attackAABB)).let { aabb ->
             screen.queryAABB(aabb.x, aabb.y, aabb.x + aabb.width, aabb.y + aabb.height) {
