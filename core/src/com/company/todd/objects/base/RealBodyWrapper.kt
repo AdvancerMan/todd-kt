@@ -1,6 +1,7 @@
 package com.company.todd.objects.base
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -22,7 +23,7 @@ fun Rectangle.toMeters() = this.set(x.toMeters(), y.toMeters(), width.toMeters()
 
 fun Matrix4.toPix() = this.scl(pixInMeter)!!
 
-class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
+class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
     private lateinit var body: Body
 
     override fun init(gameScreen: GameScreen) {
@@ -82,7 +83,7 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
                         merge(tmp, it.shape)
                     }
                 }
-                rotate(body.angle)
+                rotateRad(body.angle)
                 setCenter(body.position).toPix()
             }
 
@@ -91,17 +92,25 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern): BodyWrapper {
     }
 }
 
-private fun Rectangle.rotate(angleRad: Float) {
-    listOf(
-            Vector2(x, y),
-            Vector2(x + width, y),
-            Vector2(x, y + height),
-            Vector2(x + width, y + height)
-    )
-            .map { it.rotateRad(angleRad) }
-            .also { this.set(it[0].x, it[0].y, 0f, 0f) }
-            .forEach { merge(it) }
-}
+fun Rectangle.rotate(angle: Float) =
+        rotateRad(angle * MathUtils.degreesToRadians)
+
+fun Rectangle.rotateRad(angleRad: Float) =
+        listOf(
+                Vector2(x, y),
+                Vector2(x + width, y),
+                Vector2(x, y + height),
+                Vector2(x + width, y + height)
+        )
+                .map { it.rotateRad(angleRad) }
+                .also { this.set(it[0].x, it[0].y, 0f, 0f) }
+                .fold(this) { r, v -> r.merge(v) }!!
+
+fun Rectangle.rotateAround(originX: Float, originY: Float, angle: Float) =
+        rotateAroundRad(originX, originY, angle * MathUtils.degreesToRadians)
+
+fun Rectangle.rotateAroundRad(originX: Float, originY: Float, angleRad: Float) =
+        setPosition(x - originX, y - originY).rotateRad(angleRad).setPosition(x + originX, y + originY)!!
 
 private fun Rectangle.merge(tmp: Vector2, shape: Shape) {
     when (shape.type) {

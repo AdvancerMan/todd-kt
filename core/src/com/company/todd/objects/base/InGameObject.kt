@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
@@ -66,16 +67,6 @@ abstract class InGameObject(protected val game: ToddGame,
         }
     }
 
-    fun getActorAABB() =
-            listOf(
-                    Vector2(x, y),
-                    Vector2(x + width, y),
-                    Vector2(x, y + height),
-                    Vector2(x + width, y + height)
-            )
-                    .map { it.rotateAround(Vector2(x + originX, y + originY), rotation) }
-                    .let { it.fold(Rectangle(it[0].x, it[0].y, 0f, 0f)) { r, v -> r.merge(v) } }
-
     open fun takeDamage(amount: Float) {}
 
     override fun equals(other: Any?) =
@@ -126,3 +117,21 @@ abstract class InGameObject(protected val game: ToddGame,
         Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
     }
 }
+
+fun Actor.getActorAABB() =
+        worldAABBFor(Rectangle(x, y, width, height))
+
+fun Actor.worldAABBFor(rectangle: Rectangle) =
+        rectangle.apply {
+            var actor: Actor? = this@worldAABBFor
+            while (actor != null) {
+                scale(actor.x + actor.originX, actor.y + actor.originY, actor.scaleX, actor.scaleY)
+                        .rotateAround(actor.x + actor.originX, actor.y + actor.originY, actor.rotation)
+                actor = actor.parent
+            }
+        }
+
+fun Rectangle.scale(originX: Float, originY: Float, scaleX: Float, scaleY: Float) =
+        setPosition(x - originX, y - originY)
+                .set(x * scaleX, y * scaleY, width * scaleX, height * scaleY)
+                .setPosition(x + originX, y + originY)!!
