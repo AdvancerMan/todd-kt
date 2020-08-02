@@ -4,9 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
 import com.company.todd.util.asset.texture.animated.AnimationType
 
-interface MyDrawableI {
-    fun update(delta: Float) {}
+interface DisposableByManager {
     fun dispose(manager: TextureManager)
+}
+
+interface MyDrawableI : DisposableByManager {
+    fun update(delta: Float) {}
 
     // for animations
     fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {}

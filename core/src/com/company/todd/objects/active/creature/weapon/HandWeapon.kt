@@ -2,11 +2,13 @@ package com.company.todd.objects.active.creature.weapon
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
+import com.company.todd.util.asset.texture.DisposableByManager
 import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.util.asset.texture.TextureManager
 import com.company.todd.util.asset.texture.animated.AnimationType
 
 abstract class HandWeapon(private val weaponDrawable: MyDrawable?, private val handDrawable: MyDrawable?,
-                          weaponPosition: Vector2?, handPosition: Vector2?) : Weapon() {
+                          weaponPosition: Vector2?, handPosition: Vector2?) : Weapon(), DisposableByManager {
     init {
         x = handPosition?.x ?: 0f
         y = handPosition?.y ?: 0f
@@ -41,5 +43,10 @@ abstract class HandWeapon(private val weaponDrawable: MyDrawable?, private val h
     override fun attack() {
         handDrawable?.setPlayingType(AnimationType.ACTION, true)
         weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
+    }
+
+    override fun dispose(manager: TextureManager) {
+        handDrawable?.dispose(manager)
+        weaponDrawable?.dispose(manager)
     }
 }
