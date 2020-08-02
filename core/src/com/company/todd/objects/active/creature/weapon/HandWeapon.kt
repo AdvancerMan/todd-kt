@@ -7,9 +7,15 @@ import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.asset.texture.TextureManager
 import com.company.todd.util.asset.texture.animated.AnimationType
 
-abstract class HandWeapon(private val weaponDrawable: MyDrawable?, private val handDrawable: MyDrawable?,
-                          weaponPosition: Vector2?, handPosition: Vector2?) : Weapon(), DisposableByManager {
+abstract class HandWeapon(style: Style) : Weapon(), DisposableByManager {
+    private val weaponDrawable: MyDrawable? = style.weaponDrawable
+    private val handDrawable: MyDrawable? = style.handDrawable
+
     init {
+        setHandWeaponPosition(style.weaponPosition, style.handPosition)
+    }
+
+    fun setHandWeaponPosition(weaponPosition: Vector2? = null, handPosition: Vector2? = null) {
         x = handPosition?.x ?: 0f
         y = handPosition?.y ?: 0f
         width = (weaponPosition?.x ?: x) - x
@@ -48,5 +54,27 @@ abstract class HandWeapon(private val weaponDrawable: MyDrawable?, private val h
     override fun dispose(manager: TextureManager) {
         handDrawable?.dispose(manager)
         weaponDrawable?.dispose(manager)
+    }
+
+    class Style {
+        var weaponDrawable: MyDrawable?
+        var handDrawable: MyDrawable?
+        var weaponPosition: Vector2?
+        var handPosition: Vector2?
+
+        constructor(weaponDrawable: MyDrawable, handDrawable: MyDrawable,
+                    weaponPosition: Vector2, handPosition: Vector2) {
+            this.weaponDrawable = weaponDrawable
+            this.handDrawable = handDrawable
+            this.weaponPosition = weaponPosition
+            this.handPosition = handPosition
+        }
+
+        constructor(weaponDrawable: MyDrawable, weaponPosition: Vector2) {
+            this.weaponDrawable = weaponDrawable
+            this.weaponPosition = weaponPosition
+            handDrawable = null
+            handPosition = null
+        }
     }
 }
