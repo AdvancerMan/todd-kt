@@ -3,9 +3,12 @@ package com.company.todd.objects.active
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
+import com.badlogic.gdx.utils.Align
+import com.company.todd.gui.HealthBar
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
+import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.animated.AnimationType
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.asset.texture.animated.stayAnimation
@@ -17,9 +20,11 @@ import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
 
 const val JUMP_COOLDOWN = 1 / 30f
 const val yVelJumpThreshold = 1f
+const val healthBarOffset = 3f
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
-                            private var speed: Float, private var jumpPower: Float) :
+                            private var speed: Float, private var jumpPower: Float,
+                            private var maxHealth: Float) :
         InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
@@ -30,6 +35,9 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
         private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()
+
+    private val healthBar = HealthBar(game, maxHealth)
+    private var health = maxHealth
 
     init {
         bodyPattern.sensors[SensorName.BOTTOM_GROUND_SENSOR] = object : Sensor {
@@ -65,6 +73,14 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
         bodyPattern.sensors[SensorName.TOP_GROUND_SENSOR] = TopGroundSensor(this)
     }
 
+    override fun doInit(gameScreen: GameScreen) {
+        super.doInit(gameScreen)
+        healthBar.let {
+            it.setPosition(x + width / 2, y + height + healthBarOffset, Align.bottom or Align.center)
+            addActor(it)
+        }
+    }
+
     abstract fun think(delta: Float)
 
     override fun act(delta: Float) {
@@ -85,6 +101,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
         super.postAct(delta)
         animationTypeNow = animationTypeNow.next(this, preferredAnimationType)
         setPlayingType(animationTypeNow.type)
+        healthBar.value = health
     }
 
     fun jump() {
@@ -112,5 +129,15 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
 
     protected fun updateYVelocity() {
         setYVelocity(preVelocity.y)
+    }
+
+    override fun takeDamage(amount: Float) {
+        super.takeDamage(amount)
+        health -= amount
+    }
+
+    override fun dispose() {
+        healthBar.dispose(game.textureManager)
+        super.dispose()
     }
 }

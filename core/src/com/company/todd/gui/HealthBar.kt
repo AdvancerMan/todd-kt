@@ -6,9 +6,15 @@ import com.company.todd.util.asset.texture.DisposableByManager
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.asset.texture.TextureManager
 
-class HealthBar(game: ToddGame, maxHealth: Float, stepSize: Float = 0.1f,
-                private val background: MyDrawable = game.textureManager.loadDrawable("healthBarBackground"),
-                private val healthDrawable: MyDrawable = game.textureManager.loadDrawable("healthBarHealth")) :
+const val defaultHBStepSize = 0.1f
+const val defaultHBAnimateDuration = 0.1f
+
+class HealthBar(
+        game: ToddGame, maxHealth: Float,
+        stepSize: Float = defaultHBStepSize, animateDuration: Float = defaultHBAnimateDuration,
+        private val background: MyDrawable = game.textureManager.loadDrawable("healthBarBackground"),
+        private val healthDrawable: MyDrawable = game.textureManager.loadDrawable("healthBarHealth")
+) :
         ProgressBar(
                 0f, maxHealth, stepSize, false,
                 ProgressBarStyle().apply {
@@ -16,6 +22,10 @@ class HealthBar(game: ToddGame, maxHealth: Float, stepSize: Float = 0.1f,
                     this.knobBefore = healthDrawable
                 }
         ), DisposableByManager {
+    init {
+        setAnimateDuration(animateDuration)
+    }
+
     override fun act(delta: Float) {
         super.act(delta)
         background.update(delta)

@@ -35,15 +35,19 @@ abstract class InGameObject(protected val game: ToddGame,
         private set
     var isDirectedToRight = true
 
-    override fun init(gameScreen: GameScreen) {
+    protected open fun doInit(gameScreen: GameScreen) {
+        this.screen = gameScreen
+        body.init(gameScreen)
+        body.setOwner(this)
+        body.getAABB().let { setSize(it.width, it.height) }
+        setOrigin(Align.center)
+        setScale(1f)
+    }
+
+    final override fun init(gameScreen: GameScreen) {
         if (!initialized) {
             initialized = true
-            this.screen = gameScreen
-            body.init(gameScreen)
-            body.setOwner(this)
-            body.getAABB().let { setSize(it.width, it.height) }
-            setOrigin(Align.center)
-            setScale(1f)
+            doInit(gameScreen)
         }
     }
 
