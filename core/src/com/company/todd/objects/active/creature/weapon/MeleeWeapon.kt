@@ -6,21 +6,18 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.worldAABBFor
 import com.company.todd.screen.GameScreen
 
-abstract class MeleeWeapon(weaponStyle: Style, protected val attackAABB: Rectangle) :
-        HandWeapon(weaponStyle) {
+abstract class MeleeWeapon(weaponStyle: Style, protected val attackAABB: Rectangle,
+                           cooldown: Float, sinceAttackTillDamage: Float) :
+        HandWeapon(weaponStyle, cooldown, sinceAttackTillDamage) {
     protected lateinit var screen: GameScreen
-
-    init {
-        attackAABB.setPosition(attackAABB.x - x, attackAABB.y - y)
-    }
 
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
         this.screen = screen
+        attackAABB.setPosition(attackAABB.x - x, attackAABB.y - y)
     }
 
-    override fun attack() {
-        super.attack()
+    override fun doAttack() {
         val attacked = mutableSetOf<InGameObject>()
         worldAABBFor(Rectangle(attackAABB)).let { aabb ->
             if (!owner.isDirectedToRight) {

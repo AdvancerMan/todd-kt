@@ -11,8 +11,12 @@ import com.company.todd.util.asset.texture.animated.AnimationType
 
 const val handWeaponOriginXOffset = 1f
 
-abstract class HandWeapon(private val style: Style) : Weapon(), DisposableByManager {
+abstract class HandWeapon(private val style: Style, protected val cooldown: Float,
+                          protected val sinceAttackTillDamage: Float) :
+        Weapon(), DisposableByManager {
     protected lateinit var owner: InGameObject
+    protected var sinceAttack = cooldown
+    private var attacked = true
 
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
@@ -25,6 +29,12 @@ abstract class HandWeapon(private val style: Style) : Weapon(), DisposableByMana
 
     override fun act(delta: Float) {
         super.act(delta)
+        sinceAttack += delta
+        if (!attacked && sinceAttack >= sinceAttackTillDamage) {
+            attacked = true
+            doAttack()
+        }
+
         listOf(style.handDrawable, style.weaponDrawable).forEach { drawable ->
             drawable?.apply {
                 update(delta)
@@ -68,10 +78,21 @@ abstract class HandWeapon(private val style: Style) : Weapon(), DisposableByMana
         batch.color = batch.color.apply { a = batchAlpha }
     }
 
-    override fun attack() {
-        style.handDrawable?.setPlayingType(AnimationType.ACTION, true)
-        style.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
+    abstract fun doAttack()
+
+    final override fun attack() {
+        if (canAttack()) {
+            sinceAttack = 0f
+            attacked = false
+            style.handDrawable?.setPlayingType(AnimationType.ACTION, true)
+            style.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
+            if (sinceAttackTillDamage == 0f) {
+                doAttack()
+            }
+        }
     }
+
+    final override fun canAttack() = sinceAttack >= cooldown
 
     override fun dispose(manager: TextureManager) {
         style.weaponDrawable?.dispose(manager)

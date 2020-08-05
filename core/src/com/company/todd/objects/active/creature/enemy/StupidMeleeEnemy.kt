@@ -12,28 +12,25 @@ const val stupidEnemyDistanceFromTarget = 3f
 
 // aabb should be at least 2 pix height
 class StupidMeleeEnemy(game: ToddGame, drawable: MyDrawable,
-                       weaponStyle: HandWeapon.Style, private val target: InGameObject,
+                       weaponStyle: HandWeapon.Style, weaponSinceAttackTillDamage: Float,
+                       private val target: InGameObject,
                        attackRadius: Float, power: Float, aabb: Rectangle,
                        speed: Float, jumpPower: Float, maxHealth: Float,
-                       private val attackCooldown: Float = 1f,
-                       private val jumpCooldown: Float = 1.5f) :
+                       attackCooldown: Float = 1f, private val jumpCooldown: Float = 1.5f) :
         RectangleCreature(
                 game, drawable, aabb,
                 SimpleMeleeWeapon(
                         weaponStyle,
                         Rectangle(aabb.width, 1f, attackRadius, aabb.height - 2),
-                        power
+                        power, attackCooldown, weaponSinceAttackTillDamage
                 ), speed, jumpPower, maxHealth
         ) {
-    private var sinceAttack = attackCooldown
     private var sinceJump = jumpCooldown
 
     override fun think(delta: Float) {
-        sinceAttack += delta
         sinceJump += delta
 
-        if (sinceAttack >= attackCooldown) {
-            sinceAttack = 0f
+        if (weapon!!.canAttack()) {
             attack()
         }
 
