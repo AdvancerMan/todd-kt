@@ -24,11 +24,11 @@ abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
     }
 
     fun getCameraAABB() =
-            Rectangle(
-                    stage.camera.position.x - stage.camera.viewportWidth / 2,
-                    stage.camera.position.y - stage.camera.viewportHeight / 2,
-                    stage.camera.viewportWidth, stage.camera.viewportHeight
-            )
+            stage.screenToStageCoordinates(Vector2(0f, 0f)).let {
+                val w = stage.viewport.screenWidth.toFloat()
+                val h = stage.viewport.screenHeight.toFloat()
+                Rectangle(it.x, it.y - h, w, h)
+            }
 
     fun centerCameraAt(x: Float, y: Float) {
         stage.camera.position.x = x

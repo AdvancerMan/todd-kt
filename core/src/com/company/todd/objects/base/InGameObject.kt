@@ -123,16 +123,19 @@ abstract class InGameObject(protected val game: ToddGame,
 }
 
 fun Actor.getActorAABB() =
-        worldAABBFor(Rectangle(x, y, width, height))
+        worldAABBFor(Rectangle(0f, 0f, width, height))
 
 fun Actor.worldAABBFor(rectangle: Rectangle) =
         rectangle.apply {
-            var actor: Actor? = this@worldAABBFor
-            while (actor != null) {
-                scale(actor.x + actor.originX, actor.y + actor.originY, actor.scaleX, actor.scaleY)
-                        .rotateAround(actor.x + actor.originX, actor.y + actor.originY, actor.rotation)
-                actor = actor.parent
-            }
+            listOf(
+                    Vector2(x, y),
+                    Vector2(x + width, y),
+                    Vector2(x, y + height),
+                    Vector2(x + width, y + height)
+            )
+                    .map { this@worldAABBFor.localToStageCoordinates(it) }
+                    .also { set(it[0].x, it[0].y, 0f, 0f) }
+                    .fold(this) { r, v -> r.merge(v) }
         }
 
 fun Rectangle.scale(originX: Float, originY: Float, scaleX: Float, scaleY: Float) =
