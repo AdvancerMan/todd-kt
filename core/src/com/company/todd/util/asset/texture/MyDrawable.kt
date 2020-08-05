@@ -12,6 +12,7 @@ interface MyDrawableI : DisposableByManager {
     fun update(delta: Float) {}
 
     // for animations
+    fun hasAnimationType(type: AnimationType) = false
     fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {}
     fun getPlayingType(): AnimationType = AnimationType.STAY
     fun isAnimationFinished() = true

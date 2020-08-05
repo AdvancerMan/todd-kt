@@ -42,6 +42,9 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
 
     override fun getPlayingType() = type
 
+    override fun hasAnimationType(type: AnimationType) =
+            animations.containsKey(type)
+
     override fun dispose(manager: TextureManager) {
         manager.unload(animationPackInfo)
     }
