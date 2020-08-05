@@ -8,6 +8,8 @@ import com.company.todd.objects.active.creature.weapon.SimpleMeleeWeapon
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.asset.texture.MyDrawable
 
+const val stupidEnemyDistanceFromTarget = 3f
+
 // aabb should be at least 2 pix height
 class StupidMeleeEnemy(game: ToddGame, drawable: MyDrawable,
                        weaponStyle: HandWeapon.Style, private val target: InGameObject,
@@ -38,10 +40,10 @@ class StupidMeleeEnemy(game: ToddGame, drawable: MyDrawable,
         val myAABB = getAABB()
         val targetAABB = target.getAABB()
 
-        if (targetAABB.x - myAABB.x - myAABB.width > 1f) {
+        if (targetAABB.x - myAABB.x - myAABB.width > stupidEnemyDistanceFromTarget) {
             isDirectedToRight = true
             run(true)
-        } else if (targetAABB.x + targetAABB.width - myAABB.x < -1f) {
+        } else if (targetAABB.x + targetAABB.width - myAABB.x < -stupidEnemyDistanceFromTarget) {
             isDirectedToRight = false
             run(false)
         }

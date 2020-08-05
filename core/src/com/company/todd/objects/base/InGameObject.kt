@@ -40,8 +40,10 @@ abstract class InGameObject(protected val game: ToddGame,
         body.init(gameScreen)
         body.setOwner(this)
         body.getAABB().let { setSize(it.width, it.height) }
+        body.getCenter().let { setPosition(it.x, it.y, Align.center) }
         setOrigin(Align.center)
         setScale(1f)
+        this.rotation = MathUtils.radiansToDegrees * body.getAngle()
     }
 
     final override fun init(gameScreen: GameScreen) {

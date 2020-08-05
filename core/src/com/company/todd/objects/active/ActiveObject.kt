@@ -76,7 +76,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: B
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         healthBar.let {
-            it.setPosition(x + width / 2, y + height + healthBarOffset, Align.bottom or Align.center)
+            it.setPosition(width / 2, height + healthBarOffset, Align.bottom or Align.center)
             addActor(it)
         }
     }
