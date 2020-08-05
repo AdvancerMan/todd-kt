@@ -10,8 +10,12 @@ abstract class MeleeWeapon(weaponStyle: Style, protected val attackAABB: Rectang
         HandWeapon(weaponStyle) {
     protected lateinit var screen: GameScreen
 
-    override fun init(screen: GameScreen) {
-        super.init(screen)
+    init {
+        attackAABB.setPosition(attackAABB.x - x, attackAABB.y - y)
+    }
+
+    override fun init(owner: InGameObject, screen: GameScreen) {
+        super.init(owner, screen)
         this.screen = screen
     }
 
@@ -19,6 +23,10 @@ abstract class MeleeWeapon(weaponStyle: Style, protected val attackAABB: Rectang
         super.attack()
         val attacked = mutableSetOf<InGameObject>()
         worldAABBFor(Rectangle(attackAABB)).let { aabb ->
+            if (!owner.isDirectedToRight) {
+                aabb.setPosition(aabb.x - aabb.width - owner.getAABB().width, aabb.y)
+            }
+
             screen.queryAABB(aabb.x, aabb.y, aabb.x + aabb.width, aabb.y + aabb.height) {
                 if (shouldAttack(it)) {
                     attacked.add(it.body.userData as InGameObject)
@@ -26,7 +34,7 @@ abstract class MeleeWeapon(weaponStyle: Style, protected val attackAABB: Rectang
                 true
             }
         }
-        attacked.forEach { it.takeDamage(power) }
+        attacked.forEach { if (it != owner) it.takeDamage(power) }
     }
 
     protected abstract fun shouldAttack(fixture: Fixture): Boolean

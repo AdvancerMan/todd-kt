@@ -13,7 +13,10 @@ abstract class Creature(game: ToddGame, drawable: MyDrawable,
         ActiveObject(game, drawable, bodyPattern, speed, jumpPower, maxHealth) {
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
-        weapon?.init(gameScreen)
+        weapon?.let {
+            addActor(it)
+            it.init(this, gameScreen)
+        }
     }
 
     fun attack() {
