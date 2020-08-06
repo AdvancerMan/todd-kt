@@ -8,7 +8,7 @@ import com.company.todd.util.input.MovingInputType
 var SPF = 1f / 60
 
 const val SCREEN_WIDTH = 800
-const val SCREEN_HEIGHT = 640
+const val SCREEN_HEIGHT = 450
 
 const val MOVING_INPUT_SLIDER_WIDTH = 140f
 const val MOVING_INPUT_SLIDER_HEIGHT = 20f
