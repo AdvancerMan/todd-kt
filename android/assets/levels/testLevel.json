@@ -2,46 +2,39 @@
   "name": "testLevel",
   "objects": [
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [-50, -75, 100, 25]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [-50, -75, 100, 25]
     },
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [-150, -75, 100, 25]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [-150, -75, 100, 25]
     },
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [50, -35, 500, 100]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [50, -35, 500, 100]
     },
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [550, -24, 500, 100]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [550, -24, 500, 100]
     },
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [750, 76, 50, 50]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [750, 76, 50, 50]
     },
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [1050, -23, 500, 100]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [1050, -23, 500, 100]
     },
     {
-      "type": "ARENA_SOLID_RECTANGLE",
-      "args": [
-        [-650, -25, 500, 100]
-      ]
+      "type": "solidRectangle",
+      "drawableName": "arenaSolid",
+      "xywh": [-650, -25, 500, 100]
     }
   ]
 }

@@ -12,7 +12,7 @@ import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.objects.base.toPix
-import com.company.todd.objects.passive.level.Level
+import com.company.todd.objects.passive.Level
 import com.company.todd.util.box2d.MyContactListener
 import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.util.input.PlayerInputActor
