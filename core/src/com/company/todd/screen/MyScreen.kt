@@ -25,8 +25,8 @@ abstract class MyScreen(protected val game: ToddGame): Screen, Disposable {
 
     fun getCameraAABB() =
             stage.screenToStageCoordinates(Vector2(0f, 0f)).let {
-                val w = stage.viewport.screenWidth.toFloat()
-                val h = stage.viewport.screenHeight.toFloat()
+                val w = stage.viewport.worldWidth
+                val h = stage.viewport.worldHeight
                 Rectangle(it.x, it.y - h, w, h)
             }
 
