@@ -1,0 +1,12 @@
+{
+  "name": "arenaSolid",
+  "type": "solidRectangle",
+  "drawableName": "arenaSolid"
+}
+
+{
+  "name": "arenaPortal",
+  "type": "portal",
+  "drawableName": "arenaPortal",
+  "teleportDelay": 0.1
+}

@@ -2,39 +2,38 @@
   "name": "testLevel",
   "objects": [
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [-50, -75, 100, 25]
     },
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [-150, -75, 100, 25]
     },
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [50, -35, 500, 100]
     },
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [550, -24, 500, 100]
     },
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [750, 76, 50, 50]
     },
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [1050, -23, 500, 100]
     },
     {
-      "type": "solidRectangle",
-      "drawableName": "arenaSolid",
+      "prototype": "arenaSolid",
       "xywh": [-650, -25, 500, 100]
+    },
+    {
+      "prototype": "arenaPortal",
+      "center": [1600, 127],
+      "radius": 50,
+      "teleportTo": [0, 100]
     }
   ]
 }
