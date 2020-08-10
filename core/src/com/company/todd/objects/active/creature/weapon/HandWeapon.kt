@@ -16,22 +16,26 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
         Weapon(), DisposableByManager {
     protected lateinit var owner: InGameObject
     protected var sinceAttack = cooldown
-    private var attacked = true
+    private var doneAttack = true
 
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
         this.owner = owner
+        updatePositionAndOrigin()
+    }
+
+    private fun updatePositionAndOrigin() {
         x = owner.width / 2
         y = 0f
-        originX = style.handPosition.x + handWeaponOriginXOffset
-        originY = style.handPosition.y + (style.handDrawable?.minHeight ?: 0f) / 2
+        originX = style.handPosition.x + handWeaponOriginXOffset - x
+        originY = style.handPosition.y + (style.handDrawable?.minHeight ?: 0f) / 2 - y
     }
 
     override fun act(delta: Float) {
         super.act(delta)
         sinceAttack += delta
-        if (!attacked && sinceAttack >= sinceAttackTillDamage) {
-            attacked = true
+        if (!doneAttack && sinceAttack >= sinceAttackTillDamage) {
+            doneAttack = true
             doAttack()
         }
 
@@ -43,6 +47,7 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
                 }
             }
         }
+        updatePositionAndOrigin()
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
@@ -54,8 +59,7 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
 
         val origin = Vector2(originX, originY).scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
         listOf(handPos, weaponPos).forEach {
-            it.scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
-            it.add(x, y)
+            it.sub(x, y).scl(if (owner.isDirectedToRight) 1f else -1f, 1f).add(x, y)
         }
 
         if (!owner.isDirectedToRight) {
@@ -83,7 +87,7 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
     final override fun attack() {
         if (canAttack()) {
             sinceAttack = 0f
-            attacked = false
+            doneAttack = false
             style.handDrawable?.setPlayingType(AnimationType.ACTION, true)
             style.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
             if (sinceAttackTillDamage == 0f) {
@@ -99,32 +103,6 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
         style.handDrawable?.dispose(manager)
     }
 
-    class Style {
-        val handDrawable: MyDrawable?
-        val weaponDrawable: MyDrawable?
-        val handPosition: Vector2
-        val weaponPosition: Vector2
-
-        constructor(handDrawable: MyDrawable, weaponDrawable: MyDrawable,
-                    handPosition: Vector2, weaponPosition: Vector2) {
-            this.weaponDrawable = weaponDrawable
-            this.handDrawable = handDrawable
-            this.weaponPosition = weaponPosition
-            this.handPosition = handPosition
-        }
-
-        constructor(weaponDrawable: MyDrawable, weaponPosition: Vector2) {
-            this.weaponDrawable = weaponDrawable
-            this.weaponPosition = weaponPosition
-            handDrawable = null
-            handPosition = Vector2()
-        }
-
-        constructor() {
-            weaponDrawable = null
-            handDrawable = null
-            weaponPosition = Vector2()
-            handPosition = Vector2()
-        }
-    }
+    class Style(val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
+                val handPosition: Vector2, val weaponPosition: Vector2)
 }

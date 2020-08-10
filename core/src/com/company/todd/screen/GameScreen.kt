@@ -22,7 +22,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
     protected val objects = Group()
     protected val playerInputActor = PlayerInputActor(game)
     protected val justAddedObjects = mutableListOf<InGameObject>()
-    protected val player = Player(game, playerInputActor)
+    val player = Player(game, playerInputActor)
 
     init {
         level?.create(game)?.forEach { addObject(it) }

@@ -4,15 +4,11 @@ import com.badlogic.gdx.math.Rectangle
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.RectangleCreature
 import com.company.todd.objects.active.creature.weapon.Weapon
-import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.asset.texture.MyDrawable
 
-const val stupidEnemyDistanceFromTarget = 3f
-
 open class StupidEnemy(game: ToddGame, drawable: MyDrawable, weapon: Weapon?,
-                  private val target: InGameObject, aabb: Rectangle,
-                  speed: Float, jumpPower: Float, maxHealth: Float,
-                  private val jumpCooldown: Float = 1.5f) :
+                       aabb: Rectangle, speed: Float, jumpPower: Float, maxHealth: Float,
+                       private val jumpCooldown: Float, private val maxDistanceFromTarget: Float) :
         RectangleCreature(game, drawable, aabb, weapon, speed, jumpPower, maxHealth) {
     private var sinceJump = jumpCooldown
 
@@ -24,12 +20,12 @@ open class StupidEnemy(game: ToddGame, drawable: MyDrawable, weapon: Weapon?,
         }
 
         val myAABB = getAABB()
-        val targetAABB = target.getAABB()
+        val targetAABB = screen.player.getAABB()
 
-        if (targetAABB.x - myAABB.x - myAABB.width > stupidEnemyDistanceFromTarget) {
+        if (targetAABB.x - myAABB.x - myAABB.width > maxDistanceFromTarget) {
             isDirectedToRight = true
             run(true)
-        } else if (targetAABB.x + targetAABB.width - myAABB.x < -stupidEnemyDistanceFromTarget) {
+        } else if (targetAABB.x + targetAABB.width - myAABB.x < -maxDistanceFromTarget) {
             isDirectedToRight = false
             run(false)
         }
