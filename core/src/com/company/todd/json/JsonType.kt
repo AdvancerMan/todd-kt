@@ -36,7 +36,10 @@ const val prototypesPath = "prototypes"
 
 val prototypes by lazy {
     crawlJsonListsWithComments(assetsFolder + prototypesPath)
-            .associateBy { it.name }
+            .associateBy {
+                it["name"].asString()
+                        ?: throw IllegalArgumentException("Prototype should contain parameter \"name\". Json: $it")
+            }
 }
 
 private fun createJson(

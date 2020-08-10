@@ -135,7 +135,7 @@ fun Actor.worldAABBFor(rectangle: Rectangle) =
                     Vector2(x, y + height),
                     Vector2(x + width, y + height)
             )
-                    .map { this@worldAABBFor.localToStageCoordinates(it) }
+                    .map { localToStageCoordinates(it) }
                     .also { set(it[0].x, it[0].y, 0f, 0f) }
                     .fold(this) { r, v -> r.merge(v) }
         }

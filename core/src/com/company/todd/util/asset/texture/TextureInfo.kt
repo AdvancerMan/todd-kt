@@ -124,7 +124,7 @@ private fun parseAnimInfo(json: JsonValue): AnimationInfo {
 
 fun getJsonErrorMessage(json: JsonValue, message: String) = "$message, json: $json"
 
-fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (JsonValue) -> Boolean) {
+inline fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (JsonValue) -> Boolean) {
     val value = json[key]
             ?: throw IllegalArgumentException(getJsonErrorMessage(json, "Json should contain $key"))
 
