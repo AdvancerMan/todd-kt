@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.JsonValue
+import com.company.todd.json.Constructors.constructors
 import com.company.todd.launcher.ToddGame
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.base.InGameObject
@@ -42,7 +43,7 @@ val prototypes by lazy {
             }
 }
 
-private fun createJson(
+fun createJsonValue(
         jsonWithPrototype: JsonValue,
         out: JsonValue = JsonValue(JsonValue.ValueType.`object`)
 ): JsonValue {
@@ -58,16 +59,20 @@ private fun createJson(
             Gdx.app.error("Json", "prototype name $name was not found in prototype map")
             null
         } else {
-            createJson(prototype, out)
+            createJsonValue(prototype, out)
         }
     } ?: out
 }
 
-// FIXME parseInGameObject cannot parse not passive objects
-fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {
-    val json = createJson(jsonWithPrototype)
-    checkContains(json, "type", "object type, one of strings ${passiveConstructors.keys}") { checkJson ->
-        checkJson.isString && passiveConstructors.containsKey(checkJson.asString())
+fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
+                       constructors: Map<String, JsonType<out T>>): T {
+    val json = createJsonValue(jsonWithPrototype)
+    checkContains(json, "type", "object type, one of strings ${constructors.keys}") { checkJson ->
+        checkJson.isString && constructors.containsKey(checkJson.asString())
     }
-    passiveConstructors[json["type"].asString()]!!.constructor(it, json)
+    return constructors[json["type"].asString()]!!.constructor(game, json)
+}
+
+fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {
+    parseJsonValue(it, jsonWithPrototype, constructors)
 }

@@ -34,6 +34,29 @@
       "center": [1600, 127],
       "radius": 50,
       "teleportTo": [0, 100]
+    },
+    {
+      "type": "stupidEnemy",
+      "drawableName": "stupidMeleeEnemy",
+      "weapon": {
+        "type": "simpleMeleeWeapon",
+        "style": {
+          "handDrawableName": "stupidMeleeEnemyHand",
+          "handPosition": [0, 0],
+          "weaponDrawableName": "simpleWeapon",
+          "weaponPosition": [0, 0]
+        },
+        "attackXYWH": [61, 1, 20, 57],
+        "power": 3,
+        "cooldown": 1,
+        "sinceAttackTillDamage": 0.3
+      },
+      "xywh": [100, 200, 61, 59],
+      "speed": 200,
+      "jumpPower": 500,
+      "maxHealth": 100,
+      "jumpCooldown": 1.5,
+      "maxDistanceFromTarget": 3
     }
   ]
 }
