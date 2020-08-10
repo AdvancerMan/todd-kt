@@ -21,8 +21,6 @@ fun Vector2.toMeters() = this.scl(1 / pixInMeter)!!
 fun Rectangle.toPix() = this.set(x.toPix(), y.toPix(), width.toPix(), height.toPix())!!
 fun Rectangle.toMeters() = this.set(x.toMeters(), y.toMeters(), width.toMeters(), height.toMeters())!!
 
-fun Matrix4.toPix() = this.scl(pixInMeter)!!
-
 class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
     private lateinit var body: Body
 

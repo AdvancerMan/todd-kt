@@ -28,7 +28,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
         level?.create(game)?.forEach { addObject(it) }
         addObject(player)
         stage.addActor(objects)
-        stage.addActor(playerInputActor)
+        ScreenActors.addActor(playerInputActor)
         stage.addListener(playerInputActor.createInputListener())
         world.setContactListener(MyContactListener())
     }
@@ -46,6 +46,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
         justAddedObjects.clear()
 
         centerCameraAt(player.getCenter())
+        stage.camera.up.set(Vector2(0f, 1f).rotate(player.rotation), 0f)
     }
 
     override fun resize(width: Int, height: Int) {

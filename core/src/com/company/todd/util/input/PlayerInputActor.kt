@@ -86,12 +86,6 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         inputActorIndex = type.i
     }
 
-    override fun draw(batch: Batch, parentAlpha: Float) {
-        setPosition(stage.camera.position.x - stage.camera.viewportWidth / 2,
-                stage.camera.position.y - stage.camera.viewportHeight / 2)
-        super.draw(batch, parentAlpha)
-    }
-
     private fun resetMovingActor() {
         isMovingLeft = false
         isMovingRight = false
