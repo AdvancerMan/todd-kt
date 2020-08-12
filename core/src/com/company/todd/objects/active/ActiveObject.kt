@@ -23,9 +23,10 @@ const val yVelJumpThreshold = 1f
 const val healthBarOffset = 3f
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
+                            drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
                             private var speed: Float, private var jumpPower: Float,
                             private var maxHealth: Float) :
-        InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
+        InGameObject(game, drawable, RealBodyWrapper(bodyPattern), drawableSize, bodyLowerLeftCornerOffset) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
     protected var animationTypeNow = stayAnimation()

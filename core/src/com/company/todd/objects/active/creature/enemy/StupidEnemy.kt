@@ -1,15 +1,19 @@
 package com.company.todd.objects.active.creature.enemy
 
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.RectangleCreature
 import com.company.todd.objects.active.creature.weapon.Weapon
 import com.company.todd.util.asset.texture.MyDrawable
 
-open class StupidEnemy(game: ToddGame, drawable: MyDrawable, weapon: Weapon?,
-                       aabb: Rectangle, speed: Float, jumpPower: Float, maxHealth: Float,
+open class StupidEnemy(game: ToddGame, drawable: MyDrawable,
+                       drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
+                       weapon: Weapon?, aabb: Rectangle, speed: Float,
+                       jumpPower: Float, maxHealth: Float,
                        private val jumpCooldown: Float, private val maxDistanceFromTarget: Float) :
-        RectangleCreature(game, drawable, aabb, weapon, speed, jumpPower, maxHealth) {
+        RectangleCreature(game, drawable, aabb, drawableSize,
+                bodyLowerLeftCornerOffset, weapon, speed, jumpPower, maxHealth) {
     private var sinceJump = jumpCooldown
 
     override fun think(delta: Float) {

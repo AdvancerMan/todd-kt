@@ -13,7 +13,7 @@ class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
                 game,
                 game.textureManager.loadDrawable("player"),
                 createRectangleBPWithTGSBGS(BodyDef.BodyType.DynamicBody, Vector2(50f, 100f), Vector2()),
-                null, 300f, 500f, 100f
+                Vector2(50f, 100f), Vector2(), null, 300f, 500f, 100f
         ) {
     override fun think(delta: Float) {
         if (inputActor.isMovingLeft) {

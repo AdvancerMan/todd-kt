@@ -13,16 +13,19 @@ import com.company.todd.util.box2d.bodyPattern.base.SensorName
 import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
 import com.company.todd.util.box2d.bodyPattern.sensor.createRectangleBPWithTGS
 
-open class SolidRectanglePlatform(game: ToddGame, drawable: MyDrawable, pattern: BodyPattern) :
-        PassiveObject(game, drawable, RealBodyWrapper(pattern)) {
+open class SolidRectanglePlatform(game: ToddGame, drawable: MyDrawable, pattern: BodyPattern,
+                                  drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2) :
+        PassiveObject(game, drawable, RealBodyWrapper(pattern), drawableSize, bodyLowerLeftCornerOffset) {
 
-    constructor(game: ToddGame, drawable: MyDrawable, aabb: Rectangle) :
+    constructor(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
+                spriteSize: Vector2, bodyLowerLeftCornerOffset: Vector2) :
             this(game, drawable,
                     createRectangleBPWithTGS(
                             BodyDef.BodyType.StaticBody,
                             aabb.getSize(Vector2()),
                             aabb.getPosition(Vector2())
-                    ))
+                    ),
+                    spriteSize, bodyLowerLeftCornerOffset)
 
     init {
         // it is guaranteed that link to this is not used by sensor while this creates

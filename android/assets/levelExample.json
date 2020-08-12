@@ -14,19 +14,25 @@
     {
       "type": "solidRectangle",
       "drawableName": "arenaSolid",
-      "xywh": [0, -50, 200, 50]
+      "xywh": [0, -50, 200, 50],
+      "drawableSize": [200, 50],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
 
     {
       "type": "halfCollided",
       "drawableName": "arenaHalfCollided",
-      "xywh": [200, -50, 200, 50]
+      "xywh": [200, -50, 200, 50],
+      "drawableSize": [200, 50],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
 
     {
       "type": "cloudy",
       "drawableName": "arenaCloudy",
       "xywh": [400, -50, 200, 50],
+      "drawableSize": [200, 50],
+      "bodyLowerLeftCornerOffset": [0, 0],
       "sinceContactTillInactive": 1,
       "sinceInactiveTillActive": 1
     },
@@ -35,6 +41,8 @@
       "type": "jumper",
       "drawableName": "arenaJumper",
       "xywh": [600, -50, 200, 50],
+      "drawableSize": [200, 50],
+      "bodyLowerLeftCornerOffset": [0, 0],
       "pushPower": 800
     },
 
@@ -43,6 +51,8 @@
       "drawableName": "arenaPortal",
       "center": [850, -25],
       "radius": 50,
+      "drawableSize": [100, 100],
+      "bodyLowerLeftCornerOffset": [0, 0],
       "teleportTo": [0, 0],
       "teleportDelay": 0.1
     },
@@ -50,13 +60,17 @@
     {
       "type": "trampoline",
       "drawableName": "arenaTrampoline",
-      "xywh": [900, -50, 200, 50]
+      "xywh": [900, -50, 200, 50],
+      "drawableSize": [200, 50],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
 
     {
       "type": "travolator",
       "drawableName": "arenaTravolator",
       "xywh": [1100, -50, 200, 50],
+      "drawableSize": [200, 50],
+      "bodyLowerLeftCornerOffset": [0, 0],
       "pushPower": 200
     }
   ]

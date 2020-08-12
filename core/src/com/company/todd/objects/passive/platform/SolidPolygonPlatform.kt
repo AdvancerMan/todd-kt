@@ -9,7 +9,8 @@ import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.sensor.createPolygonBPWithTGS
 
 class SolidPolygonPlatform(game: ToddGame, drawable: MyDrawable,
-                           localVertices: Array<Vector2>, worldCenter: Vector2) :
+                           localVertices: Array<Vector2>, worldCenter: Vector2,
+                           drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2) :
         PassiveObject(
                 game, drawable,
                 RealBodyWrapper(
@@ -18,5 +19,6 @@ class SolidPolygonPlatform(game: ToddGame, drawable: MyDrawable,
                                 BodyDef.BodyType.StaticBody,
                                 worldCenter
                         )
-                )
+                ),
+                drawableSize, bodyLowerLeftCornerOffset
         )

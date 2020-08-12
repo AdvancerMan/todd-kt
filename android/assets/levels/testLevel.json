@@ -3,41 +3,59 @@
   "objects": [
     {
       "prototype": "arenaSolid",
-      "xywh": [-50, -75, 100, 25]
+      "xywh": [-50, -75, 100, 25],
+      "drawableSize": [100, 25],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [-150, -75, 100, 25]
+      "xywh": [-150, -75, 100, 25],
+      "drawableSize": [100, 25],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [50, -35, 500, 100]
+      "xywh": [50, -35, 500, 100],
+      "drawableSize": [500, 100],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [550, -24, 500, 100]
+      "xywh": [550, -24, 500, 100],
+      "drawableSize": [500, 100],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [750, 76, 50, 50]
+      "xywh": [750, 76, 50, 50],
+      "drawableSize": [50, 50],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [1050, -23, 500, 100]
+      "xywh": [1050, -23, 500, 100],
+      "drawableSize": [500, 100],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [-650, -25, 500, 100]
+      "xywh": [-650, -25, 500, 100],
+      "drawableSize": [500, 100],
+      "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaPortal",
       "center": [1600, 127],
       "radius": 50,
+      "drawableSize": [100, 100],
+      "bodyLowerLeftCornerOffset": [0, 0],
       "teleportTo": [0, 100]
     },
     {
       "type": "stupidEnemy",
       "drawableName": "stupidMeleeEnemy",
+      "drawableSize": [61, 59],
+      "bodyLowerLeftCornerOffset": [10, 10],
       "weapon": {
         "type": "simpleMeleeWeapon",
         "style": {

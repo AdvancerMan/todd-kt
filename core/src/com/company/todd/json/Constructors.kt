@@ -36,7 +36,8 @@ object Constructors {
                     SolidRectanglePlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle]
+                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
 
@@ -44,7 +45,8 @@ object Constructors {
                     SolidPolygonPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["localVertices", vectorArray], json["worldCenter", vector]
+                            json["localVertices", vectorArray], json["worldCenter", vector],
+                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
 
@@ -52,7 +54,8 @@ object Constructors {
                     HalfCollidedPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle]
+                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
 
@@ -60,7 +63,8 @@ object Constructors {
                     CloudyPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["sinceContactTillInactive", float],
+                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector], json["sinceContactTillInactive", float],
                             json["sinceInactiveTillActive", float]
                     )
                 },
@@ -69,7 +73,8 @@ object Constructors {
                     Jumper(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["pushPower", float]
+                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector], json["pushPower", float]
                     )
                 },
 
@@ -78,6 +83,7 @@ object Constructors {
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json["center", vector], json["radius", float],
+                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector],
                             json["teleportTo", vector], json["teleportDelay", float]
                     )
                 },
@@ -86,7 +92,8 @@ object Constructors {
                     Trampoline(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle]
+                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
 
@@ -94,7 +101,8 @@ object Constructors {
                     Travolator(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["pushPower", float]
+                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector], json["pushPower", float]
                     )
                 }
         )
@@ -146,6 +154,7 @@ object Constructors {
                     StupidEnemy(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
+                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector],
                             json["weapon", weapon, game], json["xywh", rectangle], json["speed", float],
                             json["jumpPower", float], json["maxHealth", float],
                             json["jumpCooldown", float], json["maxDistanceFromTarget", float]

@@ -25,8 +25,11 @@ private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame,
                             private val drawable: MyDrawable,
-                            private val body: BodyWrapper):
+                            private val body: BodyWrapper,
+                            drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2):
         Group(), Disposable, Sensor, BodyWrapper, MyDrawableI, TopGroundListener {
+    // before init() it is drawableLowerLeftCornerOffset
+    private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy().scl(-1f)
     private val id: Int = getNewID()
     var initialized = false
         private set
@@ -35,12 +38,23 @@ abstract class InGameObject(protected val game: ToddGame,
         private set
     var isDirectedToRight = true
 
+    init {
+        width = drawableSize.x
+        height = drawableSize.y
+    }
+
     protected open fun doInit(gameScreen: GameScreen) {
         this.screen = gameScreen
         body.init(gameScreen)
         body.setOwner(this)
-        body.getAABB().let { setSize(it.width, it.height) }
-        body.getCenter().let { setPosition(it.x, it.y, Align.center) }
+        sizeChanged()
+
+        val aabb = getAABB()
+        drawableCenterOffset
+                .sub(aabb.width / 2, aabb.height / 2)
+                .add(width / 2, height / 2)
+        getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
+
         setOrigin(Align.center)
         setScale(1f)
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
@@ -59,7 +73,7 @@ abstract class InGameObject(protected val game: ToddGame,
     }
 
     open fun postAct(delta: Float) {
-        body.getCenter().let { setPosition(it.x, it.y, Align.center) }
+        getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
     }
 
