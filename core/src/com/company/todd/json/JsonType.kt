@@ -29,9 +29,15 @@ val vectorArray = JsonType("array of vectors (2-element arrays)") { game, json -
     json.map { vector.constructor(game, it) }.toTypedArray()
 }
 
-operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? = null) =
+operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? = null, default: T? = null, defaultOther: String? = null) =
         this[name]?.let { type.constructor(game, it) }
-                ?: throw IllegalArgumentException("Json must contain $name: ${type.typeName}. Json: $this")
+                ?: default
+                ?: defaultOther?.let { otherName -> this[otherName]?.let { type.constructor(game, it) } }
+                ?: throw IllegalArgumentException(
+                        "Json must contain $name" +
+                        if (defaultOther != null) " (or $defaultOther as default)" else "" +
+                        ": ${type.typeName}. Json: $this"
+                )
 
 const val prototypesPath = "prototypes"
 

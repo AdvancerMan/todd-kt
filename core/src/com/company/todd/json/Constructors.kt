@@ -37,7 +37,8 @@ object Constructors {
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json["bodyPosition", vector], json["bodySize", vector],
-                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector]
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
                     )
                 },
 
@@ -46,7 +47,8 @@ object Constructors {
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json["localVertices", vectorArray], json["worldCenter", vector],
-                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector]
+                            json["drawableSize", vector],
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
                     )
                 },
 
@@ -55,7 +57,8 @@ object Constructors {
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json["bodyPosition", vector], json["bodySize", vector],
-                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector]
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
                     )
                 },
 
@@ -63,9 +66,10 @@ object Constructors {
                     CloudyPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector], json["sinceContactTillInactive", float],
-                            json["sinceInactiveTillActive", float]
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["sinceContactTillInactive", float], json["sinceInactiveTillActive", float]
                     )
                 },
 
@@ -73,17 +77,21 @@ object Constructors {
                     Jumper(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector], json["pushPower", float]
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["pushPower", float]
                     )
                 },
 
                 "portal" to JsonType("Portal") { game, json ->
+                    val radius = json["radius", float]
                     Portal(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["center", vector], json["radius", float],
-                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector],
+                            json["center", vector], radius,
+                            json["drawableSize", vector, null, Vector2(radius * 2, radius * 2)],
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
                             json["teleportTo", vector], json["teleportDelay", float]
                     )
                 },
@@ -92,8 +100,9 @@ object Constructors {
                     Trampoline(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector]
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
                     )
                 },
 
@@ -101,8 +110,10 @@ object Constructors {
                     Travolator(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector], json["pushPower", float]
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["pushPower", float]
                     )
                 }
         )
@@ -154,7 +165,8 @@ object Constructors {
                     StupidEnemy(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector],
+                            json.get("drawableSize", vector, defaultOther = "bodySize"),
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
                             json["weapon", weapon, game], json["bodyPosition", vector],
                             json["bodySize", vector], json["speed", float],
                             json["jumpPower", float], json["maxHealth", float],

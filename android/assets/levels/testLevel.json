@@ -4,65 +4,47 @@
     {
       "prototype": "arenaSolid",
       "bodyPosition": [-50, -75],
-      "bodySize": [100, 25],
-      "drawableSize": [100, 25],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [100, 25]
     },
     {
       "prototype": "arenaSolid",
       "bodyPosition": [-150, -75],
-      "bodySize": [100, 25],
-      "drawableSize": [100, 25],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [100, 25]
     },
     {
       "prototype": "arenaSolid",
       "bodyPosition": [50, -35],
-      "bodySize": [500, 100],
-      "drawableSize": [500, 100],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [500, 100]
     },
     {
       "prototype": "arenaSolid",
       "bodyPosition": [550, -24],
-      "bodySize": [500, 100],
-      "drawableSize": [500, 100],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [500, 100]
     },
     {
       "prototype": "arenaSolid",
       "bodyPosition": [750, 76],
-      "bodySize": [50, 50],
-      "drawableSize": [50, 50],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [50, 50]
     },
     {
       "prototype": "arenaSolid",
       "bodyPosition": [1050, -23],
-      "bodySize": [500, 100],
-      "drawableSize": [500, 100],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [500, 100]
     },
     {
       "prototype": "arenaSolid",
       "bodyPosition": [-650, -25],
-      "bodySize": [500, 100],
-      "drawableSize": [500, 100],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [500, 100]
     },
     {
       "prototype": "arenaPortal",
       "center": [1600, 127],
       "radius": 50,
-      "drawableSize": [100, 100],
-      "bodyLowerLeftCornerOffset": [0, 0],
       "teleportTo": [0, 100]
     },
     {
       "type": "stupidEnemy",
       "drawableName": "stupidMeleeEnemy",
-      "drawableSize": [61, 59],
-      "bodyLowerLeftCornerOffset": [0, 0],
       "weapon": {
         "type": "simpleMeleeWeapon",
         "style": {
