@@ -1,6 +1,5 @@
 package com.company.todd.objects.passive.platform
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
@@ -10,11 +9,11 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
-class CloudyPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
-                     drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
+class CloudyPlatform(game: ToddGame, drawable: MyDrawable, bodyPosition: Vector2,
+                     bodySize: Vector2, drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
                      private val sinceContactTillInactive: Float,
                      sinceInactiveTillActive: Float) :
-        HalfCollidedPlatform(game, drawable, aabb, drawableSize, bodyLowerLeftCornerOffset) {
+        HalfCollidedPlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1
 

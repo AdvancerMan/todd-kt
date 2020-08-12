@@ -36,8 +36,8 @@ object Constructors {
                     SolidRectanglePlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector]
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
 
@@ -54,8 +54,8 @@ object Constructors {
                     HalfCollidedPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector]
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
 
@@ -63,7 +63,7 @@ object Constructors {
                     CloudyPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
                             json["bodyLowerLeftCornerOffset", vector], json["sinceContactTillInactive", float],
                             json["sinceInactiveTillActive", float]
                     )
@@ -73,7 +73,7 @@ object Constructors {
                     Jumper(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
                             json["bodyLowerLeftCornerOffset", vector], json["pushPower", float]
                     )
                 },
@@ -92,7 +92,7 @@ object Constructors {
                     Trampoline(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
                             json["bodyLowerLeftCornerOffset", vector]
                     )
                 },
@@ -101,7 +101,7 @@ object Constructors {
                     Travolator(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["xywh", rectangle], json["drawableSize", vector],
+                            json["bodyPosition", vector], json["bodySize", vector], json["drawableSize", vector],
                             json["bodyLowerLeftCornerOffset", vector], json["pushPower", float]
                     )
                 }
@@ -155,7 +155,8 @@ object Constructors {
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector],
-                            json["weapon", weapon, game], json["xywh", rectangle], json["speed", float],
+                            json["weapon", weapon, game], json["bodyPosition", vector],
+                            json["bodySize", vector], json["speed", float],
                             json["jumpPower", float], json["maxHealth", float],
                             json["jumpCooldown", float], json["maxDistanceFromTarget", float]
                     )

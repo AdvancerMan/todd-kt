@@ -9,10 +9,10 @@ import com.company.todd.util.asset.texture.MyDrawable
 
 open class StupidEnemy(game: ToddGame, drawable: MyDrawable,
                        drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
-                       weapon: Weapon?, aabb: Rectangle, speed: Float,
+                       weapon: Weapon?, bodyPosition: Vector2, bodySize: Vector2, speed: Float,
                        jumpPower: Float, maxHealth: Float,
                        private val jumpCooldown: Float, private val maxDistanceFromTarget: Float) :
-        RectangleCreature(game, drawable, aabb, drawableSize,
+        RectangleCreature(game, drawable, bodyPosition, bodySize, drawableSize,
                 bodyLowerLeftCornerOffset, weapon, speed, jumpPower, maxHealth) {
     private var sinceJump = jumpCooldown
 

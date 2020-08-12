@@ -9,15 +9,15 @@ import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
 
 abstract class RectangleCreature(
-        game: ToddGame, drawable: MyDrawable,
-        aabb: Rectangle, drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2, weapon: Weapon?,
+        game: ToddGame, drawable: MyDrawable, bodyPosition: Vector2, bodySize: Vector2,
+        drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2, weapon: Weapon?,
         speed: Float, jumpPower: Float, maxHealth: Float
 ) :
         Creature(
                 game, drawable,
                 createRectangleBPWithTGSBGS(
                         BodyDef.BodyType.DynamicBody,
-                        aabb.getSize(Vector2()), aabb.getPosition(Vector2())
+                        bodySize, bodyPosition
                 ),
                 drawableSize, bodyLowerLeftCornerOffset, weapon, speed, jumpPower, maxHealth
         )

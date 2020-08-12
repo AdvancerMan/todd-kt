@@ -1,6 +1,5 @@
 package com.company.todd.objects.passive.platform
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -15,9 +14,10 @@ import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
 const val halfColVelocityGroundCoef = 2f
 
-open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
+open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
+                                bodyPosition: Vector2, bodySize: Vector2,
                                 drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2) :
-        SolidRectanglePlatform(game, drawable, aabb, drawableSize, bodyLowerLeftCornerOffset) {
+        SolidRectanglePlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
     protected val groundFor = mutableMapOf<InGameObject, Int>()
 
     override fun beginOnGround(obj: InGameObject) {

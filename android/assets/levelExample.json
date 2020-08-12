@@ -14,7 +14,8 @@
     {
       "type": "solidRectangle",
       "drawableName": "arenaSolid",
-      "xywh": [0, -50, 200, 50],
+      "bodyPosition": [0, -50],
+      "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
@@ -22,7 +23,8 @@
     {
       "type": "halfCollided",
       "drawableName": "arenaHalfCollided",
-      "xywh": [200, -50, 200, 50],
+      "bodyPosition": [200, -50],
+      "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
@@ -30,7 +32,8 @@
     {
       "type": "cloudy",
       "drawableName": "arenaCloudy",
-      "xywh": [400, -50, 200, 50],
+      "bodyPosition": [400, -50],
+      "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0],
       "sinceContactTillInactive": 1,
@@ -40,7 +43,8 @@
     {
       "type": "jumper",
       "drawableName": "arenaJumper",
-      "xywh": [600, -50, 200, 50],
+      "bodyPosition": [600, -50],
+      "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0],
       "pushPower": 800
@@ -60,7 +64,8 @@
     {
       "type": "trampoline",
       "drawableName": "arenaTrampoline",
-      "xywh": [900, -50, 200, 50],
+      "bodyPosition": [900, -50],
+      "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
@@ -68,7 +73,8 @@
     {
       "type": "travolator",
       "drawableName": "arenaTravolator",
-      "xywh": [1100, -50, 200, 50],
+      "bodyPosition": [1100, -50],
+      "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0],
       "pushPower": 200

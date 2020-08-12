@@ -1,6 +1,5 @@
 package com.company.todd.objects.passive.interactive
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Manifold
@@ -13,10 +12,10 @@ import kotlin.math.abs
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
-class Travolator(game: ToddGame, drawable: MyDrawable, aabb: Rectangle,
+class Travolator(game: ToddGame, drawable: MyDrawable, bodyPosition: Vector2, bodySize: Vector2,
                  drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
                  private val pushPower: Float) :
-        HalfCollidedPlatform(game, drawable, aabb, drawableSize, bodyLowerLeftCornerOffset) {
+        HalfCollidedPlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         val impulseMap = if (pushPower > 0) objectToTravolatorPositiveImpulse else objectToTravolatorNegativeImpulse

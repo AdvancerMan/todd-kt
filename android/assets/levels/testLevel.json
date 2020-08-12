@@ -3,43 +3,50 @@
   "objects": [
     {
       "prototype": "arenaSolid",
-      "xywh": [-50, -75, 100, 25],
+      "bodyPosition": [-50, -75],
+      "bodySize": [100, 25],
       "drawableSize": [100, 25],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [-150, -75, 100, 25],
+      "bodyPosition": [-150, -75],
+      "bodySize": [100, 25],
       "drawableSize": [100, 25],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [50, -35, 500, 100],
+      "bodyPosition": [50, -35],
+      "bodySize": [500, 100],
       "drawableSize": [500, 100],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [550, -24, 500, 100],
+      "bodyPosition": [550, -24],
+      "bodySize": [500, 100],
       "drawableSize": [500, 100],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [750, 76, 50, 50],
+      "bodyPosition": [750, 76],
+      "bodySize": [50, 50],
       "drawableSize": [50, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [1050, -23, 500, 100],
+      "bodyPosition": [1050, -23],
+      "bodySize": [500, 100],
       "drawableSize": [500, 100],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
     {
       "prototype": "arenaSolid",
-      "xywh": [-650, -25, 500, 100],
+      "bodyPosition": [-650, -25],
+      "bodySize": [500, 100],
       "drawableSize": [500, 100],
       "bodyLowerLeftCornerOffset": [0, 0]
     },
@@ -55,7 +62,7 @@
       "type": "stupidEnemy",
       "drawableName": "stupidMeleeEnemy",
       "drawableSize": [61, 59],
-      "bodyLowerLeftCornerOffset": [10, 10],
+      "bodyLowerLeftCornerOffset": [0, 0],
       "weapon": {
         "type": "simpleMeleeWeapon",
         "style": {
@@ -69,7 +76,8 @@
         "cooldown": 1,
         "sinceAttackTillDamage": 0.3
       },
-      "xywh": [100, 200, 61, 59],
+      "bodyPosition": [100, 200],
+      "bodySize": [61, 59],
       "speed": 200,
       "jumpPower": 500,
       "maxHealth": 100,
