@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.Shape.Type.*
 import com.company.todd.screen.GameScreen
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.util.rotateAround
+import com.company.todd.util.translate
 
 const val pixInMeter = 30f
 
@@ -90,38 +92,6 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
         world.destroyBody(body)
     }
 }
-
-fun Rectangle.translate(trX: Float, trY: Float) =
-        setPosition(x + trX, y + trY)
-
-fun Rectangle.translate(v: Vector2) =
-        translate(v.x, v.y)
-
-fun Rectangle.rotate(angle: Float) =
-        rotateRad(angle * MathUtils.degreesToRadians)
-
-fun Rectangle.rotateRad(angleRad: Float) =
-        listOf(
-                Vector2(x, y),
-                Vector2(x + width, y),
-                Vector2(x, y + height),
-                Vector2(x + width, y + height)
-        )
-                .map { it.rotateRad(angleRad) }
-                .also { this.set(it[0].x, it[0].y, 0f, 0f) }
-                .fold(this) { r, v -> r.merge(v) }!!
-
-fun Rectangle.rotateAround(originX: Float, originY: Float, angle: Float) =
-        rotateAroundRad(originX, originY, angle * MathUtils.degreesToRadians)
-
-fun Rectangle.rotateAroundRad(originX: Float, originY: Float, angleRad: Float) =
-        setPosition(x - originX, y - originY).rotateRad(angleRad).setPosition(x + originX, y + originY)!!
-
-fun Rectangle.rotateAround(origin: Vector2, angle: Float) =
-        rotateAround(origin.x, origin.y, angle)
-
-fun Rectangle.rotateAroundRad(origin: Vector2, angleRad: Float) =
-        rotateAroundRad(origin.x, origin.y, angleRad)
 
 private fun Rectangle.merge(tmp: Vector2, shape: Shape) {
     when (shape.type) {

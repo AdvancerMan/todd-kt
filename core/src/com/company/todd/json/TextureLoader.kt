@@ -118,7 +118,7 @@ private fun checkReg(json: JsonValue) {
     }
 }
 
-val playModes = Animation.PlayMode.values().toList().map { it.toString() }
+private val playModes = Animation.PlayMode.values().toList().map { it.toString() }
 
 private fun checkAnim(json: JsonValue) {
     checkContains(json, "path", "String") { it.isString }
@@ -138,7 +138,7 @@ private fun checkAnim(json: JsonValue) {
     }
 }
 
-val animTypes = AnimationType.values().toList().map { it.toString() }
+private val animTypes = AnimationType.values().toList().map { it.toString() }
 
 private fun checkAnims(json: JsonValue) {
     checkContains(json, "anims", "non-empty map, keys are $animTypes") {

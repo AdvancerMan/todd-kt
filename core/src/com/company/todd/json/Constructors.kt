@@ -15,6 +15,7 @@ import com.company.todd.objects.passive.platform.CloudyPlatform
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.objects.passive.platform.SolidPolygonPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
+import com.company.todd.util.putAll
 
 object Constructors {
     val constructors: Map<String, JsonType<out InGameObject>>
@@ -176,5 +177,3 @@ object Constructors {
         )
     }
 }
-
-fun <K, V> MutableMap<K, V>.putAll(vararg pairs: Pair<K, V>) = putAll(pairs)

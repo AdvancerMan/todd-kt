@@ -155,8 +155,3 @@ fun Actor.worldAABBFor(rectangle: Rectangle) =
                     .also { set(it[0].x, it[0].y, 0f, 0f) }
                     .fold(this) { r, v -> r.merge(v) }
         }
-
-fun Rectangle.scale(originX: Float, originY: Float, scaleX: Float, scaleY: Float) =
-        setPosition(x - originX, y - originY)
-                .set(x * scaleX, y * scaleY, width * scaleX, height * scaleY)
-                .setPosition(x + originX, y + originY)!!

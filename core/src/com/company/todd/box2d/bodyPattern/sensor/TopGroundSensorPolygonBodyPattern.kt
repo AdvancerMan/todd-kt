@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.box2d.BodyFactory
 import com.company.todd.box2d.bodyPattern.base.PolygonBodyPattern
 import com.company.todd.box2d.bodyPattern.base.SensorName
+import com.company.todd.util.mutate
 
 open class TopGroundSensorPolygonBodyPattern(type: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>) :
         PolygonBodyPattern(type, worldCenter, localVertices) {
@@ -24,6 +25,3 @@ open class TopGroundSensorPolygonBodyPattern(type: BodyDef.BodyType, worldCenter
         localVertices.mutate { it * -1 }
     }
 }
-
-inline fun FloatArray.mutate(f: (Float) -> Float) =
-        apply { forEachIndexed { i, x -> this[i] = f(x) } }
