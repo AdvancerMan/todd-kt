@@ -47,6 +47,8 @@ interface BodyWrapper {
 
     fun setActive(value: Boolean)
 
+    fun getUnrotatedAABB(): Rectangle
+
     fun getAABB(): Rectangle
 
     fun destroy(world: World)

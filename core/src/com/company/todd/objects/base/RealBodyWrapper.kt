@@ -2,7 +2,6 @@ package com.company.todd.objects.base
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
@@ -72,7 +71,7 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
         body.isActive = value
     }
 
-    override fun getAABB() =
+    override fun getUnrotatedAABB() =
             // TODO (0, 0) isn't always in AABB
             Rectangle().apply {
                 val tmp = Vector2()
@@ -81,14 +80,22 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
                         merge(tmp, it.shape)
                     }
                 }
-                rotateRad(body.angle)
-                setCenter(body.position).toPix()
+                translate(body.position).toPix()
             }
+
+    override fun getAABB() =
+            getUnrotatedAABB().rotateAround(getCenter(), body.angle)
 
     override fun destroy(world: World) {
         world.destroyBody(body)
     }
 }
+
+fun Rectangle.translate(trX: Float, trY: Float) =
+        setPosition(x + trX, y + trY)
+
+fun Rectangle.translate(v: Vector2) =
+        translate(v.x, v.y)
 
 fun Rectangle.rotate(angle: Float) =
         rotateRad(angle * MathUtils.degreesToRadians)
@@ -109,6 +116,12 @@ fun Rectangle.rotateAround(originX: Float, originY: Float, angle: Float) =
 
 fun Rectangle.rotateAroundRad(originX: Float, originY: Float, angleRad: Float) =
         setPosition(x - originX, y - originY).rotateRad(angleRad).setPosition(x + originX, y + originY)!!
+
+fun Rectangle.rotateAround(origin: Vector2, angle: Float) =
+        rotateAround(origin.x, origin.y, angle)
+
+fun Rectangle.rotateAroundRad(origin: Vector2, angleRad: Float) =
+        rotateAroundRad(origin.x, origin.y, angleRad)
 
 private fun Rectangle.merge(tmp: Vector2, shape: Shape) {
     when (shape.type) {

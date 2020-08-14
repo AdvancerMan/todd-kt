@@ -48,13 +48,15 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
         body.setOwner(this)
         sizeChanged()
 
-        val aabb = getAABB()
+        val aabb = getUnrotatedAABB()
         drawableCenterOffset
                 .sub(aabb.width / 2, aabb.height / 2)
                 .add(width / 2, height / 2)
         getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
 
         setOrigin(Align.center)
+        originX -= drawableCenterOffset.x
+        originY -= drawableCenterOffset.y
         setScale(1f)
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
     }
@@ -128,6 +130,7 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
     override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) = body.setCenter(x, y, resetLinearVelocity)
     override fun setAngle(angle: Float, resetAngularVelocity: Boolean) = body.setAngle(angle, resetAngularVelocity)
     override fun setOwner(owner: InGameObject) = body.setOwner(owner)
+    override fun getUnrotatedAABB() = body.getUnrotatedAABB()
     override fun getAABB() = body.getAABB()
     override fun isActive() = body.isActive()
     override fun setActive(value: Boolean) = body.setActive(value)

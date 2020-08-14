@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.company.todd.screen.GameScreen
 
-class StaticBodyWrapper(private val aabb: Rectangle, private var angle: Float): BodyWrapper {
+class StaticBodyWrapper(private val unrotatedAABB: Rectangle, private var angle: Float): BodyWrapper {
     constructor(x: Float, y: Float, w: Float, h: Float, angle: Float) : this(Rectangle(x, y, w, h), angle)
 
     override fun isFixedRotation() = true
@@ -18,13 +18,14 @@ class StaticBodyWrapper(private val aabb: Rectangle, private var angle: Float): 
     }
 
     override fun getCenter() =
-            Vector2(aabb.x + aabb.width / 2, aabb.y + aabb.height / 2)
+            Vector2(unrotatedAABB.x + unrotatedAABB.width / 2, unrotatedAABB.y + unrotatedAABB.height / 2)
 
     override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) {
-        aabb.setCenter(x, y)
+        unrotatedAABB.setCenter(x, y)
     }
 
-    override fun getAABB() = Rectangle(aabb)
+    override fun getUnrotatedAABB() = Rectangle(unrotatedAABB)
+    override fun getAABB() = getUnrotatedAABB().rotate(angle)
 
     override fun init(gameScreen: GameScreen) {}
     override fun applyLinearImpulseToCenter(impulse: Vector2) {}
