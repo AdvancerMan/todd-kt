@@ -9,6 +9,7 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
 
+// TODO move to Style
 const val handWeaponOriginXOffset = 1f
 
 abstract class HandWeapon(private val style: Style, protected val cooldown: Float,

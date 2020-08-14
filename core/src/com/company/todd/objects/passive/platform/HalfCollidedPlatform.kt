@@ -5,14 +5,13 @@ import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.active.yVelJumpThreshold
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.util.SPF
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
-
-const val halfColVelocityGroundCoef = 2f
+import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
+import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
                                 drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
@@ -48,13 +47,13 @@ open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
 
     protected open fun isGroundInContact(otherSensor: Sensor, other: InGameObject, myFixture: Fixture,
                                          otherFixture: Fixture, contact: Contact, oldManifold: Manifold) =
-            other.getVelocity().y <= yVelJumpThreshold
+            other.getVelocity().y <= Y_VEL_JUMP_THRESHOLD
                     && (groundFor.containsKey(other)
                     || contact.worldManifold.numberOfContactPoints == 2
                     && contact.worldManifold.points
                     .all { myFixture.testPoint(it) }
                     && contact.worldManifold.points
-                    .map { it.cpy().sub(0f, other.getVelocity().y.toMeters() * SPF * halfColVelocityGroundCoef) }
+                    .map { it.cpy().sub(0f, other.getVelocity().y.toMeters() * SPF * HALF_COL_GROUND_VEL_SCL) }
                     .all { !myFixture.testPoint(it) })
 
     protected open fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {}

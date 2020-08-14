@@ -38,3 +38,9 @@ const val SMOOTH_RECT_SMOOTH_COEFFICIENT = 0.1f
 const val SMOOTH_RECT_MAX_SMOOTHNESS = 3f
 
 const val SAVING_ASSET_DELAY = 5f
+
+const val JUMP_COOLDOWN = 1 / 30f
+const val Y_VEL_JUMP_THRESHOLD = 1f
+const val HEALTH_BAR_OFFSET = 3f
+
+const val HALF_COL_GROUND_VEL_SCL = 2f

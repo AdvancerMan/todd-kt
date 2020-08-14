@@ -17,10 +17,9 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
-
-const val JUMP_COOLDOWN = 1 / 30f
-const val yVelJumpThreshold = 1f
-const val healthBarOffset = 3f
+import com.company.todd.util.HEALTH_BAR_OFFSET
+import com.company.todd.util.JUMP_COOLDOWN
+import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                             bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
@@ -32,7 +31,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
     protected var animationTypeNow = stayAnimation()
     private var sinceJump = JUMP_COOLDOWN + 1
     var isOnGround = false
-        get() = field && getVelocity().y <= yVelJumpThreshold && sinceJump >= JUMP_COOLDOWN
+        get() = field && getVelocity().y <= Y_VEL_JUMP_THRESHOLD && sinceJump >= JUMP_COOLDOWN
         private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()
@@ -77,7 +76,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         healthBar.let {
-            it.setPosition(width / 2, height + healthBarOffset, Align.bottom or Align.center)
+            it.setPosition(width / 2, height + HEALTH_BAR_OFFSET, Align.bottom or Align.center)
             addActor(it)
         }
     }
