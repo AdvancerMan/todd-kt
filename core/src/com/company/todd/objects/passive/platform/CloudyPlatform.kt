@@ -9,11 +9,10 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 
-class CloudyPlatform(game: ToddGame, drawable: MyDrawable, bodyPosition: Vector2,
-                     bodySize: Vector2, drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
-                     private val sinceContactTillInactive: Float,
-                     sinceInactiveTillActive: Float) :
-        HalfCollidedPlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
+class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+                     bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2,
+                     private val sinceContactTillInactive: Float, sinceInactiveTillActive: Float) :
+        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1
 

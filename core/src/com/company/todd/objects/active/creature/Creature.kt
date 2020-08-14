@@ -8,12 +8,12 @@ import com.company.todd.screen.GameScreen
 import com.company.todd.util.asset.texture.MyDrawable
 import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
 
-abstract class Creature(game: ToddGame, drawable: MyDrawable,
-                        bodyPattern: BodyPattern, drawableSize: Vector2,
-                        bodyLowerLeftCornerOffset: Vector2, protected var weapon: Weapon?,
-                        speed: Float, jumpPower: Float, maxHealth: Float) :
-        ActiveObject(game, drawable, bodyPattern, drawableSize,
-                bodyLowerLeftCornerOffset, speed, jumpPower, maxHealth) {
+abstract class Creature(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+                        bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+                        protected var weapon: Weapon?, speed: Float,
+                        jumpPower: Float, maxHealth: Float) :
+        ActiveObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset,
+                bodyPattern, speed, jumpPower, maxHealth) {
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         weapon?.let {

@@ -10,7 +10,7 @@ class Player(game: ToddGame, private val inputActor: PlayerInputActor) :
         RectangleCreature(
                 game,
                 game.textureManager.loadDrawable("player"),
-                Vector2(), Vector2(50f, 100f), Vector2(50f, 100f), Vector2(),
+                Vector2(50f, 100f), Vector2(), Vector2(), Vector2(50f, 100f),
                 null, 300f, 500f, 100f
         ) {
     override fun think(delta: Float) {

@@ -1,6 +1,5 @@
 package com.company.todd.objects.active.creature.enemy
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.RectangleCreature
@@ -9,11 +8,11 @@ import com.company.todd.util.asset.texture.MyDrawable
 
 open class StupidEnemy(game: ToddGame, drawable: MyDrawable,
                        drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
-                       weapon: Weapon?, bodyPosition: Vector2, bodySize: Vector2, speed: Float,
+                       bodyPosition: Vector2, bodySize: Vector2, weapon: Weapon?, speed: Float,
                        jumpPower: Float, maxHealth: Float,
                        private val jumpCooldown: Float, private val maxDistanceFromTarget: Float) :
-        RectangleCreature(game, drawable, bodyPosition, bodySize, drawableSize,
-                bodyLowerLeftCornerOffset, weapon, speed, jumpPower, maxHealth) {
+        RectangleCreature(game, drawable, drawableSize, bodyLowerLeftCornerOffset,
+                bodyPosition, bodySize, weapon, speed, jumpPower, maxHealth) {
     private var sinceJump = jumpCooldown
 
     override fun think(delta: Float) {

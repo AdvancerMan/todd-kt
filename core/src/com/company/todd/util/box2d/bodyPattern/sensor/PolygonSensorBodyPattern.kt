@@ -7,9 +7,9 @@ import com.company.todd.util.box2d.BodyFactory
 import com.company.todd.util.box2d.bodyPattern.base.PolygonBodyPattern
 import com.company.todd.util.box2d.bodyPattern.base.SensorName
 
-open class PolygonSensorBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType,
-                                    center: Vector2, val sensorName: SensorName) :
-        PolygonBodyPattern(localVertices, type, center) {
+open class PolygonSensorBodyPattern(type: BodyDef.BodyType, worldCenter: Vector2,
+                                    val sensorName: SensorName, localVertices: Array<Vector2>) :
+        PolygonBodyPattern(type, worldCenter, localVertices) {
 
     override fun addFixtures(body: Body) {
         sensors[sensorName]?.let { sensor ->

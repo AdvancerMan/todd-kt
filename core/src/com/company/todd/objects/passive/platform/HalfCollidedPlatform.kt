@@ -15,9 +15,9 @@ import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
 const val halfColVelocityGroundCoef = 2f
 
 open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
-                                bodyPosition: Vector2, bodySize: Vector2,
-                                drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2) :
-        SolidRectanglePlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
+                                drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
+                                bodyPosition: Vector2, bodySize: Vector2) :
+        SolidRectanglePlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
     protected val groundFor = mutableMapOf<InGameObject, Int>()
 
     override fun beginOnGround(obj: InGameObject) {

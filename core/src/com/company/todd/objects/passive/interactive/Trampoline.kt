@@ -8,9 +8,9 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.util.asset.texture.MyDrawable
 
-class Trampoline(game: ToddGame, drawable: MyDrawable, bodyPosition: Vector2, bodySize: Vector2,
-                 drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2) :
-        HalfCollidedPlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
+class Trampoline(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+                 bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2) :
+        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         contact.restitution = 1f

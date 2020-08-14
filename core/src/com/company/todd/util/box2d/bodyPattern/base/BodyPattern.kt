@@ -44,9 +44,9 @@ fun BodyPattern.combine(other: BodyPattern) =
             }
         }
 
-abstract class SimpleBodyPattern(val type: BodyDef.BodyType, val center: Vector2) : BodyPattern {
+abstract class SimpleBodyPattern(val type: BodyDef.BodyType, val worldCenter: Vector2) : BodyPattern {
     override var sensors = mutableMapOf<SensorName, Sensor>()
 
     override fun createBody(world: World) =
-            BodyFactory.createBody(world, type, center).also { addFixtures(it) }
+            BodyFactory.createBody(world, type, worldCenter).also { addFixtures(it) }
 }

@@ -8,10 +8,10 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.util.asset.texture.MyDrawable
 
-class Jumper(game: ToddGame, drawable: MyDrawable, bodyPosition: Vector2,
-             bodySize: Vector2, drawableSize: Vector2,
-             bodyLowerLeftCornerOffset: Vector2, private val pushPower: Float) :
-        HalfCollidedPlatform(game, drawable, bodyPosition, bodySize, drawableSize, bodyLowerLeftCornerOffset) {
+class Jumper(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+             bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2,
+             bodySize: Vector2, private val pushPower: Float) :
+        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         other.setYVelocity(pushPower)

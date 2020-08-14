@@ -4,13 +4,12 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.util.box2d.BodyFactory
-import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.util.box2d.bodyPattern.base.PolygonBodyPattern
 import com.company.todd.util.box2d.bodyPattern.base.SensorName
 import com.company.todd.util.box2d.bodyPattern.base.legsAngle
 
-open class BottomGroundSensorPolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType, center: Vector2) :
-        PolygonBodyPattern(localVertices, type, center) {
+open class BottomGroundSensorPolygonBodyPattern(type: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>) :
+        PolygonBodyPattern(type, worldCenter, localVertices) {
 
     override fun addFixtures(body: Body) {
         sensors[SensorName.BOTTOM_GROUND_SENSOR]?.let { sensor ->

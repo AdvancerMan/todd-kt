@@ -5,8 +5,8 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.util.box2d.BodyFactory
 
-open class PolygonBodyPattern(localVertices: Array<Vector2>, type: BodyDef.BodyType, center: Vector2) :
-        SimpleBodyPattern(type, center) {
+open class PolygonBodyPattern(type: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>) :
+        SimpleBodyPattern(type, worldCenter) {
     protected val localVertices = localVertices.flatMap { listOf(it.x, it.y) }.toFloatArray()
 
     override fun addFixtures(body: Body) {

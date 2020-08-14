@@ -1,8 +1,6 @@
 package com.company.todd.json
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.enemy.StupidEnemy
 import com.company.todd.objects.active.creature.weapon.HandWeapon
 import com.company.todd.objects.active.creature.weapon.SimpleMeleeWeapon
@@ -16,7 +14,6 @@ import com.company.todd.objects.passive.platform.CloudyPlatform
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.objects.passive.platform.SolidPolygonPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
-import com.company.todd.util.asset.texture.checkContains
 
 object Constructors {
     val constructors: Map<String, JsonType<out InGameObject>>
@@ -36,9 +33,9 @@ object Constructors {
                     SolidRectanglePlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector],
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
-                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyPosition", vector], json["bodySize", vector]
                     )
                 },
 
@@ -46,9 +43,8 @@ object Constructors {
                     SolidPolygonPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["localVertices", vectorArray], json["worldCenter", vector],
-                            json["drawableSize", vector],
-                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
+                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["worldBodyCenter", vector], json["localVertices", vectorArray]
                     )
                 },
 
@@ -56,9 +52,9 @@ object Constructors {
                     HalfCollidedPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector],
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
-                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyPosition", vector], json["bodySize", vector]
                     )
                 },
 
@@ -66,9 +62,9 @@ object Constructors {
                     CloudyPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector],
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyPosition", vector], json["bodySize", vector],
                             json["sinceContactTillInactive", float], json["sinceInactiveTillActive", float]
                     )
                 },
@@ -77,9 +73,9 @@ object Constructors {
                     Jumper(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector],
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyPosition", vector], json["bodySize", vector],
                             json["pushPower", float]
                     )
                 },
@@ -89,9 +85,9 @@ object Constructors {
                     Portal(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["center", vector], radius,
                             json["drawableSize", vector, null, Vector2(radius * 2, radius * 2)],
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["center", vector], radius,
                             json["teleportTo", vector], json["teleportDelay", float]
                     )
                 },
@@ -100,9 +96,9 @@ object Constructors {
                     Trampoline(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector],
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
-                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()]
+                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyPosition", vector], json["bodySize", vector]
                     )
                 },
 
@@ -110,9 +106,9 @@ object Constructors {
                     Travolator(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["bodyPosition", vector], json["bodySize", vector],
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyPosition", vector], json["bodySize", vector],
                             json["pushPower", float]
                     )
                 }
@@ -151,11 +147,6 @@ object Constructors {
         )
     }
 
-    private fun parseWeapon(game: ToddGame?, json: JsonValue, weapons: Map<String, JsonType<out Weapon>>): Weapon {
-        checkContains(json, "weapon", "weapon") { it.isObject }
-        return parseJsonValue(game, json, weapons)
-    }
-
     private fun addCreatures(map: MutableMap<String, JsonType<out InGameObject>>,
                              weapons: Map<String, JsonType<out Weapon>>) {
         val weapon = JsonType("Weapon") { game, json -> parseJsonValue(game, json, weapons) }
@@ -167,8 +158,8 @@ object Constructors {
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["weapon", weapon, game], json["bodyPosition", vector],
-                            json["bodySize", vector], json["speed", float],
+                            json["bodyPosition", vector], json["bodySize", vector],
+                            json["weapon", weapon, game], json["speed", float],
                             json["jumpPower", float], json["maxHealth", float],
                             json["jumpCooldown", float], json["maxDistanceFromTarget", float]
                     )

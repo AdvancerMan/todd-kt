@@ -23,10 +23,9 @@ private var maxID = 0
 
 private fun getNewID() = maxID++
 
-abstract class InGameObject(protected val game: ToddGame,
-                            private val drawable: MyDrawable,
-                            private val body: BodyWrapper,
-                            drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2):
+abstract class InGameObject(protected val game: ToddGame, private val drawable: MyDrawable,
+                            drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
+                            private val body: BodyWrapper) :
         Group(), Disposable, Sensor, BodyWrapper, MyDrawableI, TopGroundListener {
     // before init() it is drawableLowerLeftCornerOffset
     private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy().scl(-1f)

@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import kotlin.math.min
 
-class RectangleBodyPattern(type: BodyDef.BodyType, size: Vector2,
-                           position: Vector2 = Vector2(), localCenter: Vector2 = Vector2()) :
+class RectangleBodyPattern(type: BodyDef.BodyType, worldPosition: Vector2,
+                           size: Vector2, localCenter: Vector2 = Vector2()) :
         PolygonBodyPattern(
-                createSmoothRectangle(localCenter, size),
                 type,
-                position.cpy().add(size.x / 2, size.y / 2)
+                worldPosition.cpy().add(size.x / 2, size.y / 2),
+                createSmoothRectangle(localCenter, size)
         )
 
 const val legsAngle = 61f
