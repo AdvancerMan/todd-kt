@@ -6,9 +6,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.box2d.BodyFactory
 import com.company.todd.box2d.bodyPattern.base.PolygonBodyPattern
 import com.company.todd.box2d.bodyPattern.base.SensorName
+import com.company.todd.util.BOTTOM_GROUND_ANGLE
 import com.company.todd.util.BOTTOM_SENSOR_CUTTING_COEFFICIENT
 import com.company.todd.util.BOTTOM_SENSOR_OFFSET
-import com.company.todd.util.SMOOTH_RECT_BOTTOM_ANGLE
 
 open class BottomGroundSensorPolygonBodyPattern(type: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>) :
         PolygonBodyPattern(type, worldCenter, localVertices) {
@@ -46,10 +46,10 @@ private fun List<Vector2>.takeEdges() =
             val edgeJ = this[j].cpy().sub(v)
             val edgeK = v.cpy().sub(this[k])
 
-            360 - SMOOTH_RECT_BOTTOM_ANGLE < edgeJ.angle()
-                    || edgeJ.angle() < SMOOTH_RECT_BOTTOM_ANGLE
-                    || 360 - SMOOTH_RECT_BOTTOM_ANGLE < edgeK.angle()
-                    || edgeK.angle() < SMOOTH_RECT_BOTTOM_ANGLE
+            360 - BOTTOM_GROUND_ANGLE < edgeJ.angle()
+                    || edgeJ.angle() < BOTTOM_GROUND_ANGLE
+                    || 360 - BOTTOM_GROUND_ANGLE < edgeK.angle()
+                    || edgeK.angle() < BOTTOM_GROUND_ANGLE
         }
 
 private fun List<Vector2>.atLeast2() =

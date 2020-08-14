@@ -14,6 +14,7 @@ import com.company.todd.asset.texture.static.CoveredTiledDrawable
 import com.company.todd.asset.texture.static.MyTextureRegionDrawable
 import com.company.todd.asset.texture.static.NineTiledDrawable
 import com.company.todd.asset.texture.static.TransformTiledDrawable
+import com.company.todd.json.loadTextureInfos
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.random.Random
