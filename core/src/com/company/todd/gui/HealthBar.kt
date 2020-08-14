@@ -6,6 +6,7 @@ import com.company.todd.asset.texture.DisposableByManager
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 
+// TODO to json
 const val defaultHBStepSize = 0.1f
 const val defaultHBAnimateDuration = 0.1f
 

@@ -6,7 +6,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.box2d.BodyFactory
 import com.company.todd.box2d.bodyPattern.base.PolygonBodyPattern
 import com.company.todd.box2d.bodyPattern.base.SensorName
-import com.company.todd.box2d.bodyPattern.base.legsAngle
+import com.company.todd.util.BOTTOM_SENSOR_CUTTING_COEFFICIENT
+import com.company.todd.util.BOTTOM_SENSOR_OFFSET
+import com.company.todd.util.SMOOTH_RECT_BOTTOM_ANGLE
 
 open class BottomGroundSensorPolygonBodyPattern(type: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>) :
         PolygonBodyPattern(type, worldCenter, localVertices) {
@@ -23,15 +25,12 @@ open class BottomGroundSensorPolygonBodyPattern(type: BodyDef.BodyType, worldCen
     }
 }
 
-const val bottomSensorOffset = 1f
-const val bottomSensorCuttingCoefficient = 0.9f
-
 fun getBottomSensorPolygons(vertices: FloatArray) =
         List(vertices.size / 2) { Vector2(vertices[it * 2], vertices[it * 2 + 1]) }.let {
             it
                     .takeEdges()
                     .ifEmpty { listOf(it.minBy { e -> e.y }!!) }
-                    .map { e -> e.cpy().sub(0f, bottomSensorOffset) }
+                    .map { e -> e.cpy().sub(0f, BOTTOM_SENSOR_OFFSET) }
                     .atLeast2()
                     .shiftToMakeNonCyclic()
                     .cutCorners()
@@ -47,18 +46,18 @@ private fun List<Vector2>.takeEdges() =
             val edgeJ = this[j].cpy().sub(v)
             val edgeK = v.cpy().sub(this[k])
 
-            360 - legsAngle < edgeJ.angle()
-                    || edgeJ.angle() < legsAngle
-                    || 360 - legsAngle < edgeK.angle()
-                    || edgeK.angle() < legsAngle
+            360 - SMOOTH_RECT_BOTTOM_ANGLE < edgeJ.angle()
+                    || edgeJ.angle() < SMOOTH_RECT_BOTTOM_ANGLE
+                    || 360 - SMOOTH_RECT_BOTTOM_ANGLE < edgeK.angle()
+                    || edgeK.angle() < SMOOTH_RECT_BOTTOM_ANGLE
         }
 
 private fun List<Vector2>.atLeast2() =
         if (size == 1) {
             listOf(
                     this[0],
-                    Vector2(this[0].x + 1f, this[0].y - bottomSensorOffset),
-                    Vector2(this[0].x - 1f, this[0].y - bottomSensorOffset)
+                    Vector2(this[0].x + 1f, this[0].y - BOTTOM_SENSOR_OFFSET),
+                    Vector2(this[0].x - 1f, this[0].y - BOTTOM_SENSOR_OFFSET)
             )
         } else {
             this
@@ -83,7 +82,7 @@ private fun List<Vector2>.cutCorners(i: Int, j: Int) =
         apply {
             this[i]
                     .sub(this[j])
-                    .scl(bottomSensorCuttingCoefficient)
+                    .scl(BOTTOM_SENSOR_CUTTING_COEFFICIENT)
                     .add(this[j])
         }
 
@@ -91,7 +90,7 @@ private fun List<Vector2>.toEdges() =
         List(size - 1) {
             listOf(
                     this[it], this[it + 1],
-                    this[it + 1].cpy().add(0f, 2 * bottomSensorOffset),
-                    this[it].cpy().add(0f, 2 * bottomSensorOffset)
+                    this[it + 1].cpy().add(0f, 2 * BOTTOM_SENSOR_OFFSET),
+                    this[it].cpy().add(0f, 2 * BOTTOM_SENSOR_OFFSET)
             )
         }

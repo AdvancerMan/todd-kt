@@ -7,6 +7,7 @@ import com.company.todd.launcher.assetsFolder
 import com.company.todd.asset.texture.RegionInfoTypes.*
 import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.util.files.crawlJsonListsWithComments
+import com.company.todd.util.TEXTURES_PATH
 
 interface TextureInfo
 
@@ -35,12 +36,10 @@ data class AnimationInfo(
 
 data class AnimationPackInfo(val animations: List<Pair<AnimationType, AnimationInfo>>) : TextureInfo
 
-const val texturesPath = "pics/"
-
 fun loadTextureInfos(): Map<String, TextureInfo> {
     val res = mutableMapOf<String, TextureInfo>()
 
-    crawlJsonListsWithComments(assetsFolder + texturesPath).forEach { json ->
+    crawlJsonListsWithComments(assetsFolder + TEXTURES_PATH).forEach { json ->
         checkContains(json, "type", "reg, anim or anims") {
             it.isString && it.asString() in listOf("reg", "anim", "anims")
         }
@@ -51,7 +50,7 @@ fun loadTextureInfos(): Map<String, TextureInfo> {
                 checkReg(json)
                 val xywh = json["xywh"].asIntArray()
                 res[json["name"].asString()] = parseRegInfo(
-                        json, texturesPath + json["path"].asString(),
+                        json, TEXTURES_PATH + json["path"].asString(),
                         xywh[0], xywh[1], xywh[2], xywh[3]
                 )
             }
@@ -114,7 +113,7 @@ private fun parseAnimInfo(json: JsonValue): AnimationInfo {
             }
 
     return AnimationInfo(
-            texturesPath + json["path"].asString(),
+            TEXTURES_PATH + json["path"].asString(),
             json["frameDuration"].asFloat() / 1000,
             if (json.has("mode")) Animation.PlayMode.valueOf(json["mode"].asString())
             else Animation.PlayMode.NORMAL,

@@ -3,15 +3,14 @@ package com.company.todd.box2d
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.company.todd.objects.base.toMeters
+import com.company.todd.util.DEFAULT_DENSITY
+import com.company.todd.util.DEFAULT_FRICTION
+import com.company.todd.util.DEFAULT_LINEAR_DAMPING
+import com.company.todd.util.DEFAULT_RESTITUTION
 
 object BodyFactory {
-    const val DEFAULT_DENSITY = 1f
-    const val DEFAULT_FRICTION = 0f
-    const val DEFAULT_RESTITUTION = 0f
-    const val DEFAULT_LINEAR_DAMPING = 0.5f
-
-    val bodyDef = BodyDef()
-    val fixtureDef = FixtureDef()
+    private val bodyDef = BodyDef()
+    private val fixtureDef = FixtureDef()
 
     fun createBody(world: World, type: BodyDef.BodyType, center: Vector2,
                    fixedRotation: Boolean = true, isBullet: Boolean = false) =

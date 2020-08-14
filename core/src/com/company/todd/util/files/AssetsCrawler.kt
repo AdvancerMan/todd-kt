@@ -3,6 +3,7 @@ package com.company.todd.util.files
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.JsonReader
+import com.badlogic.gdx.utils.JsonValue
 import com.badlogic.gdx.utils.Queue
 import com.company.todd.launcher.assetsFolder
 import java.util.regex.Pattern
@@ -24,20 +25,19 @@ fun crawl(fileNamePattern: Pattern, internalPath: String): List<Pair<String, Str
     return res
 }
 
-val commentsPattern = Pattern.compile("//[^\\n]*\\n?")!!
+private val commentsPattern = Pattern.compile("//[^\\n]*\\n?")!!
 
-fun removeComments(input: String) =
-        commentsPattern.matcher(input).replaceAll("\n")!!
+fun String.removeComments() = commentsPattern.matcher(this).replaceAll("\n")!!
 
-private val jsonReader = JsonReader()
 private val jsonPattern = Pattern.compile(".*\\.json")
 
-fun crawlJsonListsWithComments(internalPath: String) =
-        crawl(jsonPattern, internalPath)
-                .flatMap {
-                    removeComments(it.second)
-                            .trim()
-                            .let { json ->
-                                jsonReader.parse(if (json[0] == '[') json else "[$json]")
-                            }
-                }
+fun crawlJsonListsWithComments(internalPath: String): List<JsonValue> {
+    val jsonReader = JsonReader()
+    return crawl(jsonPattern, internalPath)
+            .flatMap { fileNameToJson ->
+                fileNameToJson.second
+                        .removeComments()
+                        .trim()
+                        .let { jsonReader.parse(if (it[0] == '[') it else "[$it]") }
+            }
+}

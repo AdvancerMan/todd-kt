@@ -10,6 +10,7 @@ import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.asset.texture.checkContains
 import com.company.todd.util.files.crawlJsonListsWithComments
+import com.company.todd.util.PROTOTYPES_PATH
 
 class JsonType<T>(val typeName: String, val constructor: (ToddGame?, JsonValue) -> T)
 
@@ -39,10 +40,9 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
                         ": ${type.typeName}. Json: $this"
                 )
 
-const val prototypesPath = "prototypes"
 
 val prototypes by lazy {
-    crawlJsonListsWithComments(assetsFolder + prototypesPath)
+    crawlJsonListsWithComments(assetsFolder + PROTOTYPES_PATH)
             .associateBy {
                 it["name"].asString()
                         ?: throw IllegalArgumentException("Prototype should contain parameter \"name\". Json: $it")

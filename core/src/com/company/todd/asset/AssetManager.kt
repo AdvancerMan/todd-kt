@@ -3,8 +3,7 @@ package com.company.todd.asset
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Queue
-
-const val savingAssetDelay = 5f
+import com.company.todd.util.SAVING_ASSET_DELAY
 
 abstract class AssetManager<T: Disposable>(clazz: Class<T>): Disposable {
     private val assets = mutableMapOf<String, Asset<T>>()
@@ -61,7 +60,7 @@ abstract class AssetManager<T: Disposable>(clazz: Class<T>): Disposable {
     abstract fun loadAsset(fileName: String): T
 
     protected fun unload(fileName: String, count: Int) {
-        unloadingQueue.addLast(fileName to secondsFromCreation + savingAssetDelay to count)
+        unloadingQueue.addLast(fileName to secondsFromCreation + SAVING_ASSET_DELAY to count)
     }
 
     fun unload(fileName: String) {
