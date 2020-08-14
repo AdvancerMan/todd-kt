@@ -42,5 +42,6 @@ const val SAVING_ASSET_DELAY = 5f
 const val JUMP_COOLDOWN = 1 / 30f
 const val Y_VEL_JUMP_THRESHOLD = 1f
 const val HEALTH_BAR_OFFSET = 3f
+const val DAMAGE_TINT_TIME = 0.4f
 
 const val HALF_COL_GROUND_VEL_SCL = 2f

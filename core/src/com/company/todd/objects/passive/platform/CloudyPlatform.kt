@@ -18,15 +18,22 @@ class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2
 
     override fun act(delta: Float) {
         sinceContact += delta
+        super.act(delta)
+    }
+
+    override fun updateColor() {
+        super.updateColor()
 
         if (sinceContact < sinceContactTillInactive) {
-            color.a = 1 - sinceContact / sinceContactTillInactive
-        } else {
-            setActive(sinceContact >= sinceContactTillActive)
-            color.a = if (sinceContact >= sinceContactTillActive) 1f else 0f
+            color.a *= 1 - sinceContact / sinceContactTillInactive
+        } else if (sinceContact < sinceContactTillActive) {
+            color.a = 0f
         }
+    }
 
-        super.act(delta)
+    override fun postAct(delta: Float) {
+        super.postAct(delta)
+        setActive(sinceContact <= sinceContactTillInactive || sinceContact >= sinceContactTillActive)
     }
 
     override fun postSolve(otherSensor: Sensor, other: InGameObject, myFixture: Fixture,

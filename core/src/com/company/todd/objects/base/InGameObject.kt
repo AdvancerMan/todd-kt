@@ -73,9 +73,14 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
         super.act(delta)
     }
 
+    open fun updateColor() {
+        color.set(1f, 1f, 1f, 1f)
+    }
+
     open fun postAct(delta: Float) {
         getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
+        updateColor()
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {

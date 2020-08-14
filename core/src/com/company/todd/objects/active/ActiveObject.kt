@@ -1,5 +1,6 @@
 package com.company.todd.objects.active
 
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -19,6 +20,7 @@ import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
 import com.company.todd.util.HEALTH_BAR_OFFSET
 import com.company.todd.util.JUMP_COOLDOWN
+import com.company.todd.util.DAMAGE_TINT_TIME
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
@@ -30,6 +32,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
     private var preferredAnimationType = AnimationType.STAY
     protected var animationTypeNow = stayAnimation()
     private var sinceJump = JUMP_COOLDOWN + 1
+    private var sinceDamage = DAMAGE_TINT_TIME + 1
     var isOnGround = false
         get() = field && getVelocity().y <= Y_VEL_JUMP_THRESHOLD && sinceJump >= JUMP_COOLDOWN
         private set
@@ -85,6 +88,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
     override fun act(delta: Float) {
         super.act(delta)
         sinceJump += delta
+        sinceDamage += delta
 
         preferredAnimationType = AnimationType.STAY
         preVelocity.setZero()
@@ -93,6 +97,15 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
         updateXVelocity()
         if (!preVelocity.epsilonEquals(preVelocity.x, 0f)) {
             updateYVelocity()
+        }
+    }
+
+    override fun updateColor() {
+        super.updateColor()
+        if (sinceDamage < DAMAGE_TINT_TIME) {
+            val gbColor = Interpolation.smooth.apply(sinceDamage / DAMAGE_TINT_TIME)
+            color.g *= gbColor
+            color.b *= gbColor
         }
     }
 
@@ -133,6 +146,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
     override fun takeDamage(amount: Float) {
         super.takeDamage(amount)
         health -= amount
+        sinceDamage = 0f
     }
 
     override fun dispose() {
