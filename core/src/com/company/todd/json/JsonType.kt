@@ -8,7 +8,7 @@ import com.company.todd.json.Constructors.constructors
 import com.company.todd.launcher.ToddGame
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.base.InGameObject
-import com.company.todd.util.asset.texture.checkContains
+import com.company.todd.asset.texture.checkContains
 import com.company.todd.util.files.crawlJsonListsWithComments
 
 class JsonType<T>(val typeName: String, val constructor: (ToddGame?, JsonValue) -> T)

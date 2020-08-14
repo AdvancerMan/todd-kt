@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.asset.texture.DisposableByManager
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.asset.texture.TextureManager
-import com.company.todd.util.asset.texture.animated.AnimationType
+import com.company.todd.asset.texture.DisposableByManager
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.TextureManager
+import com.company.todd.asset.texture.animated.AnimationType
 
 const val handWeaponOriginXOffset = 1f
 

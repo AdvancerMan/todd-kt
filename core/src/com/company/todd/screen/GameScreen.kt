@@ -13,9 +13,9 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.objects.base.toPix
 import com.company.todd.objects.passive.Level
-import com.company.todd.util.box2d.MyContactListener
-import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
-import com.company.todd.util.input.PlayerInputActor
+import com.company.todd.box2d.MyContactListener
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.input.PlayerInputActor
 
 open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
     protected val world = World(Vector2(0f, -30f), true)

@@ -5,8 +5,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.sensor.createPolygonBPWithTGS
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.sensor.createPolygonBPWithTGS
 
 class SolidPolygonPlatform(game: ToddGame, drawable: MyDrawable,
                            drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,

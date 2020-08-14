@@ -2,7 +2,7 @@ package com.company.todd.util
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
-import com.company.todd.util.input.MovingInputType
+import com.company.todd.input.MovingInputType
 
 // fps ^ (-1)
 var SPF = 1f / 60

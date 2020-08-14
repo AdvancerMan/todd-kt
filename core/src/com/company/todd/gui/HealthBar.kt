@@ -2,9 +2,9 @@ package com.company.todd.gui
 
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar
 import com.company.todd.launcher.ToddGame
-import com.company.todd.util.asset.texture.DisposableByManager
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.asset.texture.TextureManager
+import com.company.todd.asset.texture.DisposableByManager
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.TextureManager
 
 const val defaultHBStepSize = 0.1f
 const val defaultHBAnimateDuration = 0.1f

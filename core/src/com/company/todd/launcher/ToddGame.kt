@@ -5,7 +5,8 @@ import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.company.todd.screen.DebugScreen
-import com.company.todd.util.asset.texture.TextureManager
+import com.company.todd.asset.texture.TextureManager
+import com.company.todd.screen.ScreenManager
 import com.company.todd.util.SPF
 import kotlin.math.min
 

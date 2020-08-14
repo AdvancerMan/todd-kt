@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.RectangleCreature
 import com.company.todd.objects.active.creature.weapon.Weapon
-import com.company.todd.util.asset.texture.MyDrawable
+import com.company.todd.asset.texture.MyDrawable
 
 open class StupidEnemy(game: ToddGame, drawable: MyDrawable,
                        drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,

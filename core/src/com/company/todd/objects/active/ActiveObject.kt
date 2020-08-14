@@ -9,14 +9,14 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.asset.texture.animated.AnimationType
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.asset.texture.animated.stayAnimation
-import com.company.todd.util.box2d.bodyPattern.base.BodyPattern
-import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.util.box2d.bodyPattern.base.SensorName
-import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundListener
-import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundSensor
+import com.company.todd.asset.texture.animated.AnimationType
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.animated.stayAnimation
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.box2d.bodyPattern.base.SensorName
+import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
+import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
 
 const val JUMP_COOLDOWN = 1 / 30f
 const val yVelJumpThreshold = 1f

@@ -10,9 +10,9 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.base.CircleBodyPattern
-import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.base.CircleBodyPattern
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
 
 class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
              bodyLowerLeftCornerOffset: Vector2, center: Vector2, radius: Float,

@@ -9,8 +9,8 @@ import com.company.todd.objects.active.yVelJumpThreshold
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.util.SPF
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
 
 const val halfColVelocityGroundCoef = 2f
 

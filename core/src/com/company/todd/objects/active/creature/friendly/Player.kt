@@ -3,7 +3,7 @@ package com.company.todd.objects.active.creature.friendly
 import com.badlogic.gdx.math.Vector2
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.RectangleCreature
-import com.company.todd.util.input.PlayerInputActor
+import com.company.todd.input.PlayerInputActor
 
 // TODO hardcoded numbers
 class Player(game: ToddGame, private val inputActor: PlayerInputActor) :

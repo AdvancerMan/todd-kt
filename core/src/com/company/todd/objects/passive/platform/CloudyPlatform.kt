@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
 
 class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                      bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2,

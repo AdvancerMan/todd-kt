@@ -12,12 +12,12 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.GameScreen
-import com.company.todd.util.asset.texture.animated.AnimationType
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.asset.texture.MyDrawableI
-import com.company.todd.util.asset.texture.TextureManager
-import com.company.todd.util.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.util.box2d.bodyPattern.sensor.TopGroundListener
+import com.company.todd.asset.texture.animated.AnimationType
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.MyDrawableI
+import com.company.todd.asset.texture.TextureManager
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 
 private var maxID = 0
 

@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.weapon.Weapon
-import com.company.todd.util.asset.texture.MyDrawable
-import com.company.todd.util.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
 
 abstract class RectangleCreature(
         game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
