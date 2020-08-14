@@ -1,12 +1,14 @@
 {
   "name": "arenaSolid",
   "type": "solidRectangle",
-  "drawableName": "arenaSolid"
+  "drawableName": "arenaSolid",
+  "bodyLowerLeftCornerOffset": [0, 0]
 }
 
 {
   "name": "arenaPortal",
   "type": "portal",
   "drawableName": "arenaPortal",
+  "bodyLowerLeftCornerOffset": [0, 0],
   "teleportDelay": 0.1
 }

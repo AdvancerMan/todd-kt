@@ -1,6 +1,7 @@
 package com.company.todd.json
 
 import com.badlogic.gdx.math.Vector2
+import com.company.todd.gui.HealthBar
 import com.company.todd.objects.active.creature.enemy.StupidEnemy
 import com.company.todd.objects.active.creature.weapon.HandWeapon
 import com.company.todd.objects.active.creature.weapon.SimpleMeleeWeapon
@@ -133,7 +134,7 @@ object Constructors {
                         null to Vector2()
                     }
 
-            HandWeapon.Style(hand.first, weapon.first, hand.second, weapon.second)
+            HandWeapon.Style(hand.first, weapon.first, hand.second, weapon.second, json["origin", vector])
         }
 
         return mapOf(
@@ -150,6 +151,14 @@ object Constructors {
     private fun addCreatures(map: MutableMap<String, JsonType<out InGameObject>>,
                              weapons: Map<String, JsonType<out Weapon>>) {
         val weapon = JsonType("Weapon") { game, json -> parseJsonValue(game, json, weapons) }
+        val healthBar = JsonType("HealthBar") { game, jsonWithPrototype ->
+            val json = createJsonValue(jsonWithPrototype)
+            HealthBar(
+                    json["maxHealth", float], json["stepSize", float], json["animateDuration", float],
+                    game!!.textureManager.loadDrawable(json["backgroundDrawableName", string]),
+                    game.textureManager.loadDrawable(json["healthDrawableName", string])
+            )
+        }
 
         map.putAll(
                 "stupidEnemy" to JsonType("Stupid Enemy") { game, json ->
@@ -157,10 +166,10 @@ object Constructors {
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
-                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                            json["bodyLowerLeftCornerOffset", vector],
                             json["bodyPosition", vector], json["bodySize", vector],
-                            json["weapon", weapon, game], json["speed", float],
-                            json["jumpPower", float], json["maxHealth", float],
+                            json["weapon", weapon, game], json["healthBar", healthBar, game],
+                            json["speed", float], json["jumpPower", float],
                             json["jumpCooldown", float], json["maxDistanceFromTarget", float]
                     )
                 }

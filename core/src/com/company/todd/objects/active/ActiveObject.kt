@@ -23,8 +23,8 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                             bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
-                            private var speed: Float, private var jumpPower: Float,
-                            private var maxHealth: Float) :
+                            private val healthBar: HealthBar, private var speed: Float,
+                            private var jumpPower: Float) :
         InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
@@ -36,8 +36,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
 
     private val grounds = mutableMapOf<InGameObject, Int>()
 
-    private val healthBar = HealthBar(game, maxHealth)
-    private var health = maxHealth
+    private var health = healthBar.maxValue
 
     init {
         bodyPattern.sensors[SensorName.BOTTOM_GROUND_SENSOR] = object : Sensor {

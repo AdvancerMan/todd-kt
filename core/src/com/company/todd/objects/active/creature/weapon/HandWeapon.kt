@@ -9,9 +9,6 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
 
-// TODO move to Style
-const val handWeaponOriginXOffset = 1f
-
 abstract class HandWeapon(private val style: Style, protected val cooldown: Float,
                           protected val sinceAttackTillDamage: Float) :
         Weapon(), DisposableByManager {
@@ -28,8 +25,8 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
     private fun updatePositionAndOrigin() {
         x = owner.width / 2
         y = 0f
-        originX = style.handPosition.x + handWeaponOriginXOffset - x
-        originY = style.handPosition.y + (style.handDrawable?.minHeight ?: 0f) / 2 - y
+        originX = style.origin.x - x
+        originY = style.origin.y - y
     }
 
     override fun act(delta: Float) {
@@ -105,5 +102,5 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
     }
 
     class Style(val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
-                val handPosition: Vector2, val weaponPosition: Vector2)
+                val handPosition: Vector2, val weaponPosition: Vector2, val origin: Vector2)
 }

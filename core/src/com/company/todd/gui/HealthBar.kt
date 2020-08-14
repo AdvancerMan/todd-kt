@@ -6,15 +6,9 @@ import com.company.todd.asset.texture.DisposableByManager
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 
-// TODO to json
-const val defaultHBStepSize = 0.1f
-const val defaultHBAnimateDuration = 0.1f
-
 class HealthBar(
-        game: ToddGame, maxHealth: Float,
-        stepSize: Float = defaultHBStepSize, animateDuration: Float = defaultHBAnimateDuration,
-        private val background: MyDrawable = game.textureManager.loadDrawable("healthBarBackground"),
-        private val healthDrawable: MyDrawable = game.textureManager.loadDrawable("healthBarHealth")
+        maxHealth: Float, stepSize: Float, animateDuration: Float,
+        private val background: MyDrawable, private val healthDrawable: MyDrawable
 ) :
         ProgressBar(
                 0f, maxHealth, stepSize, false,
@@ -24,6 +18,7 @@ class HealthBar(
                 }
         ), DisposableByManager {
     init {
+        value = maxHealth
         setAnimateDuration(animateDuration)
     }
 
