@@ -1,12 +1,12 @@
 {
-  "name": "arenaSolid",
+  "protoName": "arenaSolid",
   "type": "solidRectangle",
   "drawableName": "arenaSolid",
   "bodyLowerLeftCornerOffset": [0, 0]
 }
 
 {
-  "name": "arenaPortal",
+  "protoName": "arenaPortal",
   "type": "portal",
   "drawableName": "arenaPortal",
   "bodyLowerLeftCornerOffset": [0, 0],

@@ -35,17 +35,20 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
                 ?: default
                 ?: defaultOther?.let { otherName -> this[otherName]?.let { type.constructor(game, it) } }
                 ?: throw IllegalArgumentException(
-                        "Json must contain $name" +
-                                (defaultOther?.let { " (or $it as default)" } ?: "") +
-                                ": ${type.typeName}. Json: $this"
+                        getJsonErrorMessage(
+                                this,
+                                "Json must contain $name" +
+                                        (defaultOther?.let { " (or $it as default)" } ?: "") +
+                                        ": ${type.typeName}"
+                        )
                 )
 
 
 val prototypes by lazy {
     crawlJsonListsWithComments(assetsFolder + PROTOTYPES_PATH)
             .associateBy {
-                it["name"].asString()
-                        ?: throw IllegalArgumentException("Prototype should contain parameter \"name\". Json: $it")
+                it["protoName"]?.asString()
+                        ?: throw IllegalArgumentException(getJsonErrorMessage(it, "Prototype should contain parameter \"protoName\""))
             }
 }
 
@@ -54,19 +57,17 @@ fun createJsonValue(
         out: JsonValue = JsonValue(JsonValue.ValueType.`object`)
 ): JsonValue {
     jsonWithPrototype.forEach {
-        if (it.name != null && it.name != "prototype" && !out.has(it.name)) {
+        if (it.name != null && it.name !in listOf("prototype", "protoName") && !out.has(it.name)) {
             out.addChild(it.name, it)
         }
     }
 
     return jsonWithPrototype["prototype"]?.asString()?.let { name ->
-        val prototype = prototypes[name]
-        if (prototype == null) {
-            Gdx.app.error("Json", "prototype name $name was not found in prototype map")
-            null
-        } else {
-            createJsonValue(prototype, out)
-        }
+        prototypes[name]?.let { createJsonValue(it, out) }
+                ?: out.also {
+                    Gdx.app.error("Json", getJsonErrorMessage(jsonWithPrototype,
+                            "prototype name $name was not found in prototype map"))
+                }
     } ?: out
 }
 
