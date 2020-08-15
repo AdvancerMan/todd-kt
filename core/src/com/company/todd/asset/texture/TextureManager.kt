@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException
 import com.company.todd.asset.AssetManager
 import com.company.todd.asset.texture.animated.AnimatedDrawableManyAnimations
 import com.company.todd.asset.texture.animated.AnimatedDrawableOneAnimation
-import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.asset.texture.static.CoveredTiledDrawable
 import com.company.todd.asset.texture.static.MyTextureRegionDrawable
 import com.company.todd.asset.texture.static.NineTiledDrawable
@@ -19,7 +18,7 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.random.Random
 
-class TextureManager: AssetManager<Texture>(Texture::class.java) {
+class TextureManager : AssetManager<Texture>(Texture::class.java) {
     private val additionalTexture = TextureRegion(createAdditionalTexture())
     private val additionalInfo = RegionInfo("__additionalInfo", 0, 0, 10, 10)
     private val infos = loadTextureInfos()
@@ -46,7 +45,7 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
     override fun loadAsset(fileName: String) =
             try {
                 Texture(fileName)
-            } catch(e: GdxRuntimeException) {
+            } catch (e: GdxRuntimeException) {
                 error("Error while loading $fileName texture:\n" +
                         StringWriter().let {
                             e.printStackTrace(PrintWriter(it))
@@ -55,21 +54,21 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
                 createAdditionalTexture()
             }
 
-    private fun load(info: AnimationPackInfo): Map<AnimationType, Animation<TextureRegion>> =
+    private fun load(info: AnimationPackInfo) =
             info.animations.associate { it.first to load(it.second) }
 
-    private fun load(info: AnimationInfo): Animation<TextureRegion> =
+    private fun load(info: AnimationInfo) =
             Animation(
                     info.frameDuration,
                     Array(
-                            info.bounds
-                                    .map {
-                                        load(RegionInfo(
-                                                info.path, it.x.toInt(), it.y.toInt(),
+                            info.bounds.map {
+                                loadDrawable(
+                                        info.frameInfo.copy(
+                                                it.x.toInt(), it.y.toInt(),
                                                 it.width.toInt(), it.height.toInt()
-                                        ))
-                                    }
-                                    .toTypedArray()
+                                        )
+                                )
+                            }.toTypedArray()
                     ),
                     info.mode
             )
@@ -84,7 +83,9 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
     }
 
     fun unload(info: AnimationInfo) {
-        unload(info.path, info.bounds.size)
+        if (info.frameInfo.path != additionalInfo.path) {
+            unload(info.frameInfo.path, info.bounds.size)
+        }
     }
 
     fun unload(info: RegionInfo) {
@@ -93,8 +94,8 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
         }
     }
 
-    fun loadDrawable(name: String): MyDrawable =
-            when (val info = infos[name]) {
+    private fun loadDrawable(info: TextureInfo): MyDrawable =
+            when (info) {
                 is TiledRegionInfo -> {
                     TransformTiledDrawable(info, load(info))
                 }
@@ -113,11 +114,12 @@ class TextureManager: AssetManager<Texture>(Texture::class.java) {
                 is AnimationPackInfo -> {
                     AnimatedDrawableManyAnimations(info, load(info))
                 }
-                else -> {
-                    error("Trying to load texture that doesn't exist in infos: $name")
-                    MyTextureRegionDrawable(additionalInfo, additionalTexture)
-                }
             }
+
+    fun loadDrawable(name: String) =
+            infos[name]?.let { loadDrawable(it) }
+                    ?: MyTextureRegionDrawable(additionalInfo, additionalTexture)
+                            .also { error("Trying to load texture that doesn't exist in infos: ") }
 
     override fun dispose() {
         additionalTexture.texture.dispose()

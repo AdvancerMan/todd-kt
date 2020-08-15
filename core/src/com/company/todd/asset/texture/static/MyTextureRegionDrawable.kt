@@ -18,6 +18,6 @@ open class MyTextureRegionDrawable(private val info: RegionInfo?, region: Textur
     }
 
     override fun dispose(manager: TextureManager) {
-        info?.let { manager.unload(info) }
+        info?.let { manager.unload(it) }
     }
 }

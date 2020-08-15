@@ -10,7 +10,7 @@ import com.company.todd.asset.texture.NineTiledRegionInfo
 import com.company.todd.asset.texture.TextureManager
 import kotlin.math.max
 
-class NineTiledDrawable(private val info: NineTiledRegionInfo,
+class NineTiledDrawable(private val info: NineTiledRegionInfo?,
                         region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: Int) :
         BaseDrawable(), MyDrawable {
     constructor(info: NineTiledRegionInfo, region: TextureRegion) :
@@ -77,6 +77,6 @@ class NineTiledDrawable(private val info: NineTiledRegionInfo,
     }
 
     override fun dispose(manager: TextureManager) {
-        manager.unload(info)
+        info?.let { manager.unload(it) }
     }
 }

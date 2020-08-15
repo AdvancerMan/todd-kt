@@ -2,19 +2,19 @@ package com.company.todd.asset.texture.animated
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.company.todd.asset.texture.AnimationPackInfo
+import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 
 class AnimatedDrawableManyAnimations
 private constructor(private val animationPackInfo: AnimationPackInfo,
-                    private val animations: Map<AnimationType, Animation<TextureRegion>>,
-                    firstAnimation: Pair<AnimationType, Animation<TextureRegion>>) :
+                    private val animations: Map<AnimationType, Animation<MyDrawable>>,
+                    firstAnimation: Pair<AnimationType, Animation<MyDrawable>>) :
         AnimatedDrawable(firstAnimation.second) {
     private var type = firstAnimation.first
 
     constructor(animationPackInfo: AnimationPackInfo,
-                animations: Map<AnimationType, Animation<TextureRegion>>) :
+                animations: Map<AnimationType, Animation<MyDrawable>>) :
             this(
                     animationPackInfo, animations,
                     animations[AnimationType.STAY]?.let { AnimationType.STAY to it }
@@ -32,7 +32,7 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
                     "Trying to get non-existing animation $type for "
                             + animationPackInfo.animations
                             .map {
-                                it.second.path + it.second.bounds
+                                it.second.frameInfo.path + it.second.bounds
                                         .take(4)
                                         .map { r -> listOf(r.x, r.y, r.width, r.height).map(Float::toInt) }
                             }

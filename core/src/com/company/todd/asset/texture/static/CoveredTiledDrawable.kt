@@ -9,15 +9,17 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import kotlin.math.min
 
-class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo,
+class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo?,
                            coverTile: TextureRegion, bodyTile: TextureRegion) :
         BaseDrawable(), MyDrawable {
-    constructor(info: CoveredTiledRegionInfo, region: TextureRegion) :
+    constructor(info: CoveredTiledRegionInfo?, region: TextureRegion, uh: Int) :
             this(
                     info,
-                    TextureRegion(region, 0, region.regionHeight - info.uh, region.regionWidth, info.uh),
-                    region.apply { regionHeight -= info.uh }
+                    TextureRegion(region, 0, region.regionHeight - uh, region.regionWidth, uh),
+                    region.apply { regionHeight -= uh }
             )
+
+    constructor(info: CoveredTiledRegionInfo, region: TextureRegion) : this(info, region, info.uh)
 
     private val cover = TransformTiledDrawable(null, coverTile)
     private val body = TransformTiledDrawable(null, bodyTile)
@@ -46,6 +48,6 @@ class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo,
     }
 
     override fun dispose(manager: TextureManager) {
-        manager.unload(info)
+        info?.let { manager.unload(it) }
     }
 }

@@ -23,18 +23,21 @@ fun checkName(json: JsonValue, set: Set<String>) {
     }
 }
 
-fun checkIntRectangle(json: JsonValue) =
-        json.isArray && json.size == 4 && !json.any { it.type() != JsonValue.ValueType.longValue }
-
-
 operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? = null, default: T? = null, defaultOther: String? = null) =
-        this[name]?.let { type.constructor(game, it) }
+        this[name]?.let {
+            try {
+                type.constructor(game, it)
+            } catch (e: Exception) {
+                Gdx.app.error("Json", getJsonErrorMessage(it, "Unable to create an instance from ${type.typeName} constructor. Error: ${e.message}"))
+                null
+            }
+        }
                 ?: default
                 ?: defaultOther?.let { otherName -> this[otherName]?.let { type.constructor(game, it) } }
                 ?: throw IllegalArgumentException(
                         "Json must contain $name" +
-                                if (defaultOther != null) " (or $defaultOther as default)" else "" +
-                                        ": ${type.typeName}. Json: $this"
+                                (defaultOther?.let { " (or $it as default)" } ?: "") +
+                                ": ${type.typeName}. Json: $this"
                 )
 
 

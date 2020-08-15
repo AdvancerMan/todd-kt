@@ -57,6 +57,10 @@
 // mode --- play mode: NORMAL, REVERSED, LOOP, LOOP_REVERSED, LOOP_PINGPONG, LOOP_RANDOM
 // no mode ---> default mode ---> NORMAL
 
+// optional:
+// regType --- region type for frames can be changed by changing `regType` parameter of anim
+//             and adding required parameters for regType
+
 {
   "type": "anim",
   "name": "testAnim1",
@@ -69,6 +73,22 @@
     [10, 0, 10, 10],
     [10, 10, 10, 10]
   ]
+}
+
+{
+  "type": "anim",
+  "name": "testAnimRegTypeNineTiled",
+  "path": "testAnimRegTypeNineTiled.png",
+  "frameDuration": 100,
+  "mode": "LOOP_PINGPONG",
+  "bounds": [
+    [0, 0, 10, 10],
+    [0, 10, 10, 10],
+    [10, 0, 10, 10],
+    [10, 10, 10, 10]
+  ],
+  "regType": "NINE_TILED",
+  "lrud": [3, 3, 3, 3]
 }
 
 // also allowed:
