@@ -14,6 +14,8 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useAccelerometer = false;
 		config.useCompass = false;
 		config.useGyroscope = false;
+		config.hideStatusBar = true;
+		config.useImmersiveMode = true;
 		initialize(new ToddGame(), config);
 	}
 }

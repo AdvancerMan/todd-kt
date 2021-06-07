@@ -119,7 +119,7 @@ class TextureManager : AssetManager<Texture>(Texture::class.java) {
     fun loadDrawable(name: String) =
             infos[name]?.let { loadDrawable(it) }
                     ?: MyTextureRegionDrawable(additionalInfo, additionalTexture)
-                            .also { error("Trying to load texture that doesn't exist in infos: ") }
+                            .also { error("Trying to load texture that doesn't exist in infos: $name") }
 
     override fun dispose() {
         additionalTexture.texture.dispose()
