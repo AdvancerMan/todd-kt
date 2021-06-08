@@ -16,7 +16,7 @@ animation_file_names = [name.lower() + ".png" for name in animation_types]
 def add_to_anims(anims, path, anim_type):
     size = cv2.imread(path).shape
     anims[anim_type] = {
-        "path": path,
+        "path": "/".join(os.path.normpath(path).split(os.sep)),
         "frameDuration": 100,
         "mode": "NORMAL" if anim_type not in loop_animation_types else "LOOP",
         "xywh": [0, 0, size[1], size[0]],
@@ -45,9 +45,14 @@ def write_anims(anims, root_path, name):
         indent=2
     )
     path = os.path.join(root_path, name + ".json")
+
+    if os.path.exists(path):
+        print("File at", path, "already exists")
+        path += ".tmp"
     print("Writing .json to", path)
     with open(path, 'w') as f:
         f.write(anims_json)
+    print()
 
 def create_description(root_path: str):
     anims = dict()

@@ -5,13 +5,15 @@ import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.JsonReader
 import com.badlogic.gdx.utils.JsonValue
 import com.badlogic.gdx.utils.Queue
-import com.company.todd.launcher.assetsFolder
+import java.io.File
 import java.util.regex.Pattern
 
-fun crawl(fileNamePattern: Pattern, internalPath: String): List<Pair<String, String>> {
+fun String.toOsDependentPath() = split('/').joinToString(File.separator)
+
+fun crawl(fileNamePattern: Pattern, unixInternalPath: String): List<Pair<String, String>> {
     val res = mutableListOf<Pair<String, String>>()
     val queue = Queue<FileHandle>()
-    queue.addLast(Gdx.files.internal(internalPath))
+    queue.addLast(Gdx.files.internal(unixInternalPath.toOsDependentPath()))
 
     while (queue.notEmpty()) {
         val files = queue.removeFirst().list()
@@ -31,9 +33,9 @@ fun String.removeComments() = commentsPattern.matcher(this).replaceAll("\n")!!
 
 private val jsonPattern = Pattern.compile(".*\\.json")
 
-fun crawlJsonListsWithComments(internalPath: String): List<JsonValue> {
+fun crawlJsonListsWithComments(unixInternalPath: String): List<JsonValue> {
     val jsonReader = JsonReader()
-    return crawl(jsonPattern, internalPath)
+    return crawl(jsonPattern, unixInternalPath)
             .flatMap { fileNameToJson ->
                 fileNameToJson.second
                         .removeComments()

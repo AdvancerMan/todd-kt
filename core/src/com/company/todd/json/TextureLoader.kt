@@ -8,6 +8,7 @@ import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.util.TEXTURES_PATH
 import com.company.todd.util.files.crawlJsonListsWithComments
+import com.company.todd.util.files.toOsDependentPath
 
 private val animationPackInfo = JsonType("non-empty map, keys are ${AnimationType.values().contentToString()}, " +
         "values are infos of \"anim\" type") { _, json ->
@@ -44,15 +45,17 @@ private val regionInfoType = JsonType(
     RegionInfoType.valueOf(json.asString())
 }
 
-private fun parseRegInfo(json: JsonValue, path: String, x: Int, y: Int, w: Int, h: Int) =
-        when (json["regType", regionInfoType, null, RegionInfoType.REGION]) {
-            RegionInfoType.REGION -> RegionInfo(path, x, y, w, h)
-            RegionInfoType.TILED -> TiledRegionInfo(path, x, y, w, h)
-            RegionInfoType.COVERED_TILED -> CoveredTiledRegionInfo(path, x, y, w, h, json["uh", int])
-            RegionInfoType.NINE_TILED -> json["lrud", intRectangle].let {
-                NineTiledRegionInfo(path, x, y, w, h, it.x.toInt(), it.y.toInt(), it.width.toInt(), it.height.toInt())
-            }
+private fun parseRegInfo(json: JsonValue, unixPath: String, x: Int, y: Int, w: Int, h: Int) : RegionInfo {
+    val path = unixPath.toOsDependentPath()
+    return when (json["regType", regionInfoType, null, RegionInfoType.REGION]) {
+        RegionInfoType.REGION -> RegionInfo(path, x, y, w, h)
+        RegionInfoType.TILED -> TiledRegionInfo(path, x, y, w, h)
+        RegionInfoType.COVERED_TILED -> CoveredTiledRegionInfo(path, x, y, w, h, json["uh", int])
+        RegionInfoType.NINE_TILED -> json["lrud", intRectangle].let {
+            NineTiledRegionInfo(path, x, y, w, h, it.x.toInt(), it.y.toInt(), it.width.toInt(), it.height.toInt())
         }
+    }
+}
 
 private val animationPlayMode = JsonType(
         "animation play mode, one of strings: ${Animation.PlayMode.values().contentToString()}"
