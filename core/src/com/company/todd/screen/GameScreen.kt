@@ -15,12 +15,12 @@ import com.company.todd.objects.base.toPix
 import com.company.todd.objects.passive.Level
 import com.company.todd.box2d.MyContactListener
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
-import com.company.todd.input.PlayerInputActor
+import com.company.todd.input.PlayerThinker
 
 open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
     protected val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
-    protected val playerInputActor = PlayerInputActor(game)
+    protected val playerInputActor = PlayerThinker(game)
     protected val justAddedObjects = mutableListOf<InGameObject>()
     val player = Player(game, playerInputActor)
 

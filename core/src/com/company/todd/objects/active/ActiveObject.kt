@@ -18,6 +18,7 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
+import com.company.todd.thinker.Thinker
 import com.company.todd.util.HEALTH_BAR_OFFSET
 import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
@@ -25,8 +26,8 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                             bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
-                            private val healthBar: HealthBar, private var speed: Float,
-                            private var jumpPower: Float) :
+                            private var thinker: Thinker, private val healthBar: HealthBar,
+                            private var speed: Float, private var jumpPower: Float) :
         InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
@@ -83,7 +84,9 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
         }
     }
 
-    abstract fun think(delta: Float)
+    fun think(delta: Float) {
+        thinker.think(delta, this, screen)
+    }
 
     override fun act(delta: Float) {
         super.act(delta)

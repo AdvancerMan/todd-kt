@@ -8,13 +8,14 @@ import com.company.todd.screen.GameScreen
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.gui.HealthBar
+import com.company.todd.thinker.Thinker
 
 abstract class Creature(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                         bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
-                        protected var weapon: Weapon?, healthBar: HealthBar,
-                        speed: Float, jumpPower: Float) :
+                        protected var weapon: Weapon?, thinker: Thinker,
+                        healthBar: HealthBar, speed: Float, jumpPower: Float) :
         ActiveObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset,
-                bodyPattern, healthBar, speed, jumpPower) {
+                bodyPattern, thinker, healthBar, speed, jumpPower) {
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         weapon?.let {
@@ -22,6 +23,8 @@ abstract class Creature(game: ToddGame, drawable: MyDrawable, drawableSize: Vect
             it.init(this, gameScreen)
         }
     }
+
+    fun canAttack() = weapon?.canAttack()
 
     fun attack() {
         weapon?.attack()

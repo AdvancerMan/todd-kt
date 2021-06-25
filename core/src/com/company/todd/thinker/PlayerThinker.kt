@@ -1,7 +1,6 @@
 package com.company.todd.input
 
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.*
 import com.badlogic.gdx.scenes.scene2d.ui.Button
@@ -11,13 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
+import com.company.todd.objects.active.ActiveObject
+import com.company.todd.screen.GameScreen
+import com.company.todd.thinker.Thinker
 import com.company.todd.util.*
 
 enum class MovingInputType(val i: Int) {
     SLIDER(0), TOUCHPAD(1)
 }
 
-class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
+class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
     var isMovingLeft = false
         private set
     var isMovingRight = false
@@ -58,7 +60,7 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
 
     private var inputActorIndex = MOVING_INPUT_DEFAULT_ACTOR_INDEX
         set(value) {
-            resetMovingActor()
+            resetInputActor()
             movingActors[field].isVisible = false
             movingActors[value].isVisible = true
             field = value
@@ -82,11 +84,25 @@ class PlayerInputActor(val game: ToddGame) : Group(), Disposable {
         updatePosition()
     }
 
-    fun setInputActor(type: MovingInputType) {
+    override fun think(delta: Float, operatedObject: ActiveObject, screen: GameScreen) {
+        if (isMovingLeft) {
+            operatedObject.isDirectedToRight = false
+            operatedObject.run(false)
+        }
+        if (isMovingRight) {
+            operatedObject.isDirectedToRight = true
+            operatedObject.run(true)
+        }
+        if (isJumping) {
+            operatedObject.jump()
+        }
+    }
+
+    fun setInputActorType(type: MovingInputType) {
         inputActorIndex = type.i
     }
 
-    private fun resetMovingActor() {
+    private fun resetInputActor() {
         isMovingLeft = false
         isMovingRight = false
         isJumping = false
