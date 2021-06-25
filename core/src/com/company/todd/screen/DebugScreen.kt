@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.company.todd.launcher.ToddGame
 import com.company.todd.json.loadLevels
 import com.company.todd.objects.base.pixInMeter
-import com.company.todd.input.MovingInputType
+import com.company.todd.thinker.MovingInputType
 
 class DebugScreen(game: ToddGame): GameScreen(game, loadLevels().find { it.name == "testLevel" }) {
     private val debugRenderer = Box2DDebugRenderer()
@@ -29,10 +29,10 @@ class DebugScreen(game: ToddGame): GameScreen(game, loadLevels().find { it.name 
 
     override fun update(delta: Float) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            playerInputActor.setInputActorType(MovingInputType.SLIDER)
+            playerThinker.setInputActorType(MovingInputType.SLIDER)
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-            playerInputActor.setInputActorType(MovingInputType.TOUCHPAD)
+            playerThinker.setInputActorType(MovingInputType.TOUCHPAD)
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             pressedPlay = !pressedPlay

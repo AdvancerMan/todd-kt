@@ -15,21 +15,21 @@ import com.company.todd.objects.base.toPix
 import com.company.todd.objects.passive.Level
 import com.company.todd.box2d.MyContactListener
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
-import com.company.todd.input.PlayerThinker
+import com.company.todd.thinker.PlayerThinker
 
 open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
     protected val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
-    protected val playerInputActor = PlayerThinker(game)
+    protected val playerThinker = PlayerThinker(game)
     protected val justAddedObjects = mutableListOf<InGameObject>()
-    val player = Player(game, playerInputActor)
+    val player = Player(game, playerThinker)
 
     init {
         level?.create(game)?.forEach { addObject(it) }
         addObject(player)
         stage.addActor(objects)
-        ScreenActors.addActor(playerInputActor)
-        stage.addListener(playerInputActor.createInputListener())
+        ScreenActors.addActor(playerThinker)
+        stage.addListener(playerThinker.createInputListener())
         world.setContactListener(MyContactListener())
     }
 
@@ -51,11 +51,11 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game) {
 
     override fun resize(width: Int, height: Int) {
         super.resize(width, height)
-        playerInputActor.resize(stage.camera.viewportWidth, stage.camera.viewportHeight)
+        playerThinker.resize(stage.camera.viewportWidth, stage.camera.viewportHeight)
     }
 
     override fun dispose() {
-        playerInputActor.dispose()
+        playerThinker.dispose()
         justAddedObjects.forEach { it.dispose() }
         justAddedObjects.clear()
         objects.children.forEach { (it as InGameObject).dispose() }

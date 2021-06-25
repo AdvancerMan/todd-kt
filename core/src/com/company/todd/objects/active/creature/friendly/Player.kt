@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.company.todd.gui.HealthBar
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.creature.RectangleCreature
-import com.company.todd.input.PlayerThinker
+import com.company.todd.thinker.PlayerThinker
 
 // TODO hardcoded numbers
 class Player(game: ToddGame, thinker: PlayerThinker) :

@@ -1,6 +1,6 @@
 package com.company.todd.util
 
-import com.company.todd.input.MovingInputType
+import com.company.todd.thinker.MovingInputType
 
 // fps ^ (-1)
 var SPF = 1f / 60

@@ -1,4 +1,4 @@
-package com.company.todd.input
+package com.company.todd.thinker
 
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.active.ActiveObject
 import com.company.todd.screen.GameScreen
-import com.company.todd.thinker.Thinker
 import com.company.todd.util.*
 
 enum class MovingInputType(val i: Int) {
@@ -20,12 +19,9 @@ enum class MovingInputType(val i: Int) {
 }
 
 class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
-    var isMovingLeft = false
-        private set
-    var isMovingRight = false
-        private set
-    var isJumping = false
-        private set
+    private var isMovingLeft = false
+    private var isMovingRight = false
+    private var isJumping = false
         get() = jumpButton.isPressed || field
 
     private val resources = listOf(
