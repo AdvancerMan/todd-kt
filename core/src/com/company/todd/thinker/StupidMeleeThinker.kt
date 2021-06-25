@@ -1,7 +1,6 @@
 package com.company.todd.thinker
 
 import com.company.todd.objects.active.ActiveObject
-import com.company.todd.objects.active.creature.Creature
 import com.company.todd.screen.GameScreen
 
 class StupidMeleeThinker(private val maxDistanceFromTarget: Float, private val jumpCooldown: Float) : Thinker {
@@ -10,8 +9,7 @@ class StupidMeleeThinker(private val maxDistanceFromTarget: Float, private val j
     override fun think(delta: Float, operatedObject: ActiveObject, screen: GameScreen) {
         sinceJump += delta
 
-        if ((operatedObject as Creature).canAttack()!!) {
-            // TODO active object can attack
+        if (operatedObject.canAttack()) {
             operatedObject.attack()
         }
 

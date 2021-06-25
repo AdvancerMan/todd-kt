@@ -7,6 +7,7 @@ import com.company.todd.objects.active.creature.weapon.Weapon
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
 import com.company.todd.gui.HealthBar
+import com.company.todd.objects.active.ActiveObject
 import com.company.todd.thinker.Thinker
 
 abstract class RectangleCreature(
@@ -14,7 +15,7 @@ abstract class RectangleCreature(
         bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2,
         weapon: Weapon?, thinker: Thinker, healthBar: HealthBar, speed: Float, jumpPower: Float
 ) :
-        Creature(
+        ActiveObject(
                 game, drawable, drawableSize, bodyLowerLeftCornerOffset,
                 createRectangleBPWithTGSBGS(
                         BodyDef.BodyType.DynamicBody,
