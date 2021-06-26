@@ -7,7 +7,7 @@ import java.net.SocketAddress
 import java.util.*
 
 class ToddUDPServer(
-    private val updatesListener: UpdatesListener,
+    private val updatesListener: ServerUpdatesListener,
     private val serverInfo: ByteArray,
     private val sendIntervalMs: Long = 33,
     private val afkTimeBeforeKickingMs: Long = 60_000
@@ -127,7 +127,7 @@ class ToddUDPServer(
         val DISCONNECTED_MESSAGE: ByteArray = "HI, TODD, YOU DISCONNECTED!".toByteArray()
     }
 
-    interface UpdatesListener {
+    interface ServerUpdatesListener {
         fun receiveClientUpdates(socketAddress: SocketAddress, updates: String)
         fun flushServerUpdates(): String
         fun getOnConnectInfo(socketAddress: SocketAddress): String
