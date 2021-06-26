@@ -1,4 +1,4 @@
-package com.company.todd.objects.active.creature.weapon
+package com.company.todd.objects.weapon
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Fixture

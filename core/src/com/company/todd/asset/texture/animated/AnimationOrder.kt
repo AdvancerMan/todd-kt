@@ -1,19 +1,19 @@
 package com.company.todd.asset.texture.animated
 
-import com.company.todd.objects.active.ActiveObject
+import com.company.todd.objects.creature.Creature
 
 interface AnimationOrder {
     val type: AnimationType
-    fun next(obj: ActiveObject, preferredType: AnimationType): AnimationOrder
+    fun next(obj: Creature, preferredType: AnimationType): AnimationOrder
 }
 
 private class AnimationOrderImpl(override val type: AnimationType) : AnimationOrder {
-    private val instructions = mutableListOf<(ActiveObject, AnimationType) -> AnimationOrder?>()
+    private val instructions = mutableListOf<(Creature, AnimationType) -> AnimationOrder?>()
 
-    override fun next(obj: ActiveObject, preferredType: AnimationType) =
+    override fun next(obj: Creature, preferredType: AnimationType) =
             instructions.map { it(obj, preferredType) }.firstOrNull { it != null } ?: this
 
-    fun then(next: AnimationOrder, predicate: (ActiveObject, AnimationType) -> Boolean) {
+    fun then(next: AnimationOrder, predicate: (Creature, AnimationType) -> Boolean) {
         instructions.add { obj, type -> if (predicate(obj, type)) next else null }
     }
 }

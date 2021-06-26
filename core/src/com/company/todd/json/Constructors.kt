@@ -1,11 +1,14 @@
 package com.company.todd.json
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
 import com.company.todd.gui.HealthBar
-import com.company.todd.objects.active.creature.enemy.StupidEnemy
-import com.company.todd.objects.active.creature.weapon.HandWeapon
-import com.company.todd.objects.active.creature.weapon.SimpleMeleeWeapon
-import com.company.todd.objects.active.creature.weapon.Weapon
+import com.company.todd.objects.creature.Creature
+import com.company.todd.objects.weapon.HandWeapon
+import com.company.todd.objects.weapon.SimpleMeleeWeapon
+import com.company.todd.objects.weapon.Weapon
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.interactive.Jumper
 import com.company.todd.objects.passive.interactive.Portal
@@ -15,6 +18,8 @@ import com.company.todd.objects.passive.platform.CloudyPlatform
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.objects.passive.platform.SolidPolygonPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
+import com.company.todd.thinker.StupidMeleeThinker
+import com.company.todd.thinker.Thinker
 import com.company.todd.util.putAll
 
 object Constructors {
@@ -23,13 +28,31 @@ object Constructors {
     init {
         val constructors = mutableMapOf<String, JsonType<out InGameObject>>()
 
-        addPassiveObjects(constructors)
-        addCreatures(constructors, getWeapons())
+        val bodyPatternType = getBodyPatternType()
+        addPassiveObjects(constructors, bodyPatternType)
+        addCreatures(constructors, bodyPatternType, getWeapons(), getThinkers())
 
         this.constructors = constructors
     }
 
-    private fun addPassiveObjects(map: MutableMap<String, JsonType<out InGameObject>>) {
+    private fun getBodyPatternType(): JsonType<out BodyPattern> {
+        val map = mapOf(
+            "rectangleWithTopGSBottomGS" to JsonType("Rectangle body pattern with top and bottom ground sensors") { _, json ->
+                createRectangleBPWithTGSBGS(
+                    BodyDef.BodyType.DynamicBody,
+                    json["bodyPosition", vector], json["bodySize", vector]
+                )
+            }
+        )
+
+        return JsonType("Body pattern") { game, json -> parseJsonValue(game, json, map) }
+    }
+
+    private fun addPassiveObjects(
+        map: MutableMap<String, JsonType<out InGameObject>>,
+        bodyPatternType: JsonType<out BodyPattern>
+    ) {
+        // TODO use bodyPatternType
         map.putAll(
                 "solidRectangle" to JsonType("Solid Rectangle Platform") { game, json ->
                     SolidRectanglePlatform(
@@ -149,10 +172,23 @@ object Constructors {
         )
     }
 
-    private fun addCreatures(map: MutableMap<String, JsonType<out InGameObject>>,
-                             weapons: Map<String, JsonType<out Weapon>>) {
-        val weapon = JsonType("Weapon") { game, json -> parseJsonValue(game, json, weapons) }
-        val healthBar = JsonType("HealthBar") { game, jsonWithPrototype ->
+    private fun getThinkers(): Map<String, JsonType<out Thinker>> {
+        return mapOf(
+            "stupidMeleeThinker" to JsonType("Stupid Melee Thinker") { game, json ->
+                StupidMeleeThinker(json["maxDistanceFromTarget", float], json["jumpCooldown", float])
+            }
+        )
+    }
+
+    private fun addCreatures(
+        map: MutableMap<String, JsonType<out InGameObject>>,
+        bodyPatternType: JsonType<out BodyPattern>,
+        weapons: Map<String, JsonType<out Weapon>>,
+        thinkers: Map<String, JsonType<out Thinker>>
+    ) {
+        val weaponType = JsonType("Weapon") { game, json -> parseJsonValue(game, json, weapons) }
+        val thinkerType = JsonType("Thinker") { game, json -> parseJsonValue(game, json, thinkers) }
+        val healthBarType = JsonType("HealthBar") { game, jsonWithPrototype ->
             val json = createJsonValue(jsonWithPrototype)
             HealthBar(
                     json["maxHealth", float], json["stepSize", float], json["animateDuration", float],
@@ -162,18 +198,16 @@ object Constructors {
         }
 
         map.putAll(
-                "stupidEnemy" to JsonType("Stupid Enemy") { game, json ->
-                    StupidEnemy(
-                            game!!,
-                            game.textureManager.loadDrawable(json["drawableName", string]),
-                            json.get("drawableSize", vector, defaultOther = "bodySize"),
-                            json["bodyLowerLeftCornerOffset", vector],
-                            json["bodyPosition", vector], json["bodySize", vector],
-                            json["weapon", weapon, game], json["healthBar", healthBar, game],
-                            json["speed", float], json["jumpPower", float],
-                            json["jumpCooldown", float], json["maxDistanceFromTarget", float]
-                    )
-                }
+            "creature" to JsonType("Stupid Enemy") { game, json ->
+                Creature(
+                    game!!,
+                    game.textureManager.loadDrawable(json["drawableName", string]),
+                    json.get("drawableSize", vector, defaultOther = "bodySize"),
+                    json["bodyLowerLeftCornerOffset", vector], json["bodyPattern", bodyPatternType, game],
+                    json["weapon", weaponType, game], json["thinker", thinkerType, game],
+                    json["healthBar", healthBarType, game], json["speed", float], json["jumpPower", float]
+                )
+            }
         )
     }
 }

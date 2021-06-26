@@ -1,4 +1,4 @@
-package com.company.todd.objects.active
+package com.company.todd.objects.creature
 
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
@@ -18,19 +18,20 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
-import com.company.todd.objects.active.creature.weapon.Weapon
+import com.company.todd.objects.weapon.Weapon
 import com.company.todd.thinker.Thinker
 import com.company.todd.util.HEALTH_BAR_OFFSET
 import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
-abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
-                            bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
-                            protected var weapon: Weapon?, private var thinker: Thinker,
-                            private val healthBar: HealthBar, private var speed: Float,
-                            private var jumpPower: Float) :
-        InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
+open class Creature(
+    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+    bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+    protected var weapon: Weapon?, private var thinker: Thinker,
+    private val healthBar: HealthBar, private var speed: Float,
+    private var jumpPower: Float
+) : InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
     protected var animationTypeNow = stayAnimation()
@@ -52,7 +53,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
                 if (!(otherSensor === other) && otherSensor is TopGroundListener) {
                     val cnt = grounds.getOrElse(other) { 0 }
                     if (cnt == 0) {
-                        otherSensor.beginOnGround(this@ActiveObject)
+                        otherSensor.beginOnGround(this@Creature)
                     }
                     grounds[other] = cnt + 1
                 }
@@ -64,7 +65,7 @@ abstract class ActiveObject(game: ToddGame, drawable: MyDrawable, drawableSize: 
                 if (!(otherSensor === other) && otherSensor is TopGroundListener) {
                     val cnt = grounds[other]!! - 1
                     if (cnt == 0) {
-                        otherSensor.endOnGround(this@ActiveObject)
+                        otherSensor.endOnGround(this@Creature)
                         grounds.remove(other)
                     } else {
                         grounds[other] = cnt

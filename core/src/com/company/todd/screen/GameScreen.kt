@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.active.creature.friendly.Player
+import com.company.todd.objects.creature.Player
 import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters

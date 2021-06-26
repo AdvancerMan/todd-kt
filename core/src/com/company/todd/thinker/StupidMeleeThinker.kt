@@ -1,12 +1,12 @@
 package com.company.todd.thinker
 
-import com.company.todd.objects.active.ActiveObject
+import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.GameScreen
 
 class StupidMeleeThinker(private val maxDistanceFromTarget: Float, private val jumpCooldown: Float) : Thinker {
     private var sinceJump = jumpCooldown
 
-    override fun think(delta: Float, operatedObject: ActiveObject, screen: GameScreen) {
+    override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
         sinceJump += delta
 
         if (operatedObject.canAttack()) {

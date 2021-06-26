@@ -1,4 +1,4 @@
-package com.company.todd.objects.active.creature.weapon
+package com.company.todd.objects.weapon
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2

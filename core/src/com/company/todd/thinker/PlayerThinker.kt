@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.active.ActiveObject
+import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.GameScreen
 import com.company.todd.util.*
 
@@ -80,7 +80,7 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
         updatePosition()
     }
 
-    override fun think(delta: Float, operatedObject: ActiveObject, screen: GameScreen) {
+    override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
         if (isMovingLeft) {
             operatedObject.isDirectedToRight = false
             operatedObject.run(false)

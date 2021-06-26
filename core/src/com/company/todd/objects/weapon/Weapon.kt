@@ -1,4 +1,4 @@
-package com.company.todd.objects.active.creature.weapon
+package com.company.todd.objects.weapon
 
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.company.todd.objects.base.InGameObject
