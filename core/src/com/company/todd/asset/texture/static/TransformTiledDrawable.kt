@@ -10,6 +10,7 @@ import com.company.todd.asset.texture.TiledRegionInfo
 import kotlin.math.ceil
 
 class TransformTiledDrawable(private val info: TiledRegionInfo?, region: TextureRegion) : TiledDrawable(region), MyDrawable {
+    override var drawableName: String? = null
     private val temp: Color = Color()
 
     /**

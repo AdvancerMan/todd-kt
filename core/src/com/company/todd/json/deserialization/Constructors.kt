@@ -38,7 +38,7 @@ object Constructors {
 
     private fun <T, CT : Any> Map<KClass<out CT>, JsonType<out T>>.toJsonTypeMap() = mapKeys { entry ->
         try {
-            (entry.key.annotations.first { it::class == SerializationType::class} as SerializationType).type
+            (entry.key.annotations.first { it is SerializationType} as SerializationType).type
         } catch (e: NoSuchElementException) {
             throw IllegalArgumentException("Given class has no SerializationType annotation", e)
         }

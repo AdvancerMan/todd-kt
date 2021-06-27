@@ -9,6 +9,7 @@ enum class AnimationType {
 }
 
 abstract class AnimatedDrawable(playingNow: Animation<MyDrawable>) : MyDrawable {
+    override var drawableName: String? = null
     protected var elapsed = 0f
     protected var frame = playingNow.getKeyFrame(0f)!!
     protected var playingNow = playingNow

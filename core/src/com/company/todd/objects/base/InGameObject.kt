@@ -112,6 +112,7 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
     }
 
     // delegating MyDrawable implementation to drawable
+    override var drawableName = drawable.drawableName
     override fun setPlayingType(type: AnimationType, forceReset: Boolean) = drawable.setPlayingType(type, forceReset)
     override fun getPlayingType() = drawable.getPlayingType()
     override fun isAnimationFinished() = drawable.isAnimationFinished()

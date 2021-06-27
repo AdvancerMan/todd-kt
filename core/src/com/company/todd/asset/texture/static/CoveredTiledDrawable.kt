@@ -12,6 +12,8 @@ import kotlin.math.min
 class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo?,
                            coverTile: TextureRegion, bodyTile: TextureRegion) :
         BaseDrawable(), MyDrawable {
+    override var drawableName: String? = null
+
     constructor(info: CoveredTiledRegionInfo?, region: TextureRegion, uh: Int) :
             this(
                     info,

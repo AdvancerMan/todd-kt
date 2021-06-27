@@ -9,6 +9,8 @@ interface DisposableByManager {
 }
 
 interface MyDrawableI : DisposableByManager {
+    var drawableName: String?
+
     fun update(delta: Float) {}
 
     // for animations
