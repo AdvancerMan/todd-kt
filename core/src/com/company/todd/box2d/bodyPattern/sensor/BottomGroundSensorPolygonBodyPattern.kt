@@ -29,7 +29,7 @@ fun getBottomSensorPolygons(vertices: FloatArray) =
         List(vertices.size / 2) { Vector2(vertices[it * 2], vertices[it * 2 + 1]) }.let {
             it
                     .takeEdges()
-                    .ifEmpty { listOf(it.minBy { e -> e.y }!!) }
+                    .ifEmpty { listOf(it.minByOrNull { e -> e.y }!!) }
                     .map { e -> e.cpy().sub(0f, BOTTOM_SENSOR_OFFSET) }
                     .atLeast2()
                     .shiftToMakeNonCyclic()
