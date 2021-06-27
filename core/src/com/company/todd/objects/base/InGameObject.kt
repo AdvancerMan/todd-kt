@@ -16,8 +16,10 @@ import com.company.todd.screen.GameScreen
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.MyDrawableI
 import com.company.todd.asset.texture.TextureManager
+import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
+import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.ManuallyJsonSerializable
@@ -43,6 +45,9 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
     var isDirectedToRight = true
 
     init {
+        // it is guaranteed that link to this is not used by sensor while this creates
+        @Suppress("LeakingThis")
+        body.putSensor(SensorName.TOP_GROUND_SENSOR, TopGroundSensor(this))
         width = drawableSize.x
         height = drawableSize.y
     }

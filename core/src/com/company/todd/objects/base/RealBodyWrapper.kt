@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.Shape.Type.*
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.screen.GameScreen
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.box2d.bodyPattern.base.SensorName
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.ManuallyJsonSerializable
 import com.company.todd.json.deserialization.float
 import com.company.todd.json.deserialization.get
@@ -32,6 +34,10 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper, Manua
 
     override fun init(gameScreen: GameScreen) {
         body = gameScreen.createBody(bodyPattern)
+    }
+
+    override fun putSensor(sensorName: SensorName, sensor: Sensor) {
+        bodyPattern.sensors[sensorName] = sensor
     }
 
     override fun applyLinearImpulseToCenter(impulse: Vector2) {

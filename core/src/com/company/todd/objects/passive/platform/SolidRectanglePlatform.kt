@@ -26,10 +26,4 @@ open class SolidRectanglePlatform(game: ToddGame, drawable: MyDrawable, drawable
                             bodyPosition, bodySize
                     )
             )
-
-    init {
-        // it is guaranteed that link to this is not used by sensor while this creates
-        @Suppress("LeakingThis")
-        pattern.sensors[SensorName.TOP_GROUND_SENSOR] = TopGroundSensor(this)
-    }
 }

@@ -3,12 +3,16 @@ package com.company.todd.objects.base
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.company.todd.box2d.bodyPattern.base.SensorName
+import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.ManuallyJsonSerializable
 import com.company.todd.screen.GameScreen
 
 
 interface BodyWrapper : ManuallyJsonSerializable {
     fun init(gameScreen: GameScreen)
+
+    fun putSensor(sensorName: SensorName, sensor: Sensor)
 
     fun applyLinearImpulseToCenter(impulse: Vector2)
 

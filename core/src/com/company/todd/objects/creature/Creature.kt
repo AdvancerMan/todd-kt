@@ -80,10 +80,6 @@ open class Creature(
                 }
             }
         }
-
-        // it is guaranteed that link to this is not used by sensor while this creates
-        @Suppress("LeakingThis")
-        bodyPattern.sensors[SensorName.TOP_GROUND_SENSOR] = TopGroundSensor(this)
     }
 
     override fun doInit(gameScreen: GameScreen) {
