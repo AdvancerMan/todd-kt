@@ -7,11 +7,13 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.json.serialization.SerializationType
 import kotlin.math.abs
 
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
+@SerializationType("travolator")
 class Travolator(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                  bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2,
                  private val pushPower: Float) :

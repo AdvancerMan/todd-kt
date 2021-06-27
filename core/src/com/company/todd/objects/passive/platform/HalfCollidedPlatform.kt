@@ -10,9 +10,11 @@ import com.company.todd.objects.base.toMeters
 import com.company.todd.util.SPF
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.json.serialization.SerializationType
 import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
+@SerializationType("halfCollided")
 open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
                                 drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
                                 bodyPosition: Vector2, bodySize: Vector2) :

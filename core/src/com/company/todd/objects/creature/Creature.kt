@@ -18,6 +18,7 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
+import com.company.todd.json.serialization.SerializationType
 import com.company.todd.objects.weapon.Weapon
 import com.company.todd.thinker.Thinker
 import com.company.todd.util.HEALTH_BAR_OFFSET
@@ -25,6 +26,7 @@ import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
+@SerializationType("creature")
 open class Creature(
     game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,

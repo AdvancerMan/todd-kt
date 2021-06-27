@@ -1,8 +1,10 @@
 package com.company.todd.thinker
 
+import com.company.todd.json.serialization.SerializationType
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.GameScreen
 
+@SerializationType("stupidMeleeThinker")
 class StupidMeleeThinker(private val maxDistanceFromTarget: Float, private val jumpCooldown: Float) : Thinker {
     private var sinceJump = jumpCooldown
 

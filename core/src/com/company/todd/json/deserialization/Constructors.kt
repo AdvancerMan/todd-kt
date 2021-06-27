@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
 import com.company.todd.gui.HealthBar
+import com.company.todd.json.serialization.SerializationType
 import com.company.todd.objects.creature.Creature
 import com.company.todd.objects.weapon.HandWeapon
 import com.company.todd.objects.weapon.SimpleMeleeWeapon
@@ -20,7 +21,7 @@ import com.company.todd.objects.passive.platform.SolidPolygonPlatform
 import com.company.todd.objects.passive.platform.SolidRectanglePlatform
 import com.company.todd.thinker.StupidMeleeThinker
 import com.company.todd.thinker.Thinker
-import com.company.todd.util.putAll
+import kotlin.reflect.KClass
 
 object Constructors {
     val constructors: Map<String, JsonType<out InGameObject>>
@@ -33,6 +34,14 @@ object Constructors {
         addCreatures(constructors, bodyPatternType, getWeapons(), getThinkers())
 
         this.constructors = constructors
+    }
+
+    private fun <T, CT : Any> Map<KClass<out CT>, JsonType<out T>>.toJsonTypeMap() = mapKeys { entry ->
+        try {
+            (entry.key.annotations.first { it::class == SerializationType::class} as SerializationType).type
+        } catch (e: NoSuchElementException) {
+            throw IllegalArgumentException("Given class has no SerializationType annotation", e)
+        }
     }
 
     private fun getBodyPatternType(): JsonType<out BodyPattern> {
@@ -53,8 +62,8 @@ object Constructors {
         bodyPatternType: JsonType<out BodyPattern>
     ) {
         // TODO use bodyPatternType
-        map.putAll(
-                "solidRectangle" to JsonType("Solid Rectangle Platform") { game, json ->
+        mapOf(
+                SolidRectanglePlatform::class to JsonType("Solid Rectangle Platform") { game, json ->
                     SolidRectanglePlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -64,7 +73,7 @@ object Constructors {
                     )
                 },
 
-                "solidPolygon" to JsonType("Solid Polygon Platform") { game, json ->
+                SolidPolygonPlatform::class to JsonType("Solid Polygon Platform") { game, json ->
                     SolidPolygonPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -73,7 +82,7 @@ object Constructors {
                     )
                 },
 
-                "halfCollided" to JsonType("Half Collided Platform") { game, json ->
+                HalfCollidedPlatform::class to JsonType("Half Collided Platform") { game, json ->
                     HalfCollidedPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -83,7 +92,7 @@ object Constructors {
                     )
                 },
 
-                "cloudy" to JsonType("Cloudy Platform") { game, json ->
+                CloudyPlatform::class to JsonType("Cloudy Platform") { game, json ->
                     CloudyPlatform(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -94,7 +103,7 @@ object Constructors {
                     )
                 },
 
-                "jumper" to JsonType("Jumper") { game, json ->
+                Jumper::class to JsonType("Jumper") { game, json ->
                     Jumper(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -105,7 +114,7 @@ object Constructors {
                     )
                 },
 
-                "portal" to JsonType("Portal") { game, json ->
+                Portal::class to JsonType("Portal") { game, json ->
                     val radius = json["radius", float]
                     Portal(
                             game!!,
@@ -117,7 +126,7 @@ object Constructors {
                     )
                 },
 
-                "trampoline" to JsonType("Trampoline") { game, json ->
+                Trampoline::class to JsonType("Trampoline") { game, json ->
                     Trampoline(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -127,7 +136,7 @@ object Constructors {
                     )
                 },
 
-                "travolator" to JsonType("Trav0lator") { game, json ->
+                Travolator::class to JsonType("Trav0lator") { game, json ->
                     Travolator(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
@@ -137,7 +146,7 @@ object Constructors {
                             json["pushPower", float]
                     )
                 }
-        )
+        ).toJsonTypeMap().let { map.putAll(it) }
     }
 
     private fun getWeapons(): Map<String, JsonType<out Weapon>> {
@@ -161,23 +170,23 @@ object Constructors {
             HandWeapon.Style(hand.first, weapon.first, hand.second, weapon.second, json["origin", vector])
         }
 
-        return mapOf(
-                "simpleMeleeWeapon" to JsonType("Simple Melee Weapon") { game, json ->
+        return mapOf<KClass<out Weapon>, JsonType<out Weapon>>(
+                SimpleMeleeWeapon::class to JsonType("Simple Melee Weapon") { game, json ->
                     SimpleMeleeWeapon(
                             json["style", handWeaponStyle, game],
                             json["attackXYWH", rectangle], json["power", float],
                             json["cooldown", float], json["sinceAttackTillDamage", float]
                     )
                 }
-        )
+        ).toJsonTypeMap()
     }
 
     private fun getThinkers(): Map<String, JsonType<out Thinker>> {
-        return mapOf(
-            "stupidMeleeThinker" to JsonType("Stupid Melee Thinker") { game, json ->
+        return mapOf<KClass<out Thinker>, JsonType<out Thinker>>(
+            StupidMeleeThinker::class to JsonType("Stupid Melee Thinker") { game, json ->
                 StupidMeleeThinker(json["maxDistanceFromTarget", float], json["jumpCooldown", float])
             }
-        )
+        ).toJsonTypeMap()
     }
 
     private fun addCreatures(
@@ -197,8 +206,8 @@ object Constructors {
             )
         }
 
-        map.putAll(
-            "creature" to JsonType("Stupid Enemy") { game, json ->
+        mapOf<KClass<out InGameObject>, JsonType<out InGameObject>>(
+            Creature::class to JsonType("Stupid Enemy") { game, json ->
                 Creature(
                     game!!,
                     game.textureManager.loadDrawable(json["drawableName", string]),
@@ -208,6 +217,6 @@ object Constructors {
                     json["healthBar", healthBarType, game], json["speed", float], json["jumpPower", float]
                 )
             }
-        )
+        ).toJsonTypeMap().let { map.putAll(it) }
     }
 }

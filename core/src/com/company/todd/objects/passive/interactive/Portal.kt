@@ -13,7 +13,9 @@ import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.CircleBodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.json.serialization.SerializationType
 
+@SerializationType("portal")
 class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
              bodyLowerLeftCornerOffset: Vector2, center: Vector2, radius: Float,
              private val teleportTo: Vector2, private val teleportDelay: Float) :
