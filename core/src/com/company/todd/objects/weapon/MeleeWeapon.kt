@@ -2,12 +2,16 @@ package com.company.todd.objects.weapon
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Fixture
+import com.company.todd.json.JsonFullSerializable
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.worldAABBFor
 import com.company.todd.screen.GameScreen
 
-abstract class MeleeWeapon(weaponStyle: Style, protected val attackAABB: Rectangle,
-                           cooldown: Float, sinceAttackTillDamage: Float) :
+abstract class MeleeWeapon(
+    weaponStyle: Style,
+    @JsonFullSerializable("attackXYWH") protected val attackAABB: Rectangle,
+    cooldown: Float, sinceAttackTillDamage: Float
+) :
         HandWeapon(weaponStyle, cooldown, sinceAttackTillDamage) {
     protected lateinit var screen: GameScreen
 

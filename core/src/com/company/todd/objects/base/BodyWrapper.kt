@@ -3,10 +3,11 @@ package com.company.todd.objects.base
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.company.todd.json.ManuallyJsonSerializable
 import com.company.todd.screen.GameScreen
 
 
-interface BodyWrapper {
+interface BodyWrapper : ManuallyJsonSerializable {
     fun init(gameScreen: GameScreen)
 
     fun applyLinearImpulseToCenter(impulse: Vector2)
@@ -21,6 +22,8 @@ interface BodyWrapper {
 
     fun getVelocity(): Vector2
 
+    fun getAngularVelocity(): Float
+
     fun getAngle(): Float
 
     fun setVelocity(v: Vector2)
@@ -34,7 +37,12 @@ interface BodyWrapper {
     fun setXVelocity(xVel: Float) =
             setVelocity(xVel, getVelocity().y)
 
+    fun setAngularVelocity(velocity: Float)
+
     fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean = true)
+
+    fun setCenter(v: Vector2, resetLinearVelocity: Boolean = true) =
+        setCenter(v.x, v.y, resetLinearVelocity)
 
     fun setPosition(x: Float, y: Float, resetSpeed: Boolean = true) =
             getAABB().let {

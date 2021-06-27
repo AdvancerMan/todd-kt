@@ -8,11 +8,17 @@ import com.company.todd.asset.texture.DisposableByManager
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
+import com.company.todd.json.JsonFullSerializable
+import com.company.todd.json.JsonUpdateSerializable
 
-abstract class HandWeapon(private val style: Style, protected val cooldown: Float,
-                          protected val sinceAttackTillDamage: Float) :
+abstract class HandWeapon(
+    @JsonFullSerializable private val style: Style,
+    @JsonFullSerializable protected val cooldown: Float,
+    @JsonFullSerializable protected val sinceAttackTillDamage: Float
+) :
         Weapon(), DisposableByManager {
     protected lateinit var owner: InGameObject
+    @JsonUpdateSerializable
     protected var sinceAttack = cooldown
     private var doneAttack = true
 
@@ -101,6 +107,18 @@ abstract class HandWeapon(private val style: Style, protected val cooldown: Floa
         style.handDrawable?.dispose(manager)
     }
 
-    class Style(val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
-                val handPosition: Vector2, val weaponPosition: Vector2, val origin: Vector2)
+    class Style(
+        val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
+        @JsonFullSerializable val handPosition: Vector2,
+        @JsonFullSerializable val weaponPosition: Vector2,
+        @JsonFullSerializable val origin: Vector2
+    ) {
+        @JsonFullSerializable
+        private val handDrawableName: String?
+            get() = handDrawable?.drawableName
+
+        @JsonFullSerializable
+        private val weaponDrawableName: String?
+            get() = weaponDrawable?.drawableName
+    }
 }

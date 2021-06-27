@@ -18,7 +18,7 @@ class Player(game: ToddGame, thinker: PlayerThinker) :
                         Vector2(), Vector2(50f, 100f)
                 ), null, thinker,
                 HealthBar(
-                        100f, 0.1f, 0.1f,
+                        100f,
                         game.textureManager.loadDrawable("healthBarBackground"),
                         game.textureManager.loadDrawable("healthBarHealth")
                 ), 300f, 500f

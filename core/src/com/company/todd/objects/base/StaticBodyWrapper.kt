@@ -3,6 +3,7 @@ package com.company.todd.objects.base
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.screen.GameScreen
 import com.company.todd.util.rotate
 
@@ -32,9 +33,23 @@ class StaticBodyWrapper(private val unrotatedAABB: Rectangle, private var angle:
     override fun applyLinearImpulseToCenter(impulse: Vector2) {}
     override fun applyForceToCenter(force: Vector2) {}
     override fun getVelocity() = Vector2()
+    override fun getAngularVelocity() = 0f
     override fun setVelocity(v: Vector2) {}
+    override fun setAngularVelocity(velocity: Float) {}
     override fun setOwner(owner: InGameObject) {}
     override fun setActive(value: Boolean) {}
 
     override fun destroy(world: World) {}
+
+    override fun serializeUpdates(json: JsonValue) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deserializeUpdates(json: JsonValue) {
+        TODO("Not yet implemented")
+    }
+
+    override fun serializeFull(json: JsonValue) {
+        TODO("Not yet implemented")
+    }
 }

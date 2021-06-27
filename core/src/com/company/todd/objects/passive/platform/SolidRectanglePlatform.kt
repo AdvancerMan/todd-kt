@@ -10,7 +10,7 @@ import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
 import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGS
-import com.company.todd.json.serialization.SerializationType
+import com.company.todd.json.SerializationType
 
 @SerializationType("solidRectangle")
 open class SolidRectanglePlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,

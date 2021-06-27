@@ -3,12 +3,14 @@ package com.company.todd.asset.texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
 import com.company.todd.asset.texture.animated.AnimationType
+import com.company.todd.json.JsonFullSerializable
 
 interface DisposableByManager {
     fun dispose(manager: TextureManager)
 }
 
 interface MyDrawableI : DisposableByManager {
+    @JsonFullSerializable
     var drawableName: String?
 
     fun update(delta: Float) {}

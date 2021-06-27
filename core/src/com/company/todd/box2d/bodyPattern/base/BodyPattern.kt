@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.box2d.BodyFactory
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.json.serialization.ManuallyJsonSerializable
+import com.company.todd.json.ManuallyJsonSerializable
 
 enum class SensorName {
     BOTTOM_GROUND_SENSOR, TOP_GROUND_SENSOR
@@ -28,6 +28,10 @@ abstract class AbstractBodyPattern : BodyPattern {
     private var serializer: ((JsonValue) -> Unit)? = null
 
     override fun serializeUpdates(json: JsonValue) {
+        // no operations
+    }
+
+    override fun deserializeUpdates(json: JsonValue) {
         // no operations
     }
 

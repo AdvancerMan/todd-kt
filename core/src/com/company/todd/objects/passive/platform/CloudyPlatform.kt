@@ -8,7 +8,7 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.json.serialization.SerializationType
+import com.company.todd.json.SerializationType
 
 @SerializationType("cloudy")
 class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,

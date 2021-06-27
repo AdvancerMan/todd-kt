@@ -7,7 +7,7 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.asset.texture.MyDrawable
-import com.company.todd.json.serialization.SerializationType
+import com.company.todd.json.SerializationType
 import kotlin.math.abs
 
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()

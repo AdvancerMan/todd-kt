@@ -68,8 +68,6 @@
       },
       "healthBar": {
         "maxHealth": 100,
-        "stepSize": 0.1,
-        "animateDuration": 0.1,
         "backgroundDrawableName": "healthBarBackground",
         "healthDrawableName": "healthBarHealth"
       },

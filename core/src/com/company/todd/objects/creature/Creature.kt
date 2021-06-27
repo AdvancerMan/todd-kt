@@ -18,7 +18,8 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
-import com.company.todd.json.serialization.SerializationType
+import com.company.todd.json.JsonUpdateSerializable
+import com.company.todd.json.SerializationType
 import com.company.todd.objects.weapon.Weapon
 import com.company.todd.thinker.Thinker
 import com.company.todd.util.HEALTH_BAR_OFFSET
@@ -30,14 +31,18 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 open class Creature(
     game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
-    protected var weapon: Weapon?, private var thinker: Thinker,
-    private val healthBar: HealthBar, private var speed: Float,
-    private var jumpPower: Float
+    @JsonUpdateSerializable protected var weapon: Weapon?,
+    @JsonUpdateSerializable private var thinker: Thinker,
+    @JsonUpdateSerializable private val healthBar: HealthBar,
+    @JsonUpdateSerializable private var speed: Float,
+    @JsonUpdateSerializable private var jumpPower: Float
 ) : InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
     protected var animationTypeNow = stayAnimation()
+    @JsonUpdateSerializable
     private var sinceJump = JUMP_COOLDOWN + 1
+    @JsonUpdateSerializable
     private var sinceDamage = DAMAGE_TINT_TIME + 1
     var isOnGround = false
         get() = field && getVelocity().y <= Y_VEL_JUMP_THRESHOLD && sinceJump >= JUMP_COOLDOWN

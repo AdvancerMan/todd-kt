@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
 import com.company.todd.gui.HealthBar
-import com.company.todd.json.serialization.SerializationType
+import com.company.todd.json.SerializationType
 import com.company.todd.objects.creature.Creature
 import com.company.todd.objects.weapon.HandWeapon
 import com.company.todd.objects.weapon.SimpleMeleeWeapon
@@ -38,7 +38,7 @@ object Constructors {
 
     private fun <T, CT : Any> Map<KClass<out CT>, JsonType<out T>>.toJsonTypeMap() = mapKeys { entry ->
         try {
-            (entry.key.annotations.first { it is SerializationType} as SerializationType).type
+            (entry.key.annotations.first { it is SerializationType } as SerializationType).type
         } catch (e: NoSuchElementException) {
             throw IllegalArgumentException("Given class has no SerializationType annotation", e)
         }
@@ -200,7 +200,7 @@ object Constructors {
         val healthBarType = JsonType("HealthBar") { game, jsonWithPrototype ->
             val json = createJsonValue(jsonWithPrototype)
             HealthBar(
-                    json["maxHealth", float], json["stepSize", float], json["animateDuration", float],
+                    json["maxHealth", float],
                     game!!.textureManager.loadDrawable(json["backgroundDrawableName", string]),
                     game.textureManager.loadDrawable(json["healthDrawableName", string])
             )

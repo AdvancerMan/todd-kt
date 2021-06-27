@@ -10,31 +10,36 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.GameScreen
-import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.MyDrawableI
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
+import com.company.todd.json.JsonFullSerializable
+import com.company.todd.json.JsonUpdateSerializable
+import com.company.todd.json.ManuallyJsonSerializable
 
 private var maxID = 0
 
 private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, private val drawable: MyDrawable,
-                            drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
-                            private val body: BodyWrapper) :
-        Group(), Disposable, Sensor, BodyWrapper, MyDrawableI, TopGroundListener {
+                            drawableSize: Vector2, @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
+                            @JsonFullSerializable("bodyPattern") private val body: BodyWrapper) :
+    Group(), Disposable, Sensor, BodyWrapper by body, MyDrawableI by drawable,
+    TopGroundListener, ManuallyJsonSerializable {
     // before init() it is drawableLowerLeftCornerOffset
-    private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy().scl(-1f)
+    private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy()
     private val id: Int = getNewID()
     var initialized = false
         private set
     protected lateinit var screen: GameScreen
     var alive = true
         private set
+    @JsonUpdateSerializable
     var isDirectedToRight = true
 
     init {
@@ -111,38 +116,36 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
         drawable.dispose(game.textureManager)
     }
 
-    // delegating MyDrawable implementation to drawable
-    override var drawableName = drawable.drawableName
-    override fun setPlayingType(type: AnimationType, forceReset: Boolean) = drawable.setPlayingType(type, forceReset)
-    override fun getPlayingType() = drawable.getPlayingType()
-    override fun isAnimationFinished() = drawable.isAnimationFinished()
-
+    // update from MyDrawable interface
     final override fun update(delta: Float) {
         Gdx.app.error("IGO", "To update IGO act(Float) should be called")
     }
 
+    // dispose from MyDrawable interface
     final override fun dispose(manager: TextureManager) {
         Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
     }
 
-    // delegating BodyWrapper implementation to body
-    override fun applyLinearImpulseToCenter(impulse: Vector2) = body.applyLinearImpulseToCenter(impulse)
-    override fun applyForceToCenter(force: Vector2) = body.applyForceToCenter(force)
-    override fun isFixedRotation() = body.isFixedRotation()
-    override fun getCenter() = body.getCenter()
-    override fun getVelocity() = body.getVelocity()
-    override fun getAngle() = body.getAngle()
-    override fun setVelocity(v: Vector2) = body.setVelocity(v)
-    override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) = body.setCenter(x, y, resetLinearVelocity)
-    override fun setAngle(angle: Float, resetAngularVelocity: Boolean) = body.setAngle(angle, resetAngularVelocity)
-    override fun setOwner(owner: InGameObject) = body.setOwner(owner)
-    override fun getUnrotatedAABB() = body.getUnrotatedAABB()
-    override fun getAABB() = body.getAABB()
-    override fun isActive() = body.isActive()
-    override fun setActive(value: Boolean) = body.setActive(value)
-
+    // destroy from BodyWrapper interface
     final override fun destroy(world: World) {
         Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
+    }
+
+    @JsonFullSerializable("drawableSize")
+    private fun getActorDrawableSize(): Vector2 {
+        return Vector2(width, height)
+    }
+
+    override fun serializeFull(json: JsonValue) {
+        // no operations
+    }
+
+    override fun deserializeUpdates(json: JsonValue) {
+        // no operations
+    }
+
+    override fun serializeUpdates(json: JsonValue) {
+        // no operations
     }
 }
 

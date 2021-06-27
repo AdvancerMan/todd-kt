@@ -1,13 +1,18 @@
 package com.company.todd.objects.base
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.Shape.Type.*
+import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.screen.GameScreen
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
+import com.company.todd.json.ManuallyJsonSerializable
+import com.company.todd.json.deserialization.float
+import com.company.todd.json.deserialization.get
+import com.company.todd.json.deserialization.vector
+import com.company.todd.json.serialization.toJsonValue
 import com.company.todd.util.rotateAround
 import com.company.todd.util.translate
 
@@ -22,7 +27,7 @@ fun Vector2.toMeters() = this.scl(1 / pixInMeter)!!
 fun Rectangle.toPix() = this.set(x.toPix(), y.toPix(), width.toPix(), height.toPix())!!
 fun Rectangle.toMeters() = this.set(x.toMeters(), y.toMeters(), width.toMeters(), height.toMeters())!!
 
-class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
+class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper, ManuallyJsonSerializable by bodyPattern {
     private lateinit var body: Body
 
     override fun init(gameScreen: GameScreen) {
@@ -47,8 +52,14 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
 
     override fun getVelocity() = body.linearVelocity.cpy().toPix()
 
+    override fun getAngularVelocity() = body.angularVelocity
+
     override fun setVelocity(v: Vector2) {
         body.linearVelocity = v.toMeters()
+    }
+
+    override fun setAngularVelocity(velocity: Float) {
+        body.angularVelocity = velocity
     }
 
     override fun setCenter(x: Float, y: Float, resetLinearVelocity: Boolean) {
@@ -90,6 +101,22 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper {
 
     override fun destroy(world: World) {
         world.destroyBody(body)
+    }
+
+    override fun serializeUpdates(json: JsonValue) {
+        json.addChild("b2d_position", getCenter().toJsonValue())
+        json.addChild("b2d_linearVelocity", getVelocity().toJsonValue())
+        json.addChild("b2d_gravityScale", body.gravityScale.toJsonValue())
+        json.addChild("b2d_angularVelocity", getAngularVelocity().toJsonValue())
+        json.addChild("b2d_angle", getAngle().toJsonValue())
+    }
+
+    override fun deserializeUpdates(json: JsonValue) {
+        setCenter(json["b2d_position", vector], false)
+        setVelocity(json["b2d_linearVelocity", vector])
+        body.gravityScale = json["b2d_gravityScale", float]
+        setAngularVelocity(json["b2d_angularVelocity", float])
+        setAngle(json["b2d_angle", float], false)
     }
 }
 
