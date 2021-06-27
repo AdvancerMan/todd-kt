@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.isAccessible
 
-private fun getName(member: KCallable<*>, annotation: Annotation) =
+fun getJsonName(member: KCallable<*>, annotation: Annotation) =
     when (annotation) {
         is JsonFullSerializable -> if (annotation.name.isBlank()) member.name else annotation.name
         is JsonUpdateSerializable -> if (annotation.name.isBlank()) member.name else annotation.name
@@ -37,7 +37,7 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
                 .filter { it.second != null }
                 .onEach { it.first.isAccessible = true }
                  // expecting getters only
-                .associate { getName(it.first, it.second!!) to toJson(it.first.call(obj), *annotations) }
+                .associate { getJsonName(it.first, it.second!!) to toJson(it.first.call(obj), *annotations) }
                 .forEach { result.addChild(it.key, it.value) }
 
             if (obj is ManuallyJsonSerializable) {

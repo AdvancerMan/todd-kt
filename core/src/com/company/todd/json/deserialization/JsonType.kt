@@ -13,6 +13,8 @@ val int = JsonType("integer") { _, json -> json.asInt() }
 
 val float = JsonType("float") { _, json -> json.asFloat() }
 
+val boolean = JsonType("boolean") { _, json -> json.asBoolean() }
+
 val vector = JsonType("vector (2-element array)") { _, json ->
     json.asFloatArray().let { Vector2(it[0], it[1]) }
 }

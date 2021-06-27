@@ -1,4 +1,4 @@
 package com.company.todd.json
 
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY, AnnotationTarget.FIELD)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
 annotation class JsonFullSerializable(val name: String = "")

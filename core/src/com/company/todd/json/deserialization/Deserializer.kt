@@ -1,12 +1,23 @@
 package com.company.todd.json.deserialization
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.JsonValue
+import com.company.todd.json.JsonUpdateSerializable
+import com.company.todd.json.ManuallyJsonSerializable
+import com.company.todd.json.serialization.getJsonName
 import com.company.todd.launcher.ToddGame
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.PROTOTYPES_PATH
 import com.company.todd.util.files.crawlJsonListsWithComments
+import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.jvmErasure
 
 fun getJsonErrorMessage(json: JsonValue, message: String) = "$message, json: $json"
 
@@ -83,4 +94,36 @@ fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
 
 fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {
     parseJsonValue(it, jsonWithPrototype, Constructors.constructors)
+}
+
+private val replaceableTypes = mapOf<KClass<*>, JsonType<*>>(
+    String::class to string,
+    Vector2::class to vector,
+    Rectangle::class to rectangle,
+    Boolean::class to boolean,
+    Float::class to float
+)
+
+fun Any.updateFromJson(json: JsonValue) {
+    listOf(listOf(this::class), this::class.allSuperclasses)
+        .flatten()
+        .flatMap { it.declaredMemberProperties }
+        .map { property ->
+            property to property.annotations.find { it is JsonUpdateSerializable }
+                ?.let { getJsonName(property, it) }
+        }
+        .filter { it.second != null }
+        .forEach { (property, name) ->
+            val jsonType = replaceableTypes[property.returnType.jvmErasure]
+            property.isAccessible = true
+            if (jsonType != null) {
+                (property as KMutableProperty1).setter.call(this, json[name!!, jsonType])
+            } else {
+                property.call(this)?.updateFromJson(json[name!!])
+            }
+        }
+
+    if (this is ManuallyJsonSerializable) {
+        deserializeUpdates(json)
+    }
 }
