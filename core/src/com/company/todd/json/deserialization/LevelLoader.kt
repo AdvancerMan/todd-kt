@@ -1,4 +1,4 @@
-package com.company.todd.json
+package com.company.todd.json.deserialization
 
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.passive.Level

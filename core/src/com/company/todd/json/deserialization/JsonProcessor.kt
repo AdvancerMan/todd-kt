@@ -1,4 +1,4 @@
-package com.company.todd.json
+package com.company.todd.json.deserialization
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.JsonValue
@@ -66,7 +66,8 @@ fun createJsonValue(
         prototypes[name]?.let { createJsonValue(it, out) }
                 ?: out.also {
                     Gdx.app.error("Json", getJsonErrorMessage(jsonWithPrototype,
-                            "prototype name $name was not found in prototype map"))
+                            "prototype name $name was not found in prototype map")
+                    )
                 }
     } ?: out
 }

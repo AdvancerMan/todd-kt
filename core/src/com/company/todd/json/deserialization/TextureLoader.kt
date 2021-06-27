@@ -1,4 +1,4 @@
-package com.company.todd.json
+package com.company.todd.json.deserialization
 
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.math.Rectangle
