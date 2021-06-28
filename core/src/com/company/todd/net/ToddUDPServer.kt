@@ -27,7 +27,7 @@ class ToddUDPServer(
         sendUpdatesThread = Thread { sendUpdates() }.also { it.start() }
 
         broadcastServer = ToddBroadcastServer(
-            (BROADCAST_PREFIX + socket!!.port.toString()).toByteArray(), BROADCAST_PERIOD
+            (BROADCAST_PREFIX + socket!!.localPort.toString()).toByteArray(), BROADCAST_PERIOD
         ).also { it.start() }
     }
 
@@ -70,6 +70,9 @@ class ToddUDPServer(
     }
 
     private fun receiveUpdates(socketAddress: SocketAddress, updates: String) {
+        synchronized(lastActiveMoment) {
+            lastActiveMoment[socketAddress] = System.currentTimeMillis()
+        }
         updatesListener.receiveClientUpdates(socketAddress, updates)
     }
 
