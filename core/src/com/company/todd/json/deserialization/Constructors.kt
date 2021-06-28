@@ -183,14 +183,14 @@ object Constructors {
         val handWeaponStyle = JsonType("HandWeapon style") { game, json ->
             game!!
             val hand =
-                    if (json.has("handDrawableName")) {
+                    if (json.has("handDrawableName") && !json["handDrawableName"].isNull) {
                         game.textureManager.loadDrawable(json["handDrawableName", string]) to
                                 json["handPosition", vector]
                     } else {
                         null to Vector2()
                     }
             val weapon =
-                    if (json.has("weaponDrawableName")) {
+                    if (json.has("weaponDrawableName") && !json["weaponDrawableName"].isNull) {
                         game.textureManager.loadDrawable(json["weaponDrawableName", string]) to
                                 json["weaponPosition", vector]
                     } else {

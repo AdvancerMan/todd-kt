@@ -12,10 +12,10 @@ class Player(game: ToddGame, thinker: PlayerThinker) :
         Creature(
                 game,
                 game.textureManager.loadDrawable("player"),
-                Vector2(50f, 100f), Vector2(),
+                Vector2(30f, 110f), Vector2(),
                 createRectangleBPWithTGSBGS(
                         BodyDef.BodyType.DynamicBody,
-                        Vector2(), Vector2(50f, 100f)
+                        Vector2(), Vector2(30f, 91f)
                 ), null, thinker,
                 HealthBar(
                         100f,
