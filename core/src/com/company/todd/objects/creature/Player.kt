@@ -2,7 +2,7 @@ package com.company.todd.objects.creature
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
-import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
+import com.company.todd.box2d.bodyPattern.createRectangleBPWithTGSBGS
 import com.company.todd.gui.HealthBar
 import com.company.todd.launcher.ToddGame
 import com.company.todd.thinker.PlayerThinker

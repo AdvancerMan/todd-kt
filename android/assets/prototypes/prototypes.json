@@ -1,8 +1,10 @@
 {
   "protoName": "arenaSolid",
-  "type": "solidRectangle",
+  "type": "solid",
   "drawableName": "arenaSolid",
-  "bodyLowerLeftCornerOffset": [0, 0]
+  "bodyLowerLeftCornerOffset": [0, 0],
+  "bodyPatternType": "rectangleWithTopGS",
+  "b2dType": "static"
 }
 
 {
@@ -10,5 +12,7 @@
   "type": "portal",
   "drawableName": "arenaPortal",
   "bodyLowerLeftCornerOffset": [0, 0],
-  "teleportDelay": 0.1
+  "teleportDelay": 0.1,
+  "bodyPatternType": "circle",
+  "b2dType": "static"
 }

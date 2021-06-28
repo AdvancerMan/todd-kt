@@ -84,12 +84,13 @@ fun createJsonValue(
 }
 
 fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
-                       constructors: Map<String, JsonType<out T>>): T {
+                       constructors: Map<String, JsonType<out T>>,
+                       jsonTypeName: String = "type"): T {
     val json = createJsonValue(jsonWithPrototype)
-    checkContains(json, "type", "object type, one of strings ${constructors.keys}") { checkJson ->
+    checkContains(json, jsonTypeName, "object type, one of strings ${constructors.keys}") { checkJson ->
         checkJson.isString && constructors.containsKey(checkJson.asString())
     }
-    return constructors[json["type"].asString()]!!.constructor(game, json)
+    return constructors[json[jsonTypeName].asString()]!!.constructor(game, json)
 }
 
 fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {

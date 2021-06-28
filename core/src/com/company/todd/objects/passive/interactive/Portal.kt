@@ -11,18 +11,18 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.base.CircleBodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("portal")
 class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
-             bodyLowerLeftCornerOffset: Vector2, center: Vector2, radius: Float,
-             private val teleportTo: Vector2, private val teleportDelay: Float) :
-        PassiveObject(
-                game, drawable, drawableSize, bodyLowerLeftCornerOffset,
-                RealBodyWrapper(CircleBodyPattern(BodyDef.BodyType.StaticBody, center, radius))
-        ) {
+             bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+             @JsonFullSerializable private val teleportTo: Vector2,
+             @JsonFullSerializable private val teleportDelay: Float) :
+        PassiveObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
     private val delayedObjects = Queue<Pair<InGameObject, Float>>()
     private var timeSinceCreation = 0f
 

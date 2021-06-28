@@ -7,14 +7,17 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
+import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("cloudy")
 class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
-                     bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2,
-                     private val sinceContactTillInactive: Float, sinceInactiveTillActive: Float) :
-        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
+                     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+                     @JsonFullSerializable private val sinceContactTillInactive: Float,
+                     sinceInactiveTillActive: Float) :
+        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1
 
@@ -47,4 +50,7 @@ class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2
             }
         }
     }
+
+    @JsonFullSerializable("sinceInactiveTillActive")
+    private fun getSinceInactiveTillActive() = sinceContactTillActive - sinceContactTillInactive
 }

@@ -9,6 +9,7 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.util.SPF
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.SerializationType
 import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
@@ -17,8 +18,8 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 @SerializationType("halfCollided")
 open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
                                 drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
-                                bodyPosition: Vector2, bodySize: Vector2) :
-        SolidRectanglePlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
+                                bodyPattern: BodyPattern) :
+        SolidPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
     protected val groundFor = mutableMapOf<InGameObject, Int>()
 
     override fun beginOnGround(obj: InGameObject) {

@@ -38,8 +38,8 @@
     },
     {
       "prototype": "arenaPortal",
-      "center": [1600, 127],
-      "radius": 50,
+      "bodyCenter": [1600, 127],
+      "bodyRadius": 50,
       "teleportTo": [0, 100]
     },
     {
@@ -62,7 +62,8 @@
         "sinceAttackTillDamage": 0.3
       },
       "bodyPattern": {
-        "type": "rectangleWithTopGSBottomGS",
+        "bodyPatternType": "rectangleWithTopGSBottomGS",
+        "b2dType": "dynamic",
         "bodyPosition": [100, 200],
         "bodySize": [61, 59]
       },

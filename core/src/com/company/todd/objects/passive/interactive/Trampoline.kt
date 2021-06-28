@@ -7,12 +7,13 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.passive.platform.HalfCollidedPlatform
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.SerializationType
 
 @SerializationType("trampoline")
 class Trampoline(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
-                 bodyLowerLeftCornerOffset: Vector2, bodyPosition: Vector2, bodySize: Vector2) :
-        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPosition, bodySize) {
+                 bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern) :
+        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         contact.restitution = 1f

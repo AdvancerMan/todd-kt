@@ -3,7 +3,10 @@ package com.company.todd.json.deserialization
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
-import com.company.todd.box2d.bodyPattern.sensor.createRectangleBPWithTGSBGS
+import com.company.todd.box2d.bodyPattern.createCircleBP
+import com.company.todd.box2d.bodyPattern.createPolygonBPWithTGS
+import com.company.todd.box2d.bodyPattern.createRectangleBPWithTGS
+import com.company.todd.box2d.bodyPattern.createRectangleBPWithTGSBGS
 import com.company.todd.gui.HealthBar
 import com.company.todd.json.SerializationType
 import com.company.todd.objects.creature.Creature
@@ -15,16 +18,19 @@ import com.company.todd.objects.passive.interactive.Jumper
 import com.company.todd.objects.passive.interactive.Portal
 import com.company.todd.objects.passive.interactive.Trampoline
 import com.company.todd.objects.passive.interactive.Travolator
-import com.company.todd.objects.passive.platform.CloudyPlatform
-import com.company.todd.objects.passive.platform.HalfCollidedPlatform
-import com.company.todd.objects.passive.platform.SolidPolygonPlatform
-import com.company.todd.objects.passive.platform.SolidRectanglePlatform
+import com.company.todd.objects.passive.platform.*
 import com.company.todd.thinker.StupidMeleeThinker
 import com.company.todd.thinker.Thinker
 import kotlin.reflect.KClass
 
 object Constructors {
     val constructors: Map<String, JsonType<out InGameObject>>
+
+    val b2dTypes = mapOf(
+        "dynamic" to BodyDef.BodyType.DynamicBody,
+        "kinematic" to BodyDef.BodyType.KinematicBody,
+        "static" to BodyDef.BodyType.StaticBody
+    )
 
     init {
         val constructors = mutableMapOf<String, JsonType<out InGameObject>>()
@@ -45,40 +51,66 @@ object Constructors {
     }
 
     private fun getBodyPatternType(): JsonType<out BodyPattern> {
+        val b2dType = JsonType("Box2D body type") { _, json ->
+            val jsonValue = json.asString()
+            b2dTypes[jsonValue] ?: throw IllegalArgumentException(
+                "Unexpected b2d type $jsonValue (allowed: ${b2dTypes.keys})"
+            )
+        }
+
         val map = mapOf(
             "rectangleWithTopGSBottomGS" to JsonType("Rectangle body pattern with top and bottom ground sensors") { _, json ->
                 createRectangleBPWithTGSBGS(
-                    BodyDef.BodyType.DynamicBody,
-                    json["bodyPosition", vector], json["bodySize", vector]
+                    json["b2dType", b2dType],
+                    json["bodyPosition", vector],
+                    json["bodySize", vector]
                 )
-            }
+            },
+            "rectangleWithTopGS" to JsonType("Rectangle body pattern with top ground sensor") { _, json ->
+                createRectangleBPWithTGS(
+                    json["b2dType", b2dType],
+                    json["bodyPosition", vector],
+                    json["bodySize", vector]
+                )
+            },
+            "polygonWithTopGS" to JsonType("Polygon body pattern with top ground sensor") { _, json ->
+                createPolygonBPWithTGS(
+                    json["b2dType", b2dType],
+                    json["worldBodyCenter", vector],
+                    json["localVertices", vectorArray]
+                )
+            },
+            "circle" to JsonType("Polygon body pattern with top ground sensor") { _, json ->
+                createCircleBP(json["b2dType", b2dType], json["bodyCenter", vector], json["bodyRadius", float])
+            },
         )
 
-        return JsonType("Body pattern") { game, json -> parseJsonValue(game, json, map) }
+        val innerJsonType = JsonType("Body pattern") { game, json ->
+            parseJsonValue(game, json, map, "bodyPatternType")
+        }
+
+        return JsonType("Body pattern") { game, json ->
+            if (json["bodyPattern"] != null) {
+                json["bodyPattern", innerJsonType, game]
+            } else {
+                innerJsonType.constructor(game, json)
+            }
+        }
     }
 
     private fun addPassiveObjects(
         map: MutableMap<String, JsonType<out InGameObject>>,
         bodyPatternType: JsonType<out BodyPattern>
     ) {
-        // TODO use bodyPatternType
+        // FIXME: resource leak on exception (leaking textures)
         mapOf(
-                SolidRectanglePlatform::class to JsonType("Solid Rectangle Platform") { game, json ->
-                    SolidRectanglePlatform(
-                            game!!,
-                            game.textureManager.loadDrawable(json["drawableName", string]),
-                            json.get("drawableSize", vector, defaultOther = "bodySize"),
-                            json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["bodyPosition", vector], json["bodySize", vector]
-                    )
-                },
-
-                SolidPolygonPlatform::class to JsonType("Solid Polygon Platform") { game, json ->
-                    SolidPolygonPlatform(
-                            game!!,
-                            game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["drawableSize", vector], json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["worldBodyCenter", vector], json["localVertices", vectorArray]
+                SolidPlatform::class to JsonType("Solid Platform") { game, json ->
+                    SolidPlatform(
+                        game!!,
+                        game.textureManager.loadDrawable(json["drawableName", string]),
+                        json.get("drawableSize", vector, defaultOther = "bodySize"),
+                        json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
+                        bodyPatternType.constructor(game, json)
                     )
                 },
 
@@ -88,7 +120,7 @@ object Constructors {
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["bodyPosition", vector], json["bodySize", vector]
+                            bodyPatternType.constructor(game, json)
                     )
                 },
 
@@ -98,8 +130,8 @@ object Constructors {
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["bodyPosition", vector], json["bodySize", vector],
-                            json["sinceContactTillInactive", float], json["sinceInactiveTillActive", float]
+                            bodyPatternType.constructor(game, json), json["sinceContactTillInactive", float],
+                            json["sinceInactiveTillActive", float]
                     )
                 },
 
@@ -109,20 +141,19 @@ object Constructors {
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["bodyPosition", vector], json["bodySize", vector],
-                            json["pushPower", float]
+                            bodyPatternType.constructor(game, json), json["pushPower", float]
                     )
                 },
 
                 Portal::class to JsonType("Portal") { game, json ->
-                    val radius = json["radius", float]
+                    val radius = json["bodyRadius"]?.asFloat()
                     Portal(
                             game!!,
                             game.textureManager.loadDrawable(json["drawableName", string]),
-                            json["drawableSize", vector, null, Vector2(radius * 2, radius * 2)],
+                            json["drawableSize", vector, null, radius?.let { Vector2(it * 2, it * 2) }],
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["center", vector], radius,
-                            json["teleportTo", vector], json["teleportDelay", float]
+                            bodyPatternType.constructor(game, json), json["teleportTo", vector],
+                            json["teleportDelay", float]
                     )
                 },
 
@@ -132,7 +163,7 @@ object Constructors {
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["bodyPosition", vector], json["bodySize", vector]
+                            bodyPatternType.constructor(game, json)
                     )
                 },
 
@@ -142,8 +173,7 @@ object Constructors {
                             game.textureManager.loadDrawable(json["drawableName", string]),
                             json.get("drawableSize", vector, defaultOther = "bodySize"),
                             json["bodyLowerLeftCornerOffset", vector, game, Vector2()],
-                            json["bodyPosition", vector], json["bodySize", vector],
-                            json["pushPower", float]
+                            bodyPatternType.constructor(game, json), json["pushPower", float]
                     )
                 }
         ).toJsonTypeMap().let { map.putAll(it) }
@@ -212,7 +242,7 @@ object Constructors {
                     game!!,
                     game.textureManager.loadDrawable(json["drawableName", string]),
                     json.get("drawableSize", vector, defaultOther = "bodySize"),
-                    json["bodyLowerLeftCornerOffset", vector], json["bodyPattern", bodyPatternType, game],
+                    json["bodyLowerLeftCornerOffset", vector], bodyPatternType.constructor(game, json),
                     json["weapon", weaponType, game], json["thinker", thinkerType, game],
                     json["healthBar", healthBarType, game], json["speed", float], json["jumpPower", float]
                 )
