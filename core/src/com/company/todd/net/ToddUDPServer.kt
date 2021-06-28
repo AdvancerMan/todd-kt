@@ -5,11 +5,11 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.SocketAddress
 import java.util.*
+import java.util.concurrent.ArrayBlockingQueue
 
 class ToddUDPServer(
     private val updatesListener: ServerUpdatesListener,
     private val serverInfo: ByteArray,
-    private val sendIntervalMs: Long = 33,
     private val afkTimeBeforeKickingMs: Long = 60_000
 ) : Closeable {
     private var broadcastServer: ToddBroadcastServer? = null
@@ -18,6 +18,7 @@ class ToddUDPServer(
     private var sendUpdatesThread: Thread? = null
     private var socket: DatagramSocket? = null
 
+    private val updates = ArrayBlockingQueue<String>(30, true)
     private var lastActiveMoment: MutableMap<SocketAddress, Long> = mutableMapOf()
 
     fun start() {
@@ -31,10 +32,14 @@ class ToddUDPServer(
         ).also { it.start() }
     }
 
+    fun send(update: String) {
+        updates.put(update)
+    }
+
     private fun sendUpdates() {
         while (!Thread.currentThread().isInterrupted) {
-            val updates = updatesListener.flushServerUpdates().toByteArray()
-            val packet = DatagramPacket(updates, updates.size)
+            val update = updates.take().toByteArray()
+            val packet = DatagramPacket(update, update.size)
             val disconnected = mutableListOf<SocketAddress>()
             synchronized(lastActiveMoment) {
                 val iterator = lastActiveMoment.iterator()
@@ -50,13 +55,6 @@ class ToddUDPServer(
                 }
             }
             disconnected.forEach { updatesListener.onDisconnect(it) }
-
-            try {
-                Thread.sleep(sendIntervalMs)
-            } catch (e: InterruptedException) {
-                Thread.currentThread().interrupt()
-                break
-            }
         }
     }
 
@@ -132,7 +130,6 @@ class ToddUDPServer(
 
     interface ServerUpdatesListener {
         fun receiveClientUpdates(socketAddress: SocketAddress, updates: String)
-        fun flushServerUpdates(): String
         fun getOnConnectInfo(socketAddress: SocketAddress): String
         fun onDisconnect(socketAddress: SocketAddress)
     }
