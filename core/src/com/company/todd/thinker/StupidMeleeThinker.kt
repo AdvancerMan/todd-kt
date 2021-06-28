@@ -1,14 +1,14 @@
 package com.company.todd.thinker
 
-import com.company.todd.json.JsonFullSerializable
+import com.company.todd.json.JsonSaveSerializable
 import com.company.todd.json.SerializationType
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.GameScreen
 
 @SerializationType("stupidMeleeThinker")
 class StupidMeleeThinker(
-    @JsonFullSerializable private val maxDistanceFromTarget: Float,
-    @JsonFullSerializable private val jumpCooldown: Float
+    @JsonSaveSerializable private val maxDistanceFromTarget: Float,
+    @JsonSaveSerializable private val jumpCooldown: Float
 ) : Thinker {
     private var sinceJump = jumpCooldown
 

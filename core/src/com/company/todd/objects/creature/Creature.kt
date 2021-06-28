@@ -18,6 +18,7 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
+import com.company.todd.json.JsonSaveSerializable
 import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.SerializationType
 import com.company.todd.objects.weapon.Weapon
@@ -32,7 +33,7 @@ open class Creature(
     game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,
-    @JsonUpdateSerializable private var thinker: Thinker,
+    @JsonSaveSerializable private var thinker: Thinker,
     @JsonUpdateSerializable private val healthBar: HealthBar,
     @JsonUpdateSerializable private var speed: Float,
     @JsonUpdateSerializable private var jumpPower: Float

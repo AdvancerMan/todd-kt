@@ -141,15 +141,19 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
         return Vector2(width, height)
     }
 
-    override fun serializeFull(json: JsonValue) {
-        // no operations
-    }
-
     override fun deserializeUpdates(json: JsonValue) {
         // no operations
     }
 
     override fun serializeUpdates(json: JsonValue) {
+        // no operations
+    }
+
+    override fun serializeFull(json: JsonValue) {
+        // no operations
+    }
+
+    override fun serializeSave(json: JsonValue) {
         // no operations
     }
 }

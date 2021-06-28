@@ -55,4 +55,8 @@ class StaticBodyWrapper(private val unrotatedAABB: Rectangle, private var angle:
     override fun serializeFull(json: JsonValue) {
         TODO("Not yet implemented")
     }
+
+    override fun serializeSave(json: JsonValue) {
+        TODO("Not yet implemented")
+    }
 }

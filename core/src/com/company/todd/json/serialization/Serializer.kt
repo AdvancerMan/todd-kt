@@ -3,21 +3,21 @@ package com.company.todd.json.serialization
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.json.JsonFullSerializable
-import com.company.todd.json.JsonUpdateSerializable
-import com.company.todd.json.ManuallyJsonSerializable
-import com.company.todd.json.SerializationType
+import com.company.todd.json.*
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.isAccessible
 
-fun getJsonName(member: KCallable<*>, annotation: Annotation) =
-    when (annotation) {
-        is JsonFullSerializable -> if (annotation.name.isBlank()) member.name else annotation.name
-        is JsonUpdateSerializable -> if (annotation.name.isBlank()) member.name else annotation.name
-        else -> member.name
+fun getJsonName(member: KCallable<*>, annotation: Annotation): String {
+    val annotationName = when (annotation) {
+        is JsonSaveSerializable -> annotation.name
+        is JsonFullSerializable -> annotation.name
+        is JsonUpdateSerializable -> annotation.name
+        else -> ""
     }
+    return if (annotationName.isBlank()) member.name else annotationName
+}
 
 private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
     return when (obj) {
@@ -41,6 +41,9 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
                 .forEach { result.addChild(it.key, it.value) }
 
             if (obj is ManuallyJsonSerializable) {
+                if (JsonSaveSerializable::class in annotations) {
+                    obj.serializeSave(result)
+                }
                 if (JsonFullSerializable::class in annotations) {
                     obj.serializeFull(result)
                 }
@@ -52,6 +55,11 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
     }
 }
 
-fun Any.toJsonFull() = toJson(this, JsonUpdateSerializable::class, JsonFullSerializable::class)
+fun Any.toJsonSave() =
+    toJson(this, JsonUpdateSerializable::class, JsonFullSerializable::class, JsonSaveSerializable::class)
 
-fun Any.toJsonUpdates() = toJson(this, JsonUpdateSerializable::class)
+fun Any.toJsonFull() =
+    toJson(this, JsonUpdateSerializable::class, JsonFullSerializable::class)
+
+fun Any.toJsonUpdates() =
+    toJson(this, JsonUpdateSerializable::class)

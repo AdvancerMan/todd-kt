@@ -39,6 +39,10 @@ abstract class AbstractBodyPattern : BodyPattern {
         serializer?.invoke(json)
     }
 
+    override fun serializeSave(json: JsonValue) {
+        // no operations
+    }
+
     override fun withSerializer(serializer: (JsonValue) -> Unit) = apply { this.serializer = serializer }
 }
 
