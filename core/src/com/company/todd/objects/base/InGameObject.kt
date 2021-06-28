@@ -64,9 +64,6 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
                 .add(width / 2, height / 2)
         getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
 
-        setOrigin(Align.center)
-        originX -= drawableCenterOffset.x
-        originY -= drawableCenterOffset.y
         setScale(1f)
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
     }
@@ -88,7 +85,16 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
     }
 
     open fun postAct(delta: Float) {
-        getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
+        val newPosition = getCenter().add(drawableCenterOffset)
+        if (!isDirectedToRight) {
+            newPosition.x -= drawableCenterOffset.x * 2
+        }
+        setPosition(newPosition.x, newPosition.y, Align.center)
+
+        setOrigin(Align.center)
+        originX -= drawableCenterOffset.x * if (isDirectedToRight) 1 else -1
+        originY -= drawableCenterOffset.y
+
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
         updateColor()
     }
