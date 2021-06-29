@@ -29,6 +29,7 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
         is Rectangle -> obj.toJsonValue()
         is Boolean -> obj.toJsonValue()
         is Float -> obj.toJsonValue()
+        is Enum<*> -> obj.name.toJsonValue()
         is List<*> -> {
             val result = JsonValue(JsonValue.ValueType.array)
             obj.map { toJson(it, *annotations) }.forEach { result.addChild(it) }

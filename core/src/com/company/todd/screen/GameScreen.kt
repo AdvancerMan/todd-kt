@@ -117,7 +117,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     }
 
     override fun deserializeUpdates(json: JsonValue) {
-        val updates = json.associateBy { it["id"].asInt() }
+        val updates = json["objects"].associateBy { it["id"].asInt() }
         objects.children.forEach { obj -> updates[obj.hashCode()]?.let { obj.updateFromJson(it) } }
     }
 

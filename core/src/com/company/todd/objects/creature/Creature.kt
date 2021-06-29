@@ -17,7 +17,6 @@ import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
-import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
 import com.company.todd.json.JsonSaveSerializable
 import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.SerializationType
@@ -33,7 +32,7 @@ open class Creature(
     game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,
-    @JsonSaveSerializable private var thinker: Thinker,
+    @JsonSaveSerializable val thinker: Thinker,
     @JsonUpdateSerializable private val healthBar: HealthBar,
     @JsonUpdateSerializable private var speed: Float,
     @JsonUpdateSerializable private var jumpPower: Float
@@ -50,8 +49,6 @@ open class Creature(
         private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()
-
-    private var health = healthBar.maxValue
 
     init {
         bodyPattern.sensors[SensorName.BOTTOM_GROUND_SENSOR] = object : Sensor {
@@ -127,7 +124,6 @@ open class Creature(
         super.postAct(delta)
         animationTypeNow = animationTypeNow.next(this, preferredAnimationType)
         setPlayingType(animationTypeNow.type)
-        healthBar.value = health
     }
 
     fun jump() {
@@ -165,7 +161,7 @@ open class Creature(
 
     override fun takeDamage(amount: Float) {
         super.takeDamage(amount)
-        health -= amount
+        healthBar.value -= amount
         sinceDamage = 0f
     }
 

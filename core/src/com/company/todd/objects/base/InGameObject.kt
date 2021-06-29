@@ -30,7 +30,7 @@ private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, private val drawable: MyDrawable,
                             drawableSize: Vector2, @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
-                            @JsonFullSerializable("bodyPattern") private val body: BodyWrapper) :
+                            @JsonUpdateSerializable("bodyPattern") private val body: BodyWrapper) :
     Group(), Disposable, Sensor, BodyWrapper by body, MyDrawableI by drawable,
     TopGroundListener, ManuallyJsonSerializable {
     // before init() it is drawableLowerLeftCornerOffset

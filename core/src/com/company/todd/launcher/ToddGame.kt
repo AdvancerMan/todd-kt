@@ -27,6 +27,7 @@ class ToddGame: ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         val delta = min(Gdx.graphics.deltaTime, SPF)
+        screenManager.update()
         screenManager.render(delta)
         textureManager.update(delta)
     }

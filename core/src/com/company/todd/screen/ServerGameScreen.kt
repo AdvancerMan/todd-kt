@@ -128,6 +128,11 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
         }
     }
 
+    override fun serializeFull(json: JsonValue) {
+        super.serializeFull(json)
+        json["objects"].forEach { it.addChild("meta", MetaMessage.ADDED.name.toJsonValue()) }
+    }
+
     private data class Action(@JsonUpdateSerializable private val action: ThinkerAction,
                               @JsonUpdateSerializable private val sinceCreation: Float,
                               @JsonUpdateSerializable private val id: Int)

@@ -28,7 +28,7 @@ fun Rectangle.rotateRad(angleRad: Float) =
         )
                 .map { it.rotateRad(angleRad) }
                 .also { this.set(it[0].x, it[0].y, 0f, 0f) }
-                .fold(this) { r, v -> r.merge(v) }!!
+                .fold(this) { r, v -> r.merge(v) }
 
 fun Rectangle.rotateAround(originX: Float, originY: Float, angle: Float) =
         rotateAroundRad(originX, originY, angle * MathUtils.degreesToRadians)
@@ -52,3 +52,8 @@ fun <T> MutableCollection<T>.synchronizedFlush() = synchronized(this) {
         clear()
         result
 }
+
+fun ByteArray.contentEquals(offset: Int, length: Int, other: ByteArray) = asList()
+        .subList(offset, offset + length)
+        .toByteArray()
+        .contentEquals(other)

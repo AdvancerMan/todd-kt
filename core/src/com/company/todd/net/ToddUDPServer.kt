@@ -1,10 +1,10 @@
 package com.company.todd.net
 
+import com.company.todd.util.contentEquals
 import java.io.Closeable
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.SocketAddress
-import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 
 class ToddUDPServer(
@@ -82,15 +82,10 @@ class ToddUDPServer(
             socket!!.receive(received)
 
             when {
-                // found no replacement for Array.equals in kotlin
-                Arrays.equals(
-                    buffer, received.offset, received.length, CONNECT_MESSAGE, 0, CONNECT_MESSAGE.size
-                ) -> {
+                buffer.contentEquals(received.offset, received.length, CONNECT_MESSAGE) -> {
                     connect(received)
                 }
-                Arrays.equals(
-                    buffer, received.offset, received.length, ASK_INFO_MESSAGE, 0, ASK_INFO_MESSAGE.size
-                ) -> {
+                buffer.contentEquals(received.offset, received.length, ASK_INFO_MESSAGE) -> {
                     // TODO log IOException
                     socket!!.send(DatagramPacket(serverInfo, serverInfo.size, received.socketAddress))
                 }

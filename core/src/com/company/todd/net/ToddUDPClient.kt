@@ -1,16 +1,16 @@
 package com.company.todd.net
 
+import com.company.todd.util.contentEquals
 import java.io.Closeable
 import java.lang.IllegalStateException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.SocketAddress
 import java.net.SocketTimeoutException
-import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 
-class ToddUDPClient(private val updatesListener: ClientUpdatesListener) : Closeable {
+class ToddUDPClient(@Volatile var updatesListener: ClientUpdatesListener) : Closeable {
     private var listeningThread: Thread? = null
     private var sendingThread: Thread? = null
     private var socket: DatagramSocket? = null
@@ -51,12 +51,7 @@ class ToddUDPClient(private val updatesListener: ClientUpdatesListener) : Closea
             // TODO receive blocks send -- big lag
             // TODO log IOException
             socket!!.receive(received)
-            if (
-                Arrays.equals(
-                    buffer, 0, received.length,
-                    ToddUDPServer.DISCONNECTED_MESSAGE, 0, ToddUDPServer.DISCONNECTED_MESSAGE.size
-                )
-            ) {
+            if (buffer.contentEquals(received.offset, received.length, ToddUDPServer.DISCONNECTED_MESSAGE)) {
                 updatesListener.onDisconnect()
                 break
             } else {
