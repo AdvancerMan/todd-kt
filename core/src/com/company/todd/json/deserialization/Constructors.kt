@@ -21,6 +21,7 @@ import com.company.todd.objects.passive.interactive.Travolator
 import com.company.todd.objects.passive.platform.*
 import com.company.todd.thinker.StupidMeleeThinker
 import com.company.todd.thinker.Thinker
+import com.company.todd.thinker.operated.ScheduledThinker
 import kotlin.reflect.KClass
 
 object Constructors {
@@ -225,7 +226,9 @@ object Constructors {
         weapons: Map<String, JsonType<out Weapon>>,
         thinkers: Map<String, JsonType<out Thinker>>
     ) {
-        val weaponType = JsonType("Weapon") { game, json -> parseJsonValue(game, json, weapons) }
+        val weaponType = JsonType("Weapon") { game, json ->
+            if (json.isNull) null else parseJsonValue(game, json, weapons)
+        }
         val thinkerType = JsonType("Thinker") { game, json -> parseJsonValue(game, json, thinkers) }
         val healthBarType = JsonType("HealthBar") { game, jsonWithPrototype ->
             val json = createJsonValue(jsonWithPrototype)
@@ -243,7 +246,8 @@ object Constructors {
                     game.textureManager.loadDrawable(json["drawableName", string]),
                     json.get("drawableSize", vector, defaultOther = "bodySize"),
                     json["bodyLowerLeftCornerOffset", vector], bodyPatternType.constructor(game, json),
-                    json["weapon", weaponType, game], json["thinker", thinkerType, game],
+                    if (json["weapon"].isNull) null else json["weapon", weaponType, game],
+                    json["thinker", thinkerType, game, ScheduledThinker(0f)],
                     json["healthBar", healthBarType, game], json["speed", float], json["jumpPower", float]
                 )
             }
