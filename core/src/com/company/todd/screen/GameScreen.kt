@@ -22,7 +22,9 @@ import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.json.serialization.toJsonSave
 import com.company.todd.json.serialization.toJsonUpdates
 import com.company.todd.json.serialization.toJsonValue
+import com.company.todd.objects.creature.Creature
 import com.company.todd.thinker.PlayerThinker
+import com.company.todd.thinker.operated.ThinkerAction
 
 open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), ManuallyJsonSerializable {
     protected val world = World(Vector2(0f, -30f), true)
@@ -131,5 +133,9 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
         if (!json.hasChild("objects")) {
             json.addChild("objects", objects.children.toList().toJsonSave())
         }
+    }
+
+    open fun listenAction(action: ThinkerAction, creature: Creature) {
+        // no operations
     }
 }

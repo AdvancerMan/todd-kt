@@ -5,9 +5,14 @@ import com.company.todd.screen.GameScreen
 import com.company.todd.thinker.Thinker
 
 class OperatedThinker : Thinker {
-    var action: ThinkerAction? = null
+    private val actions = mutableSetOf<ThinkerAction>()
+
+    fun addAction(action: ThinkerAction) {
+        actions.add(action)
+    }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        action?.action?.invoke(delta, operatedObject, screen)
+        actions.forEach { it.action(delta, operatedObject, screen) }
+        actions.clear()
     }
 }

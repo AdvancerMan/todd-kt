@@ -22,6 +22,7 @@ import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.SerializationType
 import com.company.todd.objects.weapon.Weapon
 import com.company.todd.thinker.Thinker
+import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.HEALTH_BAR_OFFSET
 import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
@@ -131,6 +132,7 @@ open class Creature(
             sinceJump = 0f
             preferredAnimationType = AnimationType.JUMP
             preVelocity.y = jumpPower
+            screen.listenAction(ThinkerAction.JUMP, this)
         }
     }
 
@@ -143,6 +145,12 @@ open class Creature(
             preferredAnimationType = AnimationType.RUN
         }
         preVelocity.x += if (toRight) speed else -speed
+
+        if (toRight) {
+            screen.listenAction(ThinkerAction.RUN_RIGHT, this)
+        } else {
+            screen.listenAction(ThinkerAction.RUN_LEFT, this)
+        }
     }
 
     protected fun updateXVelocity() {
@@ -157,6 +165,7 @@ open class Creature(
 
     fun attack() {
         weapon?.attack()
+        screen.listenAction(ThinkerAction.ATTACK, this)
     }
 
     override fun takeDamage(amount: Float) {

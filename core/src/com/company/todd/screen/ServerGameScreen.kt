@@ -12,6 +12,7 @@ import com.company.todd.json.serialization.toJsonUpdates
 import com.company.todd.json.serialization.toJsonValue
 import com.company.todd.net.ToddUDPServer
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.objects.creature.Creature
 import com.company.todd.thinker.operated.OperatedThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.synchronizedFlush
@@ -85,7 +86,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
             incomingUpdates.synchronizedFlush()
                 .mapNotNull { connectedPlayers[it.first]?.let { playerDescription -> playerDescription to it.second } }
                 .onEach { updatedThinkerActions.add(Action(it.second, sinceCreation, it.first.first.hashCode())) }
-                .forEach { it.first.second.action = it.second }
+                .forEach { it.first.second.addAction(it.second) }
 
             super.update(delta)
 
@@ -97,6 +98,10 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
                 sinceLastSend = 0f
             }
         }
+    }
+
+    override fun listenAction(action: ThinkerAction, creature: Creature) {
+        updatedThinkerActions.add(Action(action, sinceCreation, creature.id))
     }
 
     override fun dispose() {

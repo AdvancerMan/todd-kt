@@ -54,6 +54,13 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
     }
 
+    override fun listenAction(action: ThinkerAction, creature: Creature) {
+        super.listenAction(action, creature)
+        if (creature == player) {
+            client.sendUpdate(action.name)
+        }
+    }
+
     override fun deserializeUpdates(json: JsonValue) {
         super.deserializeUpdates(json)
         val destroyed = mutableSetOf<Int>()
@@ -90,6 +97,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
             igo.id = id
             if (igo is Creature) {
                 thinkers[igo.id] = igo.thinker as ScheduledThinker
+                igo.thinker.moment = json["sinceCreation"].asFloat()
             }
             addObject(igo)
         }
