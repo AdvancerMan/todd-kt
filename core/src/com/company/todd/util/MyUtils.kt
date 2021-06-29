@@ -46,3 +46,9 @@ fun <K, V> MutableMap<K, V>.putAll(vararg pairs: Pair<K, V>) = putAll(pairs)
 
 inline fun FloatArray.mutate(f: (Float) -> Float) =
         apply { forEachIndexed { i, x -> this[i] = f(x) } }
+
+fun <T> MutableCollection<T>.synchronizedFlush() = synchronized(this) {
+        val result = toList()
+        clear()
+        result
+}

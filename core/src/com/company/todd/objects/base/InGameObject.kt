@@ -35,6 +35,7 @@ abstract class InGameObject(protected val game: ToddGame, private val drawable: 
     TopGroundListener, ManuallyJsonSerializable {
     // before init() it is drawableLowerLeftCornerOffset
     private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy()
+    @JsonUpdateSerializable
     private val id: Int = getNewID()
     var initialized = false
         private set

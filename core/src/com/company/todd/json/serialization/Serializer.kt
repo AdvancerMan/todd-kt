@@ -22,11 +22,18 @@ fun getJsonName(member: KCallable<*>, annotation: Annotation): String {
 private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
     return when (obj) {
         null -> JsonValue(JsonValue.ValueType.nullValue)
+        is Int -> obj.toJsonValue()
+        is Long -> obj.toJsonValue()
         is String -> obj.toJsonValue()
         is Vector2 -> obj.toJsonValue()
         is Rectangle -> obj.toJsonValue()
         is Boolean -> obj.toJsonValue()
         is Float -> obj.toJsonValue()
+        is List<*> -> {
+            val result = JsonValue(JsonValue.ValueType.array)
+            obj.map { toJson(it, *annotations) }.forEach { result.addChild(it) }
+            result
+        }
         else -> {
             val result = JsonValue(JsonValue.ValueType.`object`)
             val clazz = obj::class

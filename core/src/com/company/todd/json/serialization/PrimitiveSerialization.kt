@@ -10,6 +10,10 @@ fun String.toJsonValue() = JsonValue(this)
 
 fun Boolean.toJsonValue() = JsonValue(this)
 
+fun Int.toJsonValue() = JsonValue(this.toLong())
+
+fun Long.toJsonValue() = JsonValue(this)
+
 fun Float.toJsonValue() = JsonValue(this.toDouble())
 
 fun Vector2.toJsonValue() = arrayOf(x, y).toJsonValue { JsonValue(it.toDouble()) }
