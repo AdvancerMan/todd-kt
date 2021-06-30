@@ -20,8 +20,10 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
             OrthographicCamera().apply { setToOrtho(false) }
     )).also { Gdx.input.inputProcessor = it }
 
+    protected val screenActors = ScreenActors()
+
     init {
-        stage.addActor(ScreenActors)
+        stage.addActor(screenActors)
     }
 
     override fun render(delta: Float) {
@@ -29,7 +31,7 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
         draw()
     }
 
-    fun getCameraAABB() = getActorAABB()
+    fun getCameraAABB() = screenActors.getActorAABB()
 
     fun centerCameraAt(x: Float, y: Float) {
         stage.camera.position.x = x
@@ -43,7 +45,7 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
     }
 
     open fun draw() {
-        updateParameters()
+        screenActors.updateParameters()
         stage.draw()
     }
 
@@ -52,16 +54,22 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
     }
 
     override fun pause() {}
-    override fun resume() {}
+
+    override fun resume() {
+        // TODO Gdx.input.inputProcessor = stage
+    }
 
     override fun hide() {}
-    override fun show() {}
+
+    override fun show() {
+        // TODO Gdx.input.inputProcessor = stage
+    }
 
     override fun dispose() {
         stage.dispose()
     }
 
-    companion object ScreenActors : Group() {
+    inner class ScreenActors : Group() {
         fun updateParameters() {
             val viewport = stage.viewport
             val camera = viewport.camera

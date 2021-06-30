@@ -39,7 +39,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
         level?.create(game)?.forEach { addObject(it) }
         addObject(player)
         stage.addActor(objects)
-        ScreenActors.addActor(playerThinker)
+        screenActors.addActor(playerThinker)
         stage.addListener(playerThinker.createInputListener())
         world.setContactListener(MyContactListener())
     }

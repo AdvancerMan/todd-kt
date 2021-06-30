@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.company.todd.screen.game.DebugScreen
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.screen.ScreenManager
+import com.company.todd.screen.menu.MainMenuScreen
 import com.company.todd.util.SPF
 import kotlin.math.min
 
@@ -19,7 +20,7 @@ class ToddGame: ApplicationListener {
     override fun create() {
         assetsFolder = if (Gdx.app.type == Application.ApplicationType.Desktop) "android/assets/" else ""
         textureManager = TextureManager()
-        screenManager = ScreenManager(DebugScreen(this))
+        screenManager = ScreenManager(MainMenuScreen(this))
     }
 
     override fun render() {
@@ -27,8 +28,8 @@ class ToddGame: ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         val delta = min(Gdx.graphics.deltaTime, SPF)
-        screenManager.update()
         screenManager.render(delta)
+        screenManager.update()
         textureManager.update(delta)
     }
 

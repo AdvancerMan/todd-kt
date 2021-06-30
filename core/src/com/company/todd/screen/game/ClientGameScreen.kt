@@ -61,6 +61,11 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
     }
 
+    override fun dispose() {
+        client.close()
+        super.dispose()
+    }
+
     override fun deserializeUpdates(json: JsonValue) {
         super.deserializeUpdates(json)
         val destroyed = mutableSetOf<Int>()
