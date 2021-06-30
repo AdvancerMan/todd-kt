@@ -1,7 +1,7 @@
 package com.company.todd.thinker.operated
 
 import com.company.todd.objects.creature.Creature
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 import com.company.todd.thinker.Thinker
 import java.util.TreeSet
 

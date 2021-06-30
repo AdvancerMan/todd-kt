@@ -2,6 +2,7 @@ package com.company.todd.screen
 
 import com.company.todd.launcher.ToddGame
 import com.company.todd.net.ToddUDPClient
+import com.company.todd.screen.game.ClientGameScreen
 import java.net.SocketAddress
 
 class ConnectingScreen(game: ToddGame, address: SocketAddress): MyScreen(game), ToddUDPClient.ClientUpdatesListener {

@@ -1,7 +1,7 @@
 package com.company.todd.thinker.operated
 
 import com.company.todd.objects.creature.Creature
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 
 enum class ThinkerAction(val action: (Float, Creature, GameScreen) -> Unit) {
     RUN_LEFT({ _, obj, _ ->

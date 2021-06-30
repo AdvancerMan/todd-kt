@@ -3,7 +3,7 @@ package com.company.todd.objects.weapon
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.company.todd.objects.base.InGameObject
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.DisposableByManager
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager

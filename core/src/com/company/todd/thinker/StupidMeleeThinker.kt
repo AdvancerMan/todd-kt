@@ -3,7 +3,7 @@ package com.company.todd.thinker
 import com.company.todd.json.JsonSaveSerializable
 import com.company.todd.json.SerializationType
 import com.company.todd.objects.creature.Creature
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 
 @SerializationType("stupidMeleeThinker")
 class StupidMeleeThinker(

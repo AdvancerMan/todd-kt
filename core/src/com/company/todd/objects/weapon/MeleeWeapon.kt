@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.worldAABBFor
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 
 abstract class MeleeWeapon(
     weaponStyle: Style,

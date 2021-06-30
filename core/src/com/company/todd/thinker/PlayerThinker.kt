@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Disposable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.creature.Creature
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 import com.company.todd.util.*
 
 enum class MovingInputType(val i: Int) {

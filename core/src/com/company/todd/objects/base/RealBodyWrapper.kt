@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.Shape.Type.*
 import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor

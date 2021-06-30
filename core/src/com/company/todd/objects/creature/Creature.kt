@@ -9,7 +9,7 @@ import com.company.todd.gui.HealthBar
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.animated.stayAnimation

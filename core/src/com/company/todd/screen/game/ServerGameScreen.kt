@@ -1,4 +1,4 @@
-package com.company.todd.screen
+package com.company.todd.screen.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.JsonValue

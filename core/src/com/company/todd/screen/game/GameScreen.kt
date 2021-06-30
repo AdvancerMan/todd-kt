@@ -1,4 +1,4 @@
-package com.company.todd.screen
+package com.company.todd.screen.game
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -23,6 +23,7 @@ import com.company.todd.json.serialization.toJsonSave
 import com.company.todd.json.serialization.toJsonUpdates
 import com.company.todd.json.serialization.toJsonValue
 import com.company.todd.objects.creature.Creature
+import com.company.todd.screen.MyScreen
 import com.company.todd.thinker.PlayerThinker
 import com.company.todd.thinker.operated.ThinkerAction
 

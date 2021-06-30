@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.*
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.ManuallyJsonSerializable
-import com.company.todd.screen.GameScreen
+import com.company.todd.screen.game.GameScreen
 
 
 interface BodyWrapper : ManuallyJsonSerializable {
