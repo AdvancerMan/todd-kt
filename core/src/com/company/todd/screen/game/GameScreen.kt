@@ -17,7 +17,9 @@ import com.company.todd.objects.passive.Level
 import com.company.todd.box2d.MyContactListener
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.ManuallyJsonSerializable
+import com.company.todd.json.deserialization.get
 import com.company.todd.json.deserialization.updateFromJson
+import com.company.todd.json.deserialization.vector
 import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.json.serialization.toJsonSave
 import com.company.todd.json.serialization.toJsonUpdates
@@ -122,6 +124,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     override fun deserializeUpdates(json: JsonValue) {
         val updates = json["objects"].associateBy { it["id"].asInt() }
         objects.children.forEach { obj -> updates[obj.hashCode()]?.let { obj.updateFromJson(it) } }
+        world.gravity = json["worldGravity", vector]
     }
 
     override fun serializeFull(json: JsonValue) {

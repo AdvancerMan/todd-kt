@@ -9,20 +9,21 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.creature.Creature
 import com.company.todd.thinker.operated.ScheduledThinker
 import com.company.todd.thinker.operated.ThinkerAction
+import com.company.todd.util.removeWhile
+import java.util.*
 
 class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, serverData: String) : GameScreen(game),
     ToddUDPClient.ClientUpdatesListener {
-    private var sinceCreation = 0f
     private val reader = JsonReader()
     private var disconnected = false
     private val thinkers = mutableMapOf<Int, ScheduledThinker>()
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
+    private val delayedUpdates = TreeSet(compareBy<Pair<Long, () -> Unit>> { it.first }.thenBy { it.second.toString() })
 
     init {
         val jsonData = reader.parse(serverData)
         player.id = jsonData["playerId"].asInt()
         updateFromJson(jsonData)
-        sinceCreation = jsonData["sinceCreation", float]
     }
 
     override fun addObjects() {
@@ -35,23 +36,21 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         throw IllegalStateException("Should not happen")
     }
 
+    @Synchronized
     override fun getServerUpdates(updates: String) {
-        synchronized(this) {
-            updateFromJson(reader.parse(updates))
-        }
+        updateFromJson(reader.parse(updates))
     }
 
+    @Synchronized
     override fun onDisconnect() {
-        synchronized(this) {
-            disconnected = true
-        }
+        disconnected = true
     }
 
+    @Synchronized
     override fun update(delta: Float) {
-        synchronized(this) {
-            sinceCreation += delta
-            super.update(delta)
-        }
+        val now = System.currentTimeMillis()
+        delayedUpdates.removeWhile { it.first <= now }.forEach { it.second() }
+        super.update(delta)
     }
 
     override fun listenAction(action: ThinkerAction, creature: Creature) {
@@ -67,49 +66,50 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     }
 
     override fun deserializeUpdates(json: JsonValue) {
-        super.deserializeUpdates(json)
-        val destroyed = mutableSetOf<Int>()
-        val addedIds = mutableSetOf<Int>()
-        val added = mutableListOf<JsonValue>()
-        world.gravity = json["worldGravity", vector]
+        delayedUpdates.add(json["sinceEpoch", long] to {
+            val destroyed = mutableSetOf<Int>()
+            val addedIds = mutableSetOf<Int>()
+            val added = mutableListOf<JsonValue>()
 
-        json["objects"].forEach { objectJson ->
-            objectJson["meta"]?.asString()?.let { meta ->
-                if (meta == ServerGameScreen.MetaMessage.DESTROYED.name) {
-                    destroyed.add(objectJson["id", int])
-                } else if (meta == ServerGameScreen.MetaMessage.ADDED.name) {
-                    addedIds.add(objectJson["id", int])
-                    added.add(objectJson)
+            json["objects"].forEach { objectJson ->
+                objectJson["meta"]?.asString()?.let { meta ->
+                    if (meta == ServerGameScreen.MetaMessage.DESTROYED.name) {
+                        destroyed.add(objectJson["id", int])
+                    } else if (meta == ServerGameScreen.MetaMessage.ADDED.name) {
+                        addedIds.add(objectJson["id", int])
+                        added.add(objectJson)
+                    }
                 }
             }
-        }
+            json["objects"].removeAll { it["meta"]?.asString() == ServerGameScreen.MetaMessage.DESTROYED.name}
 
-        objects.children.forEach {
-            it as InGameObject
-            if (it.id in destroyed || it.id in addedIds) {
-                destroyObject(it)
+            objects.children.forEach {
+                it as InGameObject
+                if (it.id in destroyed || it.id in addedIds) {
+                    destroyObject(it)
+                }
             }
-        }
-        added.forEach { addedJson ->
-            val id = addedJson["id", int]
-            if (id == player.id) {
-                return@forEach
-            }
+            added.forEach { addedJson ->
+                val id = addedJson["id", int]
+                if (id == player.id) {
+                    return@forEach
+                }
 
-            addedJson.remove("thinker")
-            val igo = parseInGameObject(addedJson)(game)
-            updateJustCreatedFromJson[igo] = addedJson
-            igo.id = id
-            if (igo is Creature) {
-                thinkers[igo.id] = igo.thinker as ScheduledThinker
-                igo.thinker.moment = json["sinceCreation"].asFloat()
+                addedJson.remove("thinker")
+                val igo = parseInGameObject(addedJson)(game)
+                updateJustCreatedFromJson[igo] = addedJson
+                igo.id = id
+                if (igo is Creature) {
+                    thinkers[igo.id] = igo.thinker as ScheduledThinker
+                }
+                addObject(igo)
             }
-            addObject(igo)
-        }
+            super.deserializeUpdates(json)
+        })
 
         json["actions"].forEach { jsonAction ->
             thinkers[jsonAction["id", int]]
-                ?.addAction(jsonAction["sinceCreation", float], ThinkerAction.valueOf(jsonAction["action", string]))
+                ?.addAction(jsonAction["sinceEpoch", long], ThinkerAction.valueOf(jsonAction["action", string]))
         }
     }
 }

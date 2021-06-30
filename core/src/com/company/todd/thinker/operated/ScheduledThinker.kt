@@ -1,32 +1,25 @@
 package com.company.todd.thinker.operated
 
+import com.badlogic.gdx.Gdx
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.thinker.Thinker
+import com.company.todd.util.removeWhile
 import java.util.TreeSet
 
-class ScheduledThinker(var moment: Float) : Thinker {
-    private val actions = TreeSet<Pair<Float, ThinkerAction>> { p1, p2 ->
-        when {
-            p1.first > p2.first -> 1
-            p1.first < p2.first -> -1
-            else -> p1.second.compareTo(p2.second)
-        }
-    }
+class ScheduledThinker : Thinker {
+    private val actions = TreeSet(compareBy<Pair<Long, ThinkerAction>> { it.first }.thenBy { it.second })
 
-    fun addAction(atMoment: Float, action: ThinkerAction) {
+    fun addAction(atMoment: Long, action: ThinkerAction) {
         actions.add(atMoment to action)
     }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        moment += delta
+        val now = System.currentTimeMillis()
         val actionsNow = mutableSetOf<ThinkerAction>()
-        actions.removeAll { p ->
-            (p.first < moment).also {
-                if (it) {
-                    actionsNow.add(p.second)
-                }
-            }
+        actions.removeWhile {
+            (it.first <= now && it.second !in actionsNow || now - it.first >= 2000f / Gdx.graphics.framesPerSecond)
+                .also { _ -> actionsNow.add(it.second) }
         }
         actionsNow.forEach { it.action(delta, operatedObject, screen) }
     }

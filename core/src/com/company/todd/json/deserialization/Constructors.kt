@@ -247,7 +247,7 @@ object Constructors {
                     json.get("drawableSize", vector, defaultOther = "bodySize"),
                     json["bodyLowerLeftCornerOffset", vector], bodyPatternType.constructor(game, json),
                     if (json["weapon"].isNull) null else json["weapon", weaponType, game],
-                    json["thinker", thinkerType, game, ScheduledThinker(0f)],
+                    json["thinker", thinkerType, game, ScheduledThinker()],
                     json["healthBar", healthBarType, game], json["speed", float], json["jumpPower", float]
                 )
             }
