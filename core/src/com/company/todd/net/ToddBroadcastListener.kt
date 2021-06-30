@@ -1,46 +1,56 @@
 package com.company.todd.net
 
+import com.badlogic.gdx.Gdx
 import java.io.Closeable
+import java.io.IOException
 import java.lang.NumberFormatException
 import java.net.*
 
 class ToddBroadcastListener(private val listener: ToddServersListener) : Closeable {
-    private var socket: DatagramSocket? = null
-    private var thread: Thread? = null
+    private lateinit var socket: DatagramSocket
+    private lateinit var thread: Thread
+    @Volatile
+    private var closed = false
 
     fun start() {
         socket = DatagramSocket(ToddBroadcastServer.BROADCAST_PORT)
         thread = Thread { run() }.also { it.start() }
     }
 
-    fun run() {
-        val buffer = ByteArray(socket!!.receiveBufferSize)
+    private fun run() {
+        val buffer = ByteArray(socket.receiveBufferSize)
         val receivePacket = DatagramPacket(buffer, buffer.size)
         val sendPacket = DatagramPacket(ToddUDPServer.ASK_INFO_MESSAGE, ToddUDPServer.ASK_INFO_MESSAGE.size)
-        while (!Thread.currentThread().isInterrupted) {
-            // TODO log IOException
-            socket!!.receive(receivePacket)
-            val message = buffer.copyOf(receivePacket.length).toString(Charsets.UTF_8)
-            getPort(message)?.let { port ->
-                val address = InetSocketAddress(receivePacket.address, port)
-                if (!listener.shouldAddServer(address)) {
-                    return@let
-                }
 
-                sendPacket.socketAddress = address
-                // TODO log IOException
-                socket!!.send(sendPacket)
-                socket!!.soTimeout = INFO_TIMEOUT
-                try {
-                    // TODO log IOException
-                    socket!!.receive(receivePacket)
-                } catch (e: SocketTimeoutException) {
-                    return@let
-                } finally {
-                    socket!!.soTimeout = 0
+        try {
+            while (!Thread.currentThread().isInterrupted) {
+                socket.receive(receivePacket)
+                val message = buffer.copyOf(receivePacket.length).toString(Charsets.UTF_8)
+                getPort(message)?.let { port ->
+                    val address = InetSocketAddress(receivePacket.address, port)
+                    if (!listener.shouldAddServer(address)) {
+                        return@let
+                    }
+
+                    sendPacket.socketAddress = address
+                    socket.send(sendPacket)
+                    socket.soTimeout = INFO_TIMEOUT
+                    try {
+                        socket.receive(receivePacket)
+                    } catch (e: SocketTimeoutException) {
+                        return@let
+                    } finally {
+                        socket.soTimeout = 0
+                    }
+                    listener.addServer(address, String(receivePacket.data, 0, receivePacket.length, Charsets.UTF_8))
                 }
-                listener.addServer(address, String(receivePacket.data, 0, receivePacket.length, Charsets.UTF_8))
             }
+        } catch (e: IOException) {
+            if (closed) {
+                return
+            }
+            Gdx.app.error("BroadcastListener", "Exception during server finding", e)
+            // TODO maybe callback to GUI ???
         }
     }
 
@@ -58,9 +68,13 @@ class ToddBroadcastListener(private val listener: ToddServersListener) : Closeab
     }
 
     override fun close() {
-        thread?.interrupt()
-        socket?.close()
-        thread?.join()
+        if (closed) {
+            return
+        }
+        closed = true
+        thread.interrupt()
+        socket.close()
+        thread.join()
     }
 
     interface ToddServersListener {
