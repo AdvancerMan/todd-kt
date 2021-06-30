@@ -31,7 +31,7 @@ class FindServerScreen(game: ToddGame) : MenuScreen(game), ToddBroadcastListener
         servers.add(address)
         button.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                game.screenManager.push(ConnectingScreen(game, address))
+                game.screenManager.replaceLast(ConnectingScreen(game, address))
             }
         })
     }

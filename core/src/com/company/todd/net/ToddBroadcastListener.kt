@@ -22,7 +22,7 @@ class ToddBroadcastListener(private val listener: ToddServersListener) : Closeab
             socket!!.receive(receivePacket)
             val message = buffer.copyOf(receivePacket.length).toString(Charsets.UTF_8)
             getPort(message)?.let { port ->
-                val address = InetSocketAddress(socket!!.inetAddress, port)
+                val address = InetSocketAddress(receivePacket.address, port)
                 if (!listener.shouldAddServer(address)) {
                     return@let
                 }
