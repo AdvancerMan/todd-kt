@@ -64,6 +64,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
             objects.removeActor(it)
             it.dispose()
         }
+        justDestroyedObjects.clear()
     }
 
     override fun update(delta: Float) {
