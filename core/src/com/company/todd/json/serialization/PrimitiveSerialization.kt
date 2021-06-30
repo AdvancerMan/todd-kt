@@ -14,13 +14,15 @@ fun Int.toJsonValue() = JsonValue(this.toLong())
 
 fun Long.toJsonValue() = JsonValue(this)
 
+fun Pair<Long, Long>.toJsonValue() = arrayOf(first, second).toJsonValue { it.toJsonValue() }
+
 fun Float.toJsonValue() = JsonValue(this.toDouble())
 
-fun Vector2.toJsonValue() = arrayOf(x, y).toJsonValue { JsonValue(it.toDouble()) }
+fun Vector2.toJsonValue() = arrayOf(x, y).toJsonValue { it.toJsonValue() }
 
 fun BodyDef.BodyType.toJsonValue() = b2dTypes.entries.find { it.value == this }!!.key.toJsonValue()
 
-fun Rectangle.toJsonValue() = arrayOf(x, y, width, height).toJsonValue { JsonValue(it.toDouble()) }
+fun Rectangle.toJsonValue() = arrayOf(x, y, width, height).toJsonValue { it.toJsonValue() }
 
 fun <T> Array<T>.toJsonValue(elementToJson: (T) -> JsonValue): JsonValue {
     val jsonArray = JsonValue(JsonValue.ValueType.array)

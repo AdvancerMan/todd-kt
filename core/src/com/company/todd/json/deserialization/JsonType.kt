@@ -11,6 +11,8 @@ val string = JsonType("string") { _, json -> json.asString() }
 
 val int = JsonType("integer") { _, json -> json.asInt() }
 
+val long = JsonType("long integer") { _, json -> json.asLong() }
+
 val float = JsonType("float") { _, json -> json.asFloat() }
 
 val boolean = JsonType("boolean") { _, json -> json.asBoolean() }

@@ -24,6 +24,10 @@ class HealthBar(
                 }
         ), DisposableByManager, ManuallyJsonSerializable {
     init {
+        background.minHeight = 10f
+        background.minWidth = 0f
+        healthDrawable.minHeight = 10f
+        healthDrawable.minWidth = 0f
         value = maxHealth
         setAnimateDuration(ANIMATE_DURATION)
     }
@@ -43,7 +47,7 @@ class HealthBar(
     private fun getBackgroundDrawableName() = background.drawableName
 
     @JsonFullSerializable("healthDrawableName")
-    private fun getHealthDrawableName() = background.drawableName
+    private fun getHealthDrawableName() = healthDrawable.drawableName
 
 
     override fun serializeUpdates(json: JsonValue) {

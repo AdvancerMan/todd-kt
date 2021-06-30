@@ -34,7 +34,7 @@ open class Creature(
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,
     @JsonSaveSerializable val thinker: Thinker,
-    @JsonUpdateSerializable private val healthBar: HealthBar,
+    @JsonUpdateSerializable val healthBar: HealthBar,
     @JsonUpdateSerializable private var speed: Float,
     @JsonUpdateSerializable private var jumpPower: Float
 ) : InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
