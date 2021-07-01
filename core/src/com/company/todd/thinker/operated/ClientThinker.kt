@@ -8,20 +8,25 @@ import com.company.todd.thinker.Thinker
 import com.company.todd.util.removeWhile
 import java.util.TreeSet
 
+// TODO add duration like in ServerThinker
 class ClientThinker : Thinker {
-    private val actions = TreeSet(compareBy<Pair<Long, ThinkerAction>> { it.first }.thenBy { it.second })
+    private val actions = mutableMapOf<ThinkerAction, MutableList<Long>>()
 
     fun addAction(atMoment: Long, action: ThinkerAction) {
-        actions.add(atMoment to action)
+        actions.getOrPut(action) { mutableListOf() }.add(atMoment)
     }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
         val now = (screen as ClientGameScreen).updateStartMomentWithPing
-        val actionsNow = mutableSetOf<ThinkerAction>()
-        actions.removeWhile {
-            (it.first <= now && it.second !in actionsNow || now - it.first >= 2000f / Gdx.graphics.framesPerSecond)
-                .also { _ -> actionsNow.add(it.second) }
-        }
-        actionsNow.forEach { it.action(delta, operatedObject, screen) }
+        actions.mapNotNull { entry ->
+            if (entry.value.removeAll { now - it >= 2000f / Gdx.graphics.framesPerSecond }) {
+                entry.key
+            } else {
+                entry.value.find { it <= now }?.let {
+                    entry.value.remove(it)
+                    entry.key
+                }
+            }
+        }.forEach { it.action(delta, operatedObject, screen) }
     }
 }
