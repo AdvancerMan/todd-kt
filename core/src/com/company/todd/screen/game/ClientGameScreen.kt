@@ -18,7 +18,8 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     private var disconnected = false
     private val thinkers = mutableMapOf<Int, ScheduledThinker>()
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
-    private val delayedUpdates = TreeSet(compareBy<Pair<Long, () -> Unit>> { it.first }.thenBy { it.second.toString() })
+    private val delayedPreUpdates: TreeSet<Pair<Long, () -> Unit>>
+    private val delayedPostUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val pingQueue: Queue<Long>
     private val ping: Long
         get() = pingQueue.average().toLong()
@@ -26,14 +27,19 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         get() = System.currentTimeMillis() - ping * 2
 
     init {
+        compareBy<Pair<Long, () -> Unit>> { it.first }.thenBy { it.second.toString() }.let {
+            delayedPreUpdates = TreeSet(it)
+            delayedPostUpdates = TreeSet(it)
+        }
+
         val jsonData = reader.parse(serverData)
         val initialPing = jsonData["sinceEpoch", long]
         pingQueue = ArrayDeque(Collections.nCopies(60, initialPing))
 
         player.id = jsonData["playerId"].asInt()
         updateFromJson(jsonData)
-        delayedUpdates.pollFirst()?.let {
-            delayedUpdates.add(nowWithPing to it.second)
+        delayedPreUpdates.pollFirst()?.let {
+            delayedPreUpdates.add(nowWithPing to it.second)
         }
     }
 
@@ -60,8 +66,9 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     @Synchronized
     override fun update(delta: Float) {
         val now = nowWithPing
-        delayedUpdates.removeWhile { it.first <= now }.forEach { it.second() }
+        delayedPreUpdates.removeWhile { it.first <= now }.forEach { it.second() }
         super.update(delta)
+        delayedPostUpdates.removeWhile { it.first <= now }.forEach { it.second() }
     }
 
     override fun listenAction(action: ThinkerAction, creature: Creature) {
@@ -71,6 +78,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
     }
 
+    @Synchronized
     override fun dispose() {
         client.close()
         super.dispose()
@@ -81,7 +89,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         pingQueue.remove()
         pingQueue.add(System.currentTimeMillis() - sinceEpoch)
 
-        delayedUpdates.add(sinceEpoch to {
+        delayedPreUpdates.add(sinceEpoch to {
             val destroyed = mutableSetOf<Int>()
             val addedIds = mutableSetOf<Int>()
             val added = mutableListOf<JsonValue>()
@@ -120,8 +128,8 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
                 }
                 addObject(igo)
             }
-            super.deserializeUpdates(json)
         })
+        delayedPostUpdates.add(sinceEpoch to { super.deserializeUpdates(json) })
 
         json["actions"].forEach { jsonAction ->
             thinkers[jsonAction["id", int]]
