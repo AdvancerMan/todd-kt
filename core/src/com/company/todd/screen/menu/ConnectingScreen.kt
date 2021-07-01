@@ -15,38 +15,34 @@ class ConnectingScreen(game: ToddGame, address: SocketAddress): MenuScreen(game)
         screenActors.addActor(label("Connecting...").apply { setFillParent(true) })
     }
 
+    @Synchronized
     override fun whenConnected(serverData: String) {
-        synchronized(this) {
-            gameScreen = ClientGameScreen(game, client, serverData)
-            client.updatesListener = gameScreen!!
-        }
+        gameScreen = ClientGameScreen(game, client, serverData)
+        client.updatesListener = gameScreen!!
     }
 
     override fun getServerUpdates(updates: String) {
         // no operations
     }
 
+    @Synchronized
     override fun onDisconnect() {
-        synchronized(this) {
-            disconnected = true
-        }
+        disconnected = true
     }
 
+    @Synchronized
     override fun update(delta: Float) {
-        synchronized(this) {
-            super.update(delta)
-            if (disconnected) {
-                gameScreen?.dispose()
-                // TODO show could not connect message
-            } else {
-                gameScreen?.let { game.screenManager.replaceAll(it) }
-            }
+        super.update(delta)
+        if (disconnected) {
+            gameScreen?.dispose()
+            // TODO show could not connect message
+        } else {
+            gameScreen?.let { game.screenManager.replaceAll(it) }
         }
     }
 
+    @Synchronized
     override fun dispose() {
-        synchronized(this) {
-            super.dispose()
-        }
+        super.dispose()
     }
 }
