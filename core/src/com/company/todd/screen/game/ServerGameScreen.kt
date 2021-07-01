@@ -125,7 +125,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
 
     override fun serializeUpdates(json: JsonValue) {
         super.serializeUpdates(json)
-        json.addChild("sinceEpoch", System.currentTimeMillis().toJsonValue())
+        json.addChild("sinceEpoch", updateStartMoment.toJsonValue())
         json.addChild("actions", updatedThinkerActions.toJsonUpdates())
 
         val addedIds = addedObjects.map { it.hashCode() }.toSet()

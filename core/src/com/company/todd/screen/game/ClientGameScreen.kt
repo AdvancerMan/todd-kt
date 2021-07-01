@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.JsonWriter
 import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.deserialization.*
 import com.company.todd.json.serialization.toJsonFull
+import com.company.todd.json.serialization.toJsonUpdates
 import com.company.todd.launcher.ToddGame
 import com.company.todd.net.ToddUDPClient
 import com.company.todd.objects.base.InGameObject
@@ -14,6 +15,8 @@ import com.company.todd.thinker.operated.ClientThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.removeWhile
 import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.math.abs
 
 class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, serverData: String) : GameScreen(game),
     ToddUDPClient.ClientUpdatesListener {
@@ -23,12 +26,14 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
     private val delayedPreUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val delayedPostUpdates: TreeSet<Pair<Long, () -> Unit>>
+    private val playerInThePast = ArrayDeque<Pair<Long, JsonValue>>()
 
-    private val pingQueue: Queue<Long>
+    private val pingQueue: ArrayDeque<Long>
     private val ping: Long
         get() = pingQueue.average().toLong()
-    val nowWithPing: Long
+    private val nowWithPing: Long
         get() = System.currentTimeMillis() - ping * 2
+    var updateStartMomentWithPing: Long
 
     private var updateStartMoment = System.currentTimeMillis()
     private var fromLastUpdate = 0L
@@ -40,14 +45,13 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
 
         val jsonData = reader.parse(serverData)
-        val initialPing = jsonData["sinceEpoch", long]
+        val initialPing = System.currentTimeMillis() - jsonData["sinceEpoch", long]
         pingQueue = ArrayDeque(Collections.nCopies(60, initialPing))
+        updateStartMomentWithPing = nowWithPing
 
         player.id = jsonData["playerId"].asInt()
         updateFromJson(jsonData)
-        delayedPreUpdates.pollFirst()?.let {
-            delayedPreUpdates.add(nowWithPing to it.second)
-        }
+        delayedPreUpdates.pollFirst()?.let { delayedPreUpdates.add(updateStartMomentWithPing to it.second) }
     }
 
     override fun addObjects() {
@@ -78,11 +82,13 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     override fun update(delta: Float) {
         fromLastUpdate = System.currentTimeMillis() - updateStartMoment
         updateStartMoment += fromLastUpdate
+        updateStartMomentWithPing = nowWithPing
 
-        val now = nowWithPing
-        delayedPreUpdates.removeWhile { it.first <= now }.forEach { it.second() }
+        delayedPreUpdates.removeWhile { it.first <= updateStartMomentWithPing }.forEach { it.second() }
         super.update(delta)
-        delayedPostUpdates.removeWhile { it.first <= now }.forEach { it.second() }
+        delayedPostUpdates.removeWhile { it.first <= updateStartMomentWithPing }.forEach { it.second() }
+
+        playerInThePast.add(updateStartMoment to player.toJsonUpdates())
     }
 
     override fun listenAction(action: ThinkerAction, creature: Creature) {
@@ -100,8 +106,8 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
 
     override fun deserializeUpdates(json: JsonValue) {
         val sinceEpoch = json["sinceEpoch", long]
-        pingQueue.remove()
-        pingQueue.add(System.currentTimeMillis() - sinceEpoch)
+        pingQueue.removeFirst()
+        pingQueue.addLast(System.currentTimeMillis() - sinceEpoch)
 
         delayedPreUpdates.add(sinceEpoch to {
             val destroyed = mutableSetOf<Int>()
@@ -141,6 +147,19 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
                     thinkers[igo.id] = igo.thinker as ClientThinker
                 }
                 addObject(igo)
+            }
+
+            json["objects"].indexOfFirst { it["id", int] == player.id }.let {
+                if (it == -1) null else json["objects"].remove(it)
+            }?.let { playerJson ->
+                while (playerInThePast.size > 1 && playerInThePast[1].first <= updateStartMomentWithPing) {
+                    playerInThePast.removeFirst()
+                }
+                playerInThePast.take(2)
+                    .minByOrNull { abs(it.first - updateStartMomentWithPing) }
+                    ?.let { (t, jsonInThePast) ->
+                        // TODO validate player | if not validated --> update player from the newest json
+                    }
             }
         })
         delayedPostUpdates.add(sinceEpoch to { super.deserializeUpdates(json) })

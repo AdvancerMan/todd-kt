@@ -16,7 +16,7 @@ class ClientThinker : Thinker {
     }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        val now = if (screen is ClientGameScreen) screen.nowWithPing else System.currentTimeMillis()
+        val now = (screen as ClientGameScreen).updateStartMomentWithPing
         val actionsNow = mutableSetOf<ThinkerAction>()
         actions.removeWhile {
             (it.first <= now && it.second !in actionsNow || now - it.first >= 2000f / Gdx.graphics.framesPerSecond)

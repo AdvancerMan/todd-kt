@@ -132,8 +132,8 @@ open class Creature(
             sinceJump = 0f
             preferredAnimationType = AnimationType.JUMP
             preVelocity.y = jumpPower
-            screen.listenAction(ThinkerAction.JUMP, this)
         }
+        screen.listenAction(ThinkerAction.JUMP, this)
     }
 
     fun run() {
