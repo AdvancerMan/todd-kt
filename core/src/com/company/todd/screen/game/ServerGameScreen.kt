@@ -27,6 +27,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     private val updatedThinkerActions = mutableListOf<Action>()
     private val addedObjects = mutableListOf<InGameObject>()
     private val destroyedObjects = mutableListOf<InGameObject>()
+    private var updateStartMoment = 0L
 
     override fun addObjects() {
         justAddedObjects.forEach { addedObjects.add(it) }
@@ -73,12 +74,12 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
 
     @Synchronized
     override fun update(delta: Float) {
-        val moment = System.currentTimeMillis()
+        updateStartMoment = System.currentTimeMillis()
         sinceLastSend += Gdx.graphics.rawDeltaTime
 
         incomingUpdates.synchronizedFlush()
             .mapNotNull { connectedPlayers[it.first]?.let { playerDescription -> playerDescription to it.second } }
-            .onEach { updatedThinkerActions.add(Action(it.second, moment, it.first.first.hashCode())) }
+            .onEach { updatedThinkerActions.add(Action(it.second, updateStartMoment, it.first.first.hashCode())) }
             .forEach { it.first.second.addAction(it.second) }
 
         super.update(delta)
@@ -98,7 +99,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     }
 
     override fun listenAction(action: ThinkerAction, creature: Creature) {
-        updatedThinkerActions.add(Action(action, System.currentTimeMillis(), creature.id))
+        updatedThinkerActions.add(Action(action, updateStartMoment, creature.id))
     }
 
     @Synchronized
