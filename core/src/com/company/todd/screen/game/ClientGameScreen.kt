@@ -19,11 +19,22 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     private val thinkers = mutableMapOf<Int, ScheduledThinker>()
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
     private val delayedUpdates = TreeSet(compareBy<Pair<Long, () -> Unit>> { it.first }.thenBy { it.second.toString() })
+    private val pingQueue: Queue<Long>
+    private val ping: Long
+        get() = pingQueue.average().toLong()
+    val nowWithPing: Long
+        get() = System.currentTimeMillis() - ping * 2
 
     init {
         val jsonData = reader.parse(serverData)
+        val initialPing = jsonData["sinceEpoch", long]
+        pingQueue = ArrayDeque(Collections.nCopies(60, initialPing))
+
         player.id = jsonData["playerId"].asInt()
         updateFromJson(jsonData)
+        delayedUpdates.pollFirst()?.let {
+            delayedUpdates.add(nowWithPing to it.second)
+        }
     }
 
     override fun addObjects() {
@@ -48,7 +59,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
 
     @Synchronized
     override fun update(delta: Float) {
-        val now = System.currentTimeMillis()
+        val now = nowWithPing
         delayedUpdates.removeWhile { it.first <= now }.forEach { it.second() }
         super.update(delta)
     }
@@ -66,7 +77,11 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     }
 
     override fun deserializeUpdates(json: JsonValue) {
-        delayedUpdates.add(json["sinceEpoch", long] to {
+        val sinceEpoch = json["sinceEpoch", long]
+        pingQueue.remove()
+        pingQueue.add(System.currentTimeMillis() - sinceEpoch)
+
+        delayedUpdates.add(sinceEpoch to {
             val destroyed = mutableSetOf<Int>()
             val addedIds = mutableSetOf<Int>()
             val added = mutableListOf<JsonValue>()
@@ -85,13 +100,14 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
 
             objects.children.forEach {
                 it as InGameObject
-                if (it.id in destroyed || it.id in addedIds) {
+                if (it.id in destroyed || it.id in addedIds && it != player) {
                     destroyObject(it)
                 }
             }
             added.forEach { addedJson ->
                 val id = addedJson["id", int]
                 if (id == player.id) {
+                    updateJustCreatedFromJson[player] = addedJson
                     return@forEach
                 }
 
