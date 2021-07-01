@@ -1,19 +1,22 @@
 package com.company.todd.screen.game
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.utils.JsonReader
 import com.badlogic.gdx.utils.JsonValue
 import com.badlogic.gdx.utils.JsonWriter
+import com.badlogic.gdx.utils.SerializationException
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.creature.Player
 import com.company.todd.objects.passive.Level
 import com.company.todd.json.JsonUpdateSerializable
+import com.company.todd.json.deserialization.updateFromJson
 import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.json.serialization.toJsonUpdates
 import com.company.todd.json.serialization.toJsonValue
 import com.company.todd.net.ToddUDPServer
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.creature.Creature
-import com.company.todd.thinker.operated.OperatedThinker
+import com.company.todd.thinker.operated.ServerThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.synchronizedFlush
 import java.net.SocketAddress
@@ -22,12 +25,15 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     private var sinceLastSend = 0f
     private val server = ToddUDPServer(this, info.toByteArray())
     private var started = false
-    private val incomingUpdates = mutableListOf<Pair<SocketAddress, ThinkerAction>>()
-    private val connectedPlayers = mutableMapOf<SocketAddress, Pair<Player, OperatedThinker>>()
+    private val incomingUpdates = mutableListOf<Pair<SocketAddress, ClientGameScreen.Action>>()
+    private val connectedPlayers = mutableMapOf<SocketAddress, Pair<Player, ServerThinker>>()
     private val updatedThinkerActions = mutableListOf<Action>()
     private val addedObjects = mutableListOf<InGameObject>()
     private val destroyedObjects = mutableListOf<InGameObject>()
-    private var updateStartMoment = 0L
+
+    private var updateStartMoment = System.currentTimeMillis()
+    var fromLastUpdate = 0L
+        private set
 
     override fun addObjects() {
         justAddedObjects.forEach { addedObjects.add(it) }
@@ -47,13 +53,17 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
         }
     }
 
-    private fun validatedAction(action: String): ThinkerAction? {
-        return ThinkerAction.values().find { it.name == action }
+    private fun validatedAction(message: String): ClientGameScreen.Action? {
+        return try {
+            ClientGameScreen.Action().also { it.updateFromJson(JsonReader().parse(message)) }
+        } catch (e: SerializationException) {
+            null
+        }
     }
 
     @Synchronized
     override fun getOnConnectInfo(socketAddress: SocketAddress): String {
-        val thinker = OperatedThinker()
+        val thinker = ServerThinker()
         val newPlayer = Player(game, thinker)
         val id = newPlayer.hashCode()
 
@@ -73,14 +83,19 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     }
 
     @Synchronized
+    override fun render(delta: Float) {
+        super.render(delta)
+    }
+
     override fun update(delta: Float) {
-        updateStartMoment = System.currentTimeMillis()
+        fromLastUpdate = System.currentTimeMillis() - updateStartMoment
+        updateStartMoment += fromLastUpdate
+
+        // TODO maybe change to ms and use System.currentTimeMillis()???
         sinceLastSend += Gdx.graphics.rawDeltaTime
 
         incomingUpdates.synchronizedFlush()
-            .mapNotNull { connectedPlayers[it.first]?.let { playerDescription -> playerDescription to it.second } }
-            .onEach { updatedThinkerActions.add(Action(it.second, updateStartMoment, it.first.first.hashCode())) }
-            .forEach { it.first.second.addAction(it.second) }
+            .forEach { (address, action) -> connectedPlayers[address]?.second?.addAction(action) }
 
         super.update(delta)
 
@@ -135,9 +150,11 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
         json["objects"].forEach { it.addChild("meta", MetaMessage.ADDED.name.toJsonValue()) }
     }
 
-    private data class Action(@JsonUpdateSerializable private val action: ThinkerAction,
-                              @JsonUpdateSerializable private val sinceEpoch: Long,
-                              @JsonUpdateSerializable private val id: Int)
+    data class Action(@JsonUpdateSerializable var action: ThinkerAction,
+                      @JsonUpdateSerializable var sinceEpoch: Long,
+                      @JsonUpdateSerializable var id: Int) {
+        constructor() : this(ThinkerAction.RUN_RIGHT, 0, 0)
+    }
 
     companion object {
         const val SEND_UPDATES_INTERVAL = 0.032f

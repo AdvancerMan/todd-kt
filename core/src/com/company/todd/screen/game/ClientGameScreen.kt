@@ -2,12 +2,15 @@ package com.company.todd.screen.game
 
 import com.badlogic.gdx.utils.JsonReader
 import com.badlogic.gdx.utils.JsonValue
+import com.badlogic.gdx.utils.JsonWriter
+import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.deserialization.*
+import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.launcher.ToddGame
 import com.company.todd.net.ToddUDPClient
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.creature.Creature
-import com.company.todd.thinker.operated.ScheduledThinker
+import com.company.todd.thinker.operated.ClientThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.removeWhile
 import java.util.*
@@ -16,15 +19,19 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     ToddUDPClient.ClientUpdatesListener {
     private val reader = JsonReader()
     private var disconnected = false
-    private val thinkers = mutableMapOf<Int, ScheduledThinker>()
+    private val thinkers = mutableMapOf<Int, ClientThinker>()
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
     private val delayedPreUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val delayedPostUpdates: TreeSet<Pair<Long, () -> Unit>>
+
     private val pingQueue: Queue<Long>
     private val ping: Long
         get() = pingQueue.average().toLong()
     val nowWithPing: Long
         get() = System.currentTimeMillis() - ping * 2
+
+    private var updateStartMoment = System.currentTimeMillis()
+    private var fromLastUpdate = 0L
 
     init {
         compareBy<Pair<Long, () -> Unit>> { it.first }.thenBy { it.second.toString() }.let {
@@ -64,7 +71,14 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     }
 
     @Synchronized
+    override fun render(delta: Float) {
+        super.render(delta)
+    }
+
     override fun update(delta: Float) {
+        fromLastUpdate = System.currentTimeMillis() - updateStartMoment
+        updateStartMoment += fromLastUpdate
+
         val now = nowWithPing
         delayedPreUpdates.removeWhile { it.first <= now }.forEach { it.second() }
         super.update(delta)
@@ -74,7 +88,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     override fun listenAction(action: ThinkerAction, creature: Creature) {
         super.listenAction(action, creature)
         if (creature == player) {
-            client.sendUpdate(action.name)
+            client.sendUpdate(Action(action, fromLastUpdate + 1).toJsonFull().toJson(JsonWriter.OutputType.json))
         }
     }
 
@@ -124,7 +138,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
                 updateJustCreatedFromJson[igo] = addedJson
                 igo.id = id
                 if (igo is Creature) {
-                    thinkers[igo.id] = igo.thinker as ScheduledThinker
+                    thinkers[igo.id] = igo.thinker as ClientThinker
                 }
                 addObject(igo)
             }
@@ -132,8 +146,13 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         delayedPostUpdates.add(sinceEpoch to { super.deserializeUpdates(json) })
 
         json["actions"].forEach { jsonAction ->
-            thinkers[jsonAction["id", int]]
-                ?.addAction(jsonAction["sinceEpoch", long], ThinkerAction.valueOf(jsonAction["action", string]))
+            val action = ServerGameScreen.Action().also { it.updateFromJson(jsonAction) }
+            thinkers[action.id]?.addAction(action.sinceEpoch, action.action)
         }
+    }
+
+    data class Action(@JsonUpdateSerializable var action: ThinkerAction,
+                      @JsonUpdateSerializable var duration: Long) {
+        constructor() : this(ThinkerAction.RUN_RIGHT, 0)
     }
 }

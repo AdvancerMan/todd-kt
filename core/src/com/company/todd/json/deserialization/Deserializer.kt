@@ -10,6 +10,7 @@ import com.company.todd.json.serialization.getJsonName
 import com.company.todd.launcher.ToddGame
 import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.base.InGameObject
+import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.PROTOTYPES_PATH
 import com.company.todd.util.files.crawlJsonListsWithComments
 import kotlin.reflect.KClass
@@ -102,7 +103,10 @@ private val replaceableTypes = mapOf<KClass<*>, JsonType<*>>(
     Vector2::class to vector,
     Rectangle::class to rectangle,
     Boolean::class to boolean,
-    Float::class to float
+    Float::class to float,
+    Int::class to int,
+    Long::class to long,
+    ThinkerAction::class to thinkerAction
 )
 
 fun Any.updateFromJson(json: JsonValue) {

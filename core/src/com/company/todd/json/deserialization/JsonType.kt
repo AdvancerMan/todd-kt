@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.ToddGame
+import com.company.todd.thinker.operated.ThinkerAction
 
 class JsonType<T>(val typeName: String, val constructor: (ToddGame?, JsonValue) -> T)
 
@@ -35,3 +36,5 @@ inline fun <reified T> JsonType<T>.toArray(typeName: String) =
 val vectorArray = vector.toArray("array of vectors (2-element arrays)")
 
 val intRectangleArray = intRectangle.toArray("array of integer rectangles (4-element arrays)")
+
+val thinkerAction = JsonType("thinker action") { _, json -> ThinkerAction.valueOf(json.asString()) }

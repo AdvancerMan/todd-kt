@@ -8,7 +8,7 @@ import com.company.todd.thinker.Thinker
 import com.company.todd.util.removeWhile
 import java.util.TreeSet
 
-class ScheduledThinker : Thinker {
+class ClientThinker : Thinker {
     private val actions = TreeSet(compareBy<Pair<Long, ThinkerAction>> { it.first }.thenBy { it.second })
 
     fun addAction(atMoment: Long, action: ThinkerAction) {

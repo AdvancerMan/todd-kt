@@ -26,10 +26,11 @@ import com.company.todd.json.serialization.toJsonUpdates
 import com.company.todd.json.serialization.toJsonValue
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.MyScreen
+import com.company.todd.screen.PostUpdatable
 import com.company.todd.thinker.PlayerThinker
 import com.company.todd.thinker.operated.ThinkerAction
 
-open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), ManuallyJsonSerializable {
+open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), ManuallyJsonSerializable, PostUpdatable {
     protected val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
     protected val playerThinker = PlayerThinker(game)
@@ -70,10 +71,13 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     override fun update(delta: Float) {
         super.update(delta)
         world.step(delta, 10, 10)
-        objects.children.forEach { (it as InGameObject).postAct(delta) }
 
         addObjects()
         destroyObjects()
+    }
+
+    override fun postUpdate(delta: Float) {
+        objects.children.forEach { (it as InGameObject).postAct(delta) }
 
         centerCameraAt(player.getCenter())
         stage.camera.up.set(Vector2(0f, 1f).rotate(player.rotation), 0f)

@@ -28,6 +28,9 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
 
     override fun render(delta: Float) {
         update(delta)
+        if (this is PostUpdatable) {
+            postUpdate(delta)
+        }
         draw()
     }
 

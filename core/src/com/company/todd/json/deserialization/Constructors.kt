@@ -21,7 +21,7 @@ import com.company.todd.objects.passive.interactive.Travolator
 import com.company.todd.objects.passive.platform.*
 import com.company.todd.thinker.StupidMeleeThinker
 import com.company.todd.thinker.Thinker
-import com.company.todd.thinker.operated.ScheduledThinker
+import com.company.todd.thinker.operated.ClientThinker
 import kotlin.reflect.KClass
 
 object Constructors {
@@ -247,7 +247,7 @@ object Constructors {
                     json.get("drawableSize", vector, defaultOther = "bodySize"),
                     json["bodyLowerLeftCornerOffset", vector], bodyPatternType.constructor(game, json),
                     if (json["weapon"].isNull) null else json["weapon", weaponType, game],
-                    json["thinker", thinkerType, game, ScheduledThinker()],
+                    json["thinker", thinkerType, game, ClientThinker()],
                     json["healthBar", healthBarType, game], json["speed", float], json["jumpPower", float]
                 )
             }
