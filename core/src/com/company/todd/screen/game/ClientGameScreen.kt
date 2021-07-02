@@ -27,6 +27,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     private val delayedPreUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val delayedPostUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val playerInThePast = ArrayDeque<Pair<Long, JsonValue>>()
+    private var newestPlayerUpdate: Pair<Long, JsonValue>? = null
 
     private val pingQueue: ArrayDeque<Long>
     private val ping: Long
@@ -37,6 +38,8 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
 
     private var updateStartMoment = System.currentTimeMillis()
     private var fromLastUpdate = 0L
+
+    private var shouldLagBack = false
 
     init {
         compareBy<Pair<Long, () -> Unit>> { it.first }.thenBy { it.second.toString() }.let {
@@ -88,6 +91,14 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         super.update(delta)
         delayedPostUpdates.removeWhile { it.first <= updateStartMomentWithPing }.forEach { it.second() }
 
+        if (shouldLagBack) {
+            newestPlayerUpdate?.let {
+                doLagBack(it.second)
+                shouldLagBack = false
+                playerInThePast.clear()
+                newestPlayerUpdate = null
+            }
+        }
         playerInThePast.add(updateStartMoment to player.toJsonUpdates())
     }
 
@@ -109,6 +120,14 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         pingQueue.removeFirst()
         pingQueue.addLast(System.currentTimeMillis() - sinceEpoch)
 
+        val jsonObjects = json["objects"]
+        val playerJson = jsonObjects.indexOfFirst { it["id", int] == player.id }.let {
+            if (it == -1) null else jsonObjects.remove(it)
+        }
+        if (playerJson != null && (newestPlayerUpdate == null || sinceEpoch > newestPlayerUpdate!!.first)) {
+            newestPlayerUpdate = sinceEpoch to playerJson
+        }
+
         delayedPreUpdates.add(sinceEpoch to {
             val destroyed = mutableSetOf<Int>()
             val addedIds = mutableSetOf<Int>()
@@ -126,41 +145,9 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
             }
             json["objects"].removeAll { it["meta"]?.asString() == ServerGameScreen.MetaMessage.DESTROYED.name}
 
-            objects.children.forEach {
-                it as InGameObject
-                if (it.id in destroyed || it.id in addedIds && it != player) {
-                    destroyObject(it)
-                }
-            }
-            added.forEach { addedJson ->
-                val id = addedJson["id", int]
-                if (id == player.id) {
-                    updateJustCreatedFromJson[player] = addedJson
-                    return@forEach
-                }
-
-                addedJson.remove("thinker")
-                val igo = parseInGameObject(addedJson)(game)
-                updateJustCreatedFromJson[igo] = addedJson
-                igo.id = id
-                if (igo is Creature) {
-                    thinkers[igo.id] = igo.thinker as ClientThinker
-                }
-                addObject(igo)
-            }
-
-            json["objects"].indexOfFirst { it["id", int] == player.id }.let {
-                if (it == -1) null else json["objects"].remove(it)
-            }?.let { playerJson ->
-                while (playerInThePast.size > 1 && playerInThePast[1].first <= updateStartMomentWithPing) {
-                    playerInThePast.removeFirst()
-                }
-                playerInThePast.take(2)
-                    .minByOrNull { abs(it.first - updateStartMomentWithPing) }
-                    ?.let { (t, jsonInThePast) ->
-                        // TODO validate player | if not validated --> update player from the newest json
-                    }
-            }
+            deserializeDestruction(destroyed, addedIds)
+            deserializeAdded(added)
+            deserializePlayer(playerJson, sinceEpoch)
         })
         delayedPostUpdates.add(sinceEpoch to { super.deserializeUpdates(json) })
 
@@ -170,8 +157,76 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
     }
 
+    private fun deserializeDestruction(destroyed: Set<Int>, added: Set<Int>) {
+        objects.children.forEach {
+            it as InGameObject
+            if (it.id in destroyed || it.id in added) {
+                destroyObject(it)
+            }
+        }
+    }
+
+    private fun deserializeAdded(added: List<JsonValue>) {
+        added.forEach { addedJson ->
+            val id = addedJson["id", int]
+            addedJson.remove("thinker")
+            val igo = parseInGameObject(addedJson)(game)
+            updateJustCreatedFromJson[igo] = addedJson
+            igo.id = id
+            if (igo is Creature) {
+                thinkers[igo.id] = igo.thinker as ClientThinker
+            }
+            addObject(igo)
+        }
+    }
+
+    private fun deserializePlayer(playerJson: JsonValue?, jsonMoment: Long) {
+        playerJson?.let { serverJson ->
+            when (serverJson["meta"]?.asString()) {
+                ServerGameScreen.MetaMessage.ADDED.name -> {
+                    updateJustCreatedFromJson[player] = serverJson
+                    return@let
+                }
+                ServerGameScreen.MetaMessage.DESTROYED.name -> {
+                    destroyObject(player)
+                    return@let
+                }
+            }
+
+            while (playerInThePast.size > 1 && playerInThePast[1].first <= jsonMoment) {
+                playerInThePast.removeFirst()
+            }
+            playerInThePast.take(2)
+                .minByOrNull { abs(it.first - jsonMoment) }
+                ?.let { (t, clientJson) ->
+                    shouldLagBack = if (t < jsonMoment) {
+                        playerShouldLagBack(clientJson, serverJson, jsonMoment - t)
+                    } else {
+                        playerShouldLagBack(serverJson, clientJson, t - jsonMoment)
+                    }
+                }
+        }
+    }
+
+    private fun playerShouldLagBack(jsonBefore: JsonValue, jsonAfter: JsonValue, delta: Long): Boolean {
+        val positionBefore = jsonBefore["bodyPattern"]["b2d_position", vector]
+        val positionAfter = jsonAfter["bodyPattern"]["b2d_position", vector]
+        val velocityBefore = jsonBefore["bodyPattern"]["b2d_linearVelocity", vector]
+
+        val positionDelta = positionBefore.mulAdd(velocityBefore, delta / 1000f).sub(positionAfter)
+        return 1000f * 1000f * positionDelta.len2() >= velocityBefore.len2() * lagBackDelayMs * lagBackDelayMs
+    }
+
+    private fun doLagBack(json: JsonValue) {
+        player.body.updateFromJson(json["bodyPattern"])
+    }
+
     data class Action(@JsonUpdateSerializable var action: ThinkerAction,
                       @JsonUpdateSerializable var duration: Long) {
         constructor() : this(ThinkerAction.RUN_RIGHT, 0)
+    }
+
+    companion object {
+        const val lagBackDelayMs = 100f
     }
 }
