@@ -40,7 +40,7 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
             try {
                 type.constructor(game, it)
             } catch (e: Exception) {
-                Gdx.app.error("Json", getJsonErrorMessage(it, "Unable to create an instance from ${type.typeName} constructor. Error: ${e.message}"))
+                Gdx.app.error("Json", getJsonErrorMessage(it, "Unable to create an instance from ${type.typeName} constructor"), e)
                 null
             }
         }
