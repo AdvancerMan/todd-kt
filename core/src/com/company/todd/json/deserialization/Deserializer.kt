@@ -109,26 +109,32 @@ private val replaceableTypes = mapOf<KClass<*>, JsonType<*>>(
     ThinkerAction::class to thinkerAction
 )
 
+private val cachedSchemas = mutableMapOf<KClass<*>, Any.(JsonValue) -> Unit>()
+
 fun Any.updateFromJson(json: JsonValue) {
-    listOf(listOf(this::class), this::class.allSuperclasses)
-        .flatten()
+    cachedSchemas.getOrPut(this::class) { getSchema(this::class) }(this, json)
+}
+
+private fun getSchema(clazz: KClass<*>): Any.(JsonValue) -> Unit {
+    val cachedData = (listOf(clazz) + clazz.allSuperclasses)
         .flatMap { it.declaredMemberProperties }
-        .map { property ->
-            property to property.annotations.find { it is JsonUpdateSerializable }
-                ?.let { getJsonName(property, it) }
+        .mapNotNull { property ->
+            property.annotations.find { it is JsonUpdateSerializable }
+                ?.let { Triple(property, replaceableTypes[property.returnType.jvmErasure], getJsonName(property, it)) }
         }
-        .filter { it.second != null }
-        .forEach { (property, name) ->
-            val jsonType = replaceableTypes[property.returnType.jvmErasure]
-            property.isAccessible = true
-            if (jsonType != null) {
-                (property as KMutableProperty1).setter.call(this, json[name!!, jsonType])
+        .onEach { it.first.isAccessible = true }
+
+    return { json ->
+        cachedData.forEach { (property, jsonReturnType, name) ->
+            if (jsonReturnType != null) {
+                (property as KMutableProperty1).setter.call(this, json[name, jsonReturnType])
             } else {
-                property.call(this)?.updateFromJson(json[name!!])
+                property.call(this)?.updateFromJson(json[name])
             }
         }
 
-    if (this is ManuallyJsonSerializable) {
-        deserializeUpdates(json)
+        if (this is ManuallyJsonSerializable) {
+            deserializeUpdates(json)
+        }
     }
 }

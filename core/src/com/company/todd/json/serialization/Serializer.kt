@@ -16,10 +16,13 @@ fun getJsonName(member: KCallable<*>, annotation: Annotation): String {
         is JsonUpdateSerializable -> annotation.name
         else -> ""
     }
-    return if (annotationName.isBlank()) member.name else annotationName
+    return annotationName.ifBlank { member.name }
 }
 
+private val cachedSchemas = mutableMapOf<List<KClass<*>>, (Any) -> JsonValue>()
+
 private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
+    val schemaKey = obj?.let { listOf(it::class) + annotations.toList() }
     return when (obj) {
         null -> JsonValue(JsonValue.ValueType.nullValue)
         is Int -> obj.toJsonValue()
@@ -35,31 +38,40 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
             obj.map { toJson(it, *annotations) }.forEach { result.addChild(it) }
             result
         }
-        else -> {
-            val result = JsonValue(JsonValue.ValueType.`object`)
-            val clazz = obj::class
-            clazz.findAnnotation<SerializationType>()?.let { result.addChild("type", it.type.toJsonValue()) }
-            val classes = listOf(listOf(clazz), clazz.allSuperclasses).flatten()
-            classes.flatMap { it.declaredMembers }
-                .map { member -> member to member.annotations.find { annotation -> annotations.any { annotation::class.isSubclassOf(it) } } }
-                .filter { it.second != null }
-                .onEach { it.first.isAccessible = true }
-                 // expecting getters only
-                .associate { getJsonName(it.first, it.second!!) to toJson(it.first.call(obj), *annotations) }
-                .forEach { result.addChild(it.key, it.value) }
+        else -> cachedSchemas.getOrPut(schemaKey!!) { getSchema(schemaKey[0], annotations) }(obj)
+    }
+}
 
-            if (obj is ManuallyJsonSerializable) {
-                if (JsonSaveSerializable::class in annotations) {
-                    obj.serializeSave(result)
-                }
-                if (JsonFullSerializable::class in annotations) {
-                    obj.serializeFull(result)
-                }
-                obj.serializeUpdates(result)
+private fun getSchema(clazz: KClass<*>, annotations: Array<out KClass<*>>): (Any) -> JsonValue {
+    val type = clazz.findAnnotation<SerializationType>()?.type
+    val nameToGetter = (listOf(clazz) + clazz.allSuperclasses)
+        .flatMap { it.declaredMembers }
+        .map { member ->
+            member to member.annotations.find { annotation ->
+                annotations.any { annotation::class.isSubclassOf(it) }
             }
-
-            result
         }
+        .filter { it.second != null }
+        .onEach { it.first.isAccessible = true }
+        .map { getJsonName(it.first, it.second!!) to it.first }
+
+    return { obj ->
+        val result = JsonValue(JsonValue.ValueType.`object`)
+        type?.let { result.addChild("type", it.toJsonValue()) }
+        nameToGetter.map { it.first to toJson(it.second.call(obj), *annotations) }
+            .forEach { result.addChild(it.first, it.second) }
+
+        if (obj is ManuallyJsonSerializable) {
+            if (JsonSaveSerializable::class in annotations) {
+                obj.serializeSave(result)
+            }
+            if (JsonFullSerializable::class in annotations) {
+                obj.serializeFull(result)
+            }
+            obj.serializeUpdates(result)
+        }
+
+        result
     }
 }
 
