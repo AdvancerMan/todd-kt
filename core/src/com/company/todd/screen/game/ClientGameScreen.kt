@@ -14,20 +14,21 @@ import com.company.todd.objects.creature.Creature
 import com.company.todd.thinker.operated.ClientThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.removeWhile
+import com.company.todd.util.synchronizedFlush
 import java.util.*
 import kotlin.collections.ArrayDeque
 import kotlin.math.abs
 
 class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, serverData: String) : GameScreen(game),
     ToddUDPClient.ClientUpdatesListener {
-    private val reader = JsonReader()
-    private var disconnected = false
+    @Volatile private var disconnected = false
     private val thinkers = mutableMapOf<Int, ClientThinker>()
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
     private val delayedPreUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val delayedPostUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val playerInThePast = ArrayDeque<Pair<Long, JsonValue>>()
     private var newestPlayerUpdate: Pair<Long, JsonValue>? = null
+    private val serverUpdates = mutableListOf<Pair<JsonValue, Long>>()
 
     private val pingQueue: ArrayDeque<Long>
     private val ping: Long
@@ -47,7 +48,7 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
             delayedPostUpdates = TreeSet(it)
         }
 
-        val jsonData = reader.parse(serverData)
+        val jsonData = JsonReader().parse(serverData)
         val initialPing = System.currentTimeMillis() - jsonData["sinceEpoch", long]
         pingQueue = ArrayDeque(Collections.nCopies(60, initialPing))
         updateStartMomentWithPing = nowWithPing
@@ -67,22 +68,26 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         throw IllegalStateException("Should not happen")
     }
 
-    @Synchronized
     override fun getServerUpdates(updates: String) {
-        updateFromJson(reader.parse(updates))
+        val receiveMoment = System.currentTimeMillis()
+        val parsed = JsonReader().parse(updates)
+        synchronized(serverUpdates) {
+            serverUpdates.add(parsed to receiveMoment)
+        }
     }
 
-    @Synchronized
     override fun onDisconnect() {
         disconnected = true
     }
 
-    @Synchronized
-    override fun render(delta: Float) {
-        super.render(delta)
-    }
-
     override fun update(delta: Float) {
+        serverUpdates.synchronizedFlush()
+            .forEach {
+                pingQueue.removeFirst()
+                pingQueue.addLast(it.second - it.first["sinceEpoch", long])
+                deserializeUpdates(it.first)
+            }
+
         fromLastUpdate = System.currentTimeMillis() - updateStartMoment
         updateStartMoment += fromLastUpdate
         updateStartMomentWithPing = nowWithPing
@@ -109,7 +114,6 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
     }
 
-    @Synchronized
     override fun dispose() {
         client.close()
         super.dispose()
@@ -117,9 +121,6 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
 
     override fun deserializeUpdates(json: JsonValue) {
         val sinceEpoch = json["sinceEpoch", long]
-        pingQueue.removeFirst()
-        pingQueue.addLast(System.currentTimeMillis() - sinceEpoch)
-
         val jsonObjects = json["objects"]
         val playerJson = jsonObjects.indexOfFirst { it["id", int] == player.id }.let {
             if (it == -1) null else jsonObjects.remove(it)
