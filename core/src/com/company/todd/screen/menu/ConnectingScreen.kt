@@ -16,12 +16,16 @@ class ConnectingScreen(game: ToddGame, address: SocketAddress): MenuScreen(game)
     }
 
     @Synchronized
-    override fun whenConnected(serverData: String) {
-        gameScreen = ClientGameScreen(game, client, serverData)
+    override fun onConnection(serverData: String, ping: Long, receivedAt: Long) {
+        gameScreen = ClientGameScreen(game, client, serverData, ping, receivedAt)
         client.updatesListener = gameScreen!!
     }
 
-    override fun getServerUpdates(updates: String) {
+    override fun onNewPing(ping: Long, timeDeltaWithServer: Long) {
+        // no operations
+    }
+
+    override fun onServerUpdates(updates: String) {
         // no operations
     }
 

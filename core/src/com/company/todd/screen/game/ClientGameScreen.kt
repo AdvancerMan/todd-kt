@@ -19,8 +19,10 @@ import java.util.*
 import kotlin.collections.ArrayDeque
 import kotlin.math.abs
 
-class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, serverData: String) : GameScreen(game),
-    ToddUDPClient.ClientUpdatesListener {
+class ClientGameScreen(
+    game: ToddGame, private val client: ToddUDPClient,
+    serverData: String, private var ping: Long, receivedAt: Long
+) : GameScreen(game), ToddUDPClient.ClientUpdatesListener {
     @Volatile private var disconnected = false
     private val thinkers = mutableMapOf<Int, ClientThinker>()
     private val updateJustCreatedFromJson = mutableMapOf<InGameObject, JsonValue>()
@@ -28,16 +30,18 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     private val delayedPostUpdates: TreeSet<Pair<Long, () -> Unit>>
     private val playerInThePast = ArrayDeque<Pair<Long, JsonValue>>()
     private var newestPlayerUpdate: Pair<Long, JsonValue>? = null
-    private val serverUpdates = mutableListOf<Pair<JsonValue, Long>>()
 
-    private val pingQueue: ArrayDeque<Long>
-    private val ping: Long
-        get() = pingQueue.average().toLong()
+    private val serverUpdates = mutableListOf<Pair<JsonValue, Long>>()
+    private val serverTimeUpdates = mutableListOf<Pair<Long, Long>>()
+
+    private var timeDeltaWithServer: Long
+    private val serverCurrentTimeMillis: Long
+        get() = System.currentTimeMillis() + timeDeltaWithServer
     private val nowWithPing: Long
-        get() = System.currentTimeMillis() - ping * 2
+        get() = serverCurrentTimeMillis - ping * 2
     var updateStartMomentWithPing: Long
 
-    private var updateStartMoment = System.currentTimeMillis()
+    private var updateStartMoment: Long
     private var fromLastUpdate = 0L
 
     private var shouldLagBack = false
@@ -49,8 +53,8 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         }
 
         val jsonData = JsonReader().parse(serverData)
-        val initialPing = System.currentTimeMillis() - jsonData["sinceEpoch", long]
-        pingQueue = ArrayDeque(Collections.nCopies(60, initialPing))
+        timeDeltaWithServer = jsonData["sinceEpoch", long] - receivedAt
+        updateStartMoment = serverCurrentTimeMillis
         updateStartMomentWithPing = nowWithPing
 
         player.id = jsonData["playerId"].asInt()
@@ -64,12 +68,18 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
         updateJustCreatedFromJson.clear()
     }
 
-    override fun whenConnected(serverData: String) {
+    override fun onNewPing(ping: Long, timeDeltaWithServer: Long) {
+        synchronized(serverTimeUpdates) {
+            serverTimeUpdates.add(ping to timeDeltaWithServer)
+        }
+    }
+
+    override fun onConnection(serverData: String, ping: Long, receivedAt: Long) {
         throw IllegalStateException("Should not happen")
     }
 
-    override fun getServerUpdates(updates: String) {
-        val receiveMoment = System.currentTimeMillis()
+    override fun onServerUpdates(updates: String) {
+        val receiveMoment = serverCurrentTimeMillis
         val parsed = JsonReader().parse(updates)
         synchronized(serverUpdates) {
             serverUpdates.add(parsed to receiveMoment)
@@ -81,14 +91,15 @@ class ClientGameScreen(game: ToddGame, private val client: ToddUDPClient, server
     }
 
     override fun update(delta: Float) {
-        serverUpdates.synchronizedFlush()
-            .forEach {
-                pingQueue.removeFirst()
-                pingQueue.addLast(it.second - it.first["sinceEpoch", long])
-                deserializeUpdates(it.first)
+        serverTimeUpdates.synchronizedFlush()
+            .find { true }
+            ?.let { (ping, timeDeltaWithServer) ->
+                this.ping = ping
+                this.timeDeltaWithServer = timeDeltaWithServer
             }
+        serverUpdates.synchronizedFlush().forEach { deserializeUpdates(it.first) }
 
-        fromLastUpdate = System.currentTimeMillis() - updateStartMoment
+        fromLastUpdate = serverCurrentTimeMillis - updateStartMoment
         updateStartMoment += fromLastUpdate
         updateStartMomentWithPing = nowWithPing
 

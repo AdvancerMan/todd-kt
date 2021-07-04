@@ -89,6 +89,10 @@ class ToddUDPServer(
                     // TODO log IOException
                     socket!!.send(DatagramPacket(serverInfo, serverInfo.size, received.socketAddress))
                 }
+                buffer.contentEquals(received.offset, received.length, PING_MESSAGE) -> {
+                    val message = System.currentTimeMillis().toString().toByteArray()
+                    socket!!.send(DatagramPacket(message, message.size, received.socketAddress))
+                }
                 received.socketAddress in lastActiveMoment.keys -> {
                     receiveUpdates(received.socketAddress, buffer.copyOf(received.length).toString(Charsets.UTF_8))
                 }
@@ -119,6 +123,7 @@ class ToddUDPServer(
         const val BROADCAST_PERIOD: Long = 1000
         const val BROADCAST_PREFIX: String = "TODD BROADCAST PREFIX"
         val ASK_INFO_MESSAGE: ByteArray = "GIVE ME TODD INFO".toByteArray()
+        val PING_MESSAGE: ByteArray = "PING-PONG, TODD PING-PONG)".toByteArray()
         val CONNECT_MESSAGE: ByteArray = "HEY, TODD, CONNECT ME".toByteArray()
         val DISCONNECTED_MESSAGE: ByteArray = "HI, TODD, YOU DISCONNECTED!".toByteArray()
     }
