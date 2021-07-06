@@ -49,11 +49,8 @@ class ToddUDPClient(@Volatile var updatesListener: ClientUpdatesListener) : Clos
         } finally {
             socket!!.soTimeout = 0
         }
-        val after = System.currentTimeMillis()
-        updatesListener.onConnection(
-            String(buffer, 0, received.length, Charsets.UTF_8),
-            (after - before) / 2, after
-        )
+        val ping = (System.currentTimeMillis() - before) / 2
+        updatesListener.onConnection(String(buffer, 0, received.length, Charsets.UTF_8), ping)
         return true
     }
 
@@ -88,7 +85,7 @@ class ToddUDPClient(@Volatile var updatesListener: ClientUpdatesListener) : Clos
         updates.put(update)
     }
 
-    fun pingServer(serverAddress: SocketAddress) {
+    private fun pingServer(serverAddress: SocketAddress) {
         val pingPacket = DatagramPacket(
             ToddUDPServer.PING_MESSAGE, ToddUDPServer.PING_MESSAGE.size, serverAddress
         )
@@ -99,11 +96,7 @@ class ToddUDPClient(@Volatile var updatesListener: ClientUpdatesListener) : Clos
             // TODO log IOException
             pingSocket!!.send(pingPacket)
             pingSocket!!.receive(received)
-            val after = System.currentTimeMillis()
-            // TODO validate data
-            val serverTime = String(buffer, 0, received.length, Charsets.UTF_8).toLong()
-            val ping = (after - before) / 2
-            updatesListener.onNewPing(ping, serverTime - (after - ping))
+            updatesListener.onNewPing((System.currentTimeMillis() - before) / 2)
 
             try {
                 Thread.sleep(PING_PERIOD)
@@ -122,8 +115,8 @@ class ToddUDPClient(@Volatile var updatesListener: ClientUpdatesListener) : Clos
     }
 
     interface ClientUpdatesListener {
-        fun onConnection(serverData: String, ping: Long, receivedAt: Long)
-        fun onNewPing(ping: Long, timeDeltaWithServer: Long)
+        fun onConnection(serverData: String, ping: Long)
+        fun onNewPing(ping: Long)
         fun onServerUpdates(updates: String)
         fun onDisconnect()
     }

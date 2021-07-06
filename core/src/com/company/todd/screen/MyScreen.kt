@@ -2,6 +2,7 @@ package com.company.todd.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
@@ -14,7 +15,7 @@ import com.company.todd.objects.base.getActorAABB
 import com.company.todd.util.SCREEN_HEIGHT
 import com.company.todd.util.SCREEN_WIDTH
 
-abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
+abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable, PostUpdatable {
     protected val stage = Stage(StretchViewport(
             SCREEN_WIDTH.toFloat(), SCREEN_HEIGHT.toFloat(),
             OrthographicCamera().apply { setToOrtho(false) }
@@ -27,10 +28,10 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
     }
 
     override fun render(delta: Float) {
-        update(delta)
-        if (this is PostUpdatable) {
+        do {
+            update(delta)
             postUpdate(delta)
-        }
+        } while (shouldSkipFrame())
         draw()
     }
 
@@ -47,8 +48,16 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable {
         stage.act(delta)
     }
 
-    open fun draw() {
+    override fun postUpdate(delta: Float) {
         screenActors.updateParameters()
+    }
+
+    protected open fun shouldSkipFrame() = false
+
+    open fun draw() {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
         stage.draw()
     }
 

@@ -16,32 +16,29 @@ import com.company.todd.json.serialization.toJsonValue
 import com.company.todd.net.ToddUDPServer
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.creature.Creature
-import com.company.todd.thinker.operated.ServerThinker
+import com.company.todd.thinker.operated.ScheduledThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.synchronizedFlush
 import java.net.SocketAddress
 
 class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): GameScreen(game, level), ToddUDPServer.ServerUpdatesListener {
-    private var sinceLastSend = 0f
+    private var sinceLastSend = 0
     private val server = ToddUDPServer(this, info.toByteArray())
     private var started = false
     private val incomingUpdates = mutableListOf<Pair<SocketAddress, ClientGameScreen.Action>>()
-    private val connectedPlayers = mutableMapOf<SocketAddress, Pair<Player, ServerThinker>>()
-    private val updatedThinkerActions = mutableListOf<Action>()
-    private val addedObjects = mutableListOf<InGameObject>()
-    private val destroyedObjects = mutableListOf<InGameObject>()
+    private val connectedPlayers = mutableMapOf<SocketAddress, Pair<Player, ScheduledThinker>>()
 
-    private var updateStartMoment = System.currentTimeMillis()
-    var fromLastUpdate = 0L
-        private set
+    private val actionsToSend = mutableListOf<Action>()
+    private val addedObjectsToSend = mutableListOf<InGameObject>()
+    private val destroyedObjectsToSend = mutableListOf<InGameObject>()
 
     override fun addObjects() {
-        justAddedObjects.forEach { addedObjects.add(it) }
+        justAddedObjects.forEach { addedObjectsToSend.add(it) }
         super.addObjects()
     }
 
     override fun destroyObjects() {
-        justDestroyedObjects.forEach { destroyedObjects.add(it) }
+        justDestroyedObjects.forEach { destroyedObjectsToSend.add(it) }
         super.destroyObjects()
     }
 
@@ -63,9 +60,9 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
 
     @Synchronized
     override fun getOnConnectInfo(socketAddress: SocketAddress): String {
-        val thinker = ServerThinker()
+        val thinker = ScheduledThinker()
         val newPlayer = Player(game, thinker)
-        val id = newPlayer.hashCode()
+        val id = newPlayer.id
 
         addObject(newPlayer)
         connectedPlayers[socketAddress] = newPlayer to thinker
@@ -88,14 +85,8 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     }
 
     override fun update(delta: Float) {
-        fromLastUpdate = System.currentTimeMillis() - updateStartMoment
-        updateStartMoment += fromLastUpdate
-
-        // TODO maybe change to ms and use System.currentTimeMillis()???
-        sinceLastSend += Gdx.graphics.rawDeltaTime
-
         incomingUpdates.synchronizedFlush()
-            .forEach { (address, action) -> connectedPlayers[address]?.second?.addAction(action) }
+            .forEach { (address, action) -> connectedPlayers[address]?.second?.addAction(tick, action.action) }
 
         super.update(delta)
 
@@ -104,17 +95,17 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
             started = true
         }
 
-        if (sinceLastSend >= SEND_UPDATES_INTERVAL) {
+        if (++sinceLastSend >= SEND_UPDATES_TICKS_INTERVAL) {
             server.send(toJsonUpdates().toJson(JsonWriter.OutputType.json))
-            updatedThinkerActions.clear()
-            addedObjects.clear()
-            destroyedObjects.clear()
-            sinceLastSend = 0f
+            actionsToSend.clear()
+            addedObjectsToSend.clear()
+            destroyedObjectsToSend.clear()
+            sinceLastSend = 0
         }
     }
 
     override fun listenAction(action: ThinkerAction, creature: Creature) {
-        updatedThinkerActions.add(Action(action, updateStartMoment, creature.id))
+        actionsToSend.add(Action(action, tick, creature.id))
     }
 
     @Synchronized
@@ -125,22 +116,21 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
 
     override fun serializeUpdates(json: JsonValue) {
         super.serializeUpdates(json)
-        json.addChild("sinceEpoch", updateStartMoment.toJsonValue())
-        json.addChild("actions", updatedThinkerActions.toJsonUpdates())
+        json.addChild("actions", actionsToSend.toJsonUpdates())
 
-        val addedIds = addedObjects.map { it.hashCode() }.toSet()
+        val addedIds = addedObjectsToSend.map { it.id }.toSet()
         val jsonObjects = json["objects"]
         jsonObjects.removeAll { it["id"].asInt() in addedIds }
-        addedObjects.forEach {
+        addedObjectsToSend.forEach {
             val objectJson = it.toJsonFull()
             objectJson.addChild("meta", MetaMessage.ADDED.name.toJsonValue())
             jsonObjects.addChild(objectJson)
         }
 
-        destroyedObjects.forEach { obj ->
+        destroyedObjectsToSend.forEach { obj ->
             jsonObjects.addChild(JsonValue(JsonValue.ValueType.`object`).apply {
                 addChild("meta", MetaMessage.DESTROYED.name.toJsonValue())
-                addChild("id", obj.hashCode().toJsonValue())
+                addChild("id", obj.id.toJsonValue())
             })
         }
     }
@@ -151,13 +141,13 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     }
 
     data class Action(@JsonUpdateSerializable var action: ThinkerAction,
-                      @JsonUpdateSerializable var sinceEpoch: Long,
+                      @JsonUpdateSerializable var tick: Long,
                       @JsonUpdateSerializable var id: Int) {
         constructor() : this(ThinkerAction.RUN_RIGHT, 0, 0)
     }
 
     companion object {
-        const val SEND_UPDATES_INTERVAL = 0.032f
+        const val SEND_UPDATES_TICKS_INTERVAL = 2
     }
 
     enum class MetaMessage {

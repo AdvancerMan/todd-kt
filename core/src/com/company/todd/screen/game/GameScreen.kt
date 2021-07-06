@@ -31,6 +31,7 @@ import com.company.todd.thinker.PlayerThinker
 import com.company.todd.thinker.operated.ThinkerAction
 
 open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), ManuallyJsonSerializable, PostUpdatable {
+    var tick = 0L
     protected val world = World(Vector2(0f, -30f), true)
     protected val objects = Group()
     protected val playerThinker = PlayerThinker(game)
@@ -77,10 +78,12 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     }
 
     override fun postUpdate(delta: Float) {
+        super.postUpdate(delta)
         objects.children.forEach { (it as InGameObject).postAct(delta) }
 
         centerCameraAt(player.getCenter())
         stage.camera.up.set(Vector2(0f, 1f).rotate(player.rotation), 0f)
+        tick++
     }
 
     override fun resize(width: Int, height: Int) {
@@ -124,6 +127,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
             json.addChild("objects", objects.children.toList().toJsonUpdates())
         }
         json.addChild("worldGravity", world.gravity.toJsonValue())
+        json.addChild("tick", tick.toJsonValue())
     }
 
     override fun deserializeUpdates(json: JsonValue) {
