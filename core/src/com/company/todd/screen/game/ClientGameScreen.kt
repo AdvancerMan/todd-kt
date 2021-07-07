@@ -23,7 +23,7 @@ class ClientGameScreen(
     @Volatile private var disconnected = false
     private val thinkers = mutableMapOf<Int, ScheduledThinker>()
     private val justCreatedToUpdateFromJson = mutableMapOf<InGameObject, JsonValue>()
-    private val delayedUpdates = mutableMapOf<Long, Pair<() -> Unit, () -> Unit>>()
+    private val delayedUpdates = mutableMapOf<Long, MutableList<Pair<() -> Unit, () -> Unit>>>()
     private val playerInThePast = ArrayDeque<Pair<Long, JsonValue>>()
     private var newestPlayerUpdate: Pair<Long, JsonValue>? = null
 
@@ -69,9 +69,9 @@ class ClientGameScreen(
 
         delayedUpdates.keys.filter { it < tick }.forEach { delayedUpdates.remove(it) }
         val delayedUpdate = delayedUpdates.remove(tick)
-        delayedUpdate?.first?.invoke()
+        delayedUpdate?.forEach { it.first() }
         super.update(delta)
-        delayedUpdate?.second?.invoke()
+        delayedUpdate?.forEach { it.second() }
 
         if (shouldLagBack) {
             newestPlayerUpdate?.let {
@@ -109,7 +109,7 @@ class ClientGameScreen(
             newestPlayerUpdate = serverTick to playerJson
         }
 
-        delayedUpdates[serverTick] = {
+        delayedUpdates.getOrPut(serverTick) { mutableListOf() }.add({
             val destroyed = mutableSetOf<Int>()
             val addedIds = mutableSetOf<Int>()
             val added = mutableListOf<JsonValue>()
@@ -132,7 +132,7 @@ class ClientGameScreen(
         } to {
             playerJson?.let { postDeserializePlayer(it) }
             super.deserializeUpdates(json)
-        }
+        })
 
         json["actions"].forEach { jsonAction ->
             val action = ServerGameScreen.Action().also { it.updateFromJson(jsonAction) }
