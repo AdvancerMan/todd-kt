@@ -13,7 +13,6 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.creature.Creature
 import com.company.todd.thinker.operated.ScheduledThinker
 import com.company.todd.thinker.operated.ThinkerAction
-import com.company.todd.util.removeWhile
 import com.company.todd.util.synchronizedFlush
 import kotlin.collections.ArrayDeque
 
@@ -137,7 +136,7 @@ class ClientGameScreen(
 
         json["actions"].forEach { jsonAction ->
             val action = ServerGameScreen.Action().also { it.updateFromJson(jsonAction) }
-            thinkers[action.id]?.addAction(action.tick, action.action)
+            thinkers[action.id]?.addActionAt(action.tick, action.action)
         }
     }
 

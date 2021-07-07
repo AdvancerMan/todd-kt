@@ -86,7 +86,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
 
     override fun update(delta: Float) {
         incomingUpdates.synchronizedFlush()
-            .forEach { (address, action) -> connectedPlayers[address]?.second?.addAction(tick, action.action) }
+            .forEach { (address, action) -> connectedPlayers[address]?.second?.addActionAtLeastAt(tick, action.action) }
 
         super.update(delta)
 
