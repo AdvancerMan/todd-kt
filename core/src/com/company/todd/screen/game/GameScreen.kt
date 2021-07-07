@@ -78,12 +78,12 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     }
 
     override fun postUpdate(delta: Float) {
-        super.postUpdate(delta)
         objects.children.forEach { (it as InGameObject).postAct(delta) }
 
         centerCameraAt(player.getCenter())
         stage.camera.up.set(Vector2(0f, 1f).rotate(player.rotation), 0f)
         tick++
+        super.postUpdate(delta)
     }
 
     override fun resize(width: Int, height: Int) {
