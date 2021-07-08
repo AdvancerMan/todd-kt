@@ -11,14 +11,11 @@ import com.company.todd.screen.menu.MainMenuScreen
 import com.company.todd.util.SPF
 import kotlin.math.min
 
-lateinit var assetsFolder: String private set
-
 class ToddGame: ApplicationListener {
     lateinit var screenManager: ScreenManager private set
     lateinit var textureManager: TextureManager private set
 
     override fun create() {
-        assetsFolder = if (Gdx.app.type == Application.ApplicationType.Desktop) "android/assets/" else ""
         textureManager = TextureManager()
         screenManager = ScreenManager(MainMenuScreen(this))
     }

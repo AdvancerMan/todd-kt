@@ -8,7 +8,6 @@ import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.ManuallyJsonSerializable
 import com.company.todd.json.serialization.getJsonName
 import com.company.todd.launcher.ToddGame
-import com.company.todd.launcher.assetsFolder
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.PROTOTYPES_PATH
@@ -57,7 +56,7 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
 
 
 val prototypes by lazy {
-    crawlJsonListsWithComments(assetsFolder + PROTOTYPES_PATH)
+    crawlJsonListsWithComments(PROTOTYPES_PATH)
             .associateBy {
                 it["protoName"]?.asString()
                         ?: throw IllegalArgumentException(getJsonErrorMessage(it, "Prototype should contain parameter \"protoName\""))

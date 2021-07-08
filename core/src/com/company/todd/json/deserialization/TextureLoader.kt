@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.*
 import com.company.todd.asset.texture.animated.AnimationType
-import com.company.todd.launcher.assetsFolder
 import com.company.todd.util.TEXTURES_PATH
 import com.company.todd.util.files.crawlJsonListsWithComments
 import com.company.todd.util.files.toOsDependentPath
@@ -31,7 +30,7 @@ private val textureInfoConstructors = mapOf(
 fun loadTextureInfos(): Map<String, TextureInfo> {
     val res = mutableMapOf<String, TextureInfo>()
 
-    crawlJsonListsWithComments(assetsFolder + TEXTURES_PATH).forEach { json ->
+    crawlJsonListsWithComments(TEXTURES_PATH).forEach { json ->
         checkName(json, res.keys)
         res[json["name", string]] = parseJsonValue(null, json, textureInfoConstructors)
     }
