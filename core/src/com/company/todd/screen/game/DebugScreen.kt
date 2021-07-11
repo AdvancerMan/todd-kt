@@ -8,9 +8,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.company.todd.launcher.ToddGame
 import com.company.todd.json.deserialization.loadLevels
 import com.company.todd.objects.base.pixInMeter
+import com.company.todd.objects.passive.Level
 import com.company.todd.thinker.MovingInputType
 
-class DebugScreen(game: ToddGame): GameScreen(game, loadLevels().find { it.name == "testLevel" }) {
+class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name == "testLevel" }): GameScreen(game, level) {
     private val debugRenderer = Box2DDebugRenderer()
     private var pressedPlay = true
     private var debugDraw = true

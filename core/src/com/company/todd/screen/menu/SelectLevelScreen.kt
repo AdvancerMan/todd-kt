@@ -16,14 +16,12 @@ class SelectLevelScreen(game: ToddGame, levelConsumer: (Level) -> Unit) : MenuSc
         loadLevels().take(3).forEach {
             val button = textButton(it.name)
             table.add(button).fillX()
-            table.row()
+            table.row().pad(10f, 0f, 0f, 0f)
             button.addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {
                     levelConsumer(it)
                 }
             })
         }
-
-        table.pad(10f, 0f, 10f, 0f)
     }
 }
