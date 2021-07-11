@@ -28,7 +28,7 @@ import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
-@SerializationType("creature")
+@SerializationType("igo", "creature")
 open class Creature(
     game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,

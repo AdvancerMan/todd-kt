@@ -12,7 +12,7 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
-@SerializationType("cloudy")
+@SerializationType("igo", "cloudy")
 class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                      bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
                      @JsonFullSerializable private val sinceContactTillInactive: Float,

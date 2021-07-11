@@ -49,7 +49,7 @@
       "bodyLowerLeftCornerOffset": [0, 0],
       "weapon": {
         "type": "simpleMeleeWeapon",
-        "style": {
+        "handWeaponStyle": {
           "handPosition": [0, 0],
           "weaponDrawableName": "simpleWeapon",
           "weaponPosition": [0, 25],

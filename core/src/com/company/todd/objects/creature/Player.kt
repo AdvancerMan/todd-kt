@@ -11,8 +11,8 @@ import com.company.todd.objects.weapon.HandWeapon
 import com.company.todd.objects.weapon.SimpleMeleeWeapon
 import com.company.todd.thinker.Thinker
 
-// TODO hardcoded numbers
-@SerializationType("creature")
+// TODO create player through Creature constructor from json
+@SerializationType("igo", "player")
 class Player(game: ToddGame, thinker: Thinker) :
         Creature(
                 game,

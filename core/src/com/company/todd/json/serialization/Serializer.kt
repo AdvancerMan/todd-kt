@@ -43,7 +43,7 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
 }
 
 private fun getSchema(clazz: KClass<*>, annotations: Array<out KClass<*>>): (Any) -> JsonValue {
-    val type = clazz.findAnnotation<SerializationType>()?.type
+    val type = clazz.findAnnotation<SerializationType>()?.type?.takeIf { it.isNotBlank() }
     val nameToGetter = (listOf(clazz) + clazz.allSuperclasses)
         .flatMap { it.declaredMembers }
         .map { member ->

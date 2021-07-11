@@ -5,7 +5,7 @@ import com.company.todd.json.SerializationType
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.game.GameScreen
 
-@SerializationType("stupidMeleeThinker")
+@SerializationType("thinker", "stupidMeleeThinker")
 class StupidMeleeThinker(
     @JsonSaveSerializable private val maxDistanceFromTarget: Float,
     @JsonSaveSerializable private val jumpCooldown: Float

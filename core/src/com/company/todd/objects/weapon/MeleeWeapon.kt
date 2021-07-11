@@ -8,11 +8,11 @@ import com.company.todd.objects.base.worldAABBFor
 import com.company.todd.screen.game.GameScreen
 
 abstract class MeleeWeapon(
-    weaponStyle: Style,
+    handWeaponStyle: Style,
     @JsonFullSerializable("attackXYWH") protected val attackAABB: Rectangle,
     cooldown: Float, sinceAttackTillDamage: Float
 ) :
-        HandWeapon(weaponStyle, cooldown, sinceAttackTillDamage) {
+        HandWeapon(handWeaponStyle, cooldown, sinceAttackTillDamage) {
     protected lateinit var screen: GameScreen
 
     override fun init(owner: InGameObject, screen: GameScreen) {

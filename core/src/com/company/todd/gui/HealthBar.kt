@@ -8,10 +8,12 @@ import com.company.todd.asset.texture.TextureManager
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.ManuallyJsonSerializable
+import com.company.todd.json.SerializationType
 import com.company.todd.json.deserialization.float
 import com.company.todd.json.deserialization.get
 import com.company.todd.json.serialization.toJsonValue
 
+@SerializationType("healthBar")
 class HealthBar(
         maxHealth: Float, private val background: MyDrawable,
         private val healthDrawable: MyDrawable

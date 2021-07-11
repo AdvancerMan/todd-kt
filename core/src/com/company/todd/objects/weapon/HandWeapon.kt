@@ -8,11 +8,10 @@ import com.company.todd.asset.texture.DisposableByManager
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
-import com.company.todd.json.JsonFullSerializable
-import com.company.todd.json.JsonUpdateSerializable
+import com.company.todd.json.*
 
 abstract class HandWeapon(
-    @JsonFullSerializable private val style: Style,
+    @JsonFullSerializable private val handWeaponStyle: Style,
     @JsonFullSerializable protected val cooldown: Float,
     @JsonFullSerializable protected val sinceAttackTillDamage: Float
 ) :
@@ -31,8 +30,8 @@ abstract class HandWeapon(
     private fun updatePositionAndOrigin() {
         x = owner.width / 2
         y = 0f
-        originX = style.origin.x - x
-        originY = style.origin.y - y
+        originX = handWeaponStyle.origin.x - x
+        originY = handWeaponStyle.origin.y - y
     }
 
     override fun act(delta: Float) {
@@ -43,7 +42,7 @@ abstract class HandWeapon(
             doAttack()
         }
 
-        listOf(style.handDrawable, style.weaponDrawable).forEach { drawable ->
+        listOf(handWeaponStyle.handDrawable, handWeaponStyle.weaponDrawable).forEach { drawable ->
             drawable?.apply {
                 update(delta)
                 if (getPlayingType() == AnimationType.ACTION && isAnimationFinished()) {
@@ -58,8 +57,8 @@ abstract class HandWeapon(
         val batchAlpha = batch.color.a
         batch.color = batch.color.apply { a *= parentAlpha }
 
-        val handPos = style.handPosition.cpy()
-        val weaponPos = style.weaponPosition.cpy()
+        val handPos = handWeaponStyle.handPosition.cpy()
+        val weaponPos = handWeaponStyle.weaponPosition.cpy()
 
         val origin = Vector2(originX, originY).scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
         listOf(handPos, weaponPos).forEach {
@@ -67,20 +66,20 @@ abstract class HandWeapon(
         }
 
         if (!owner.isDirectedToRight) {
-            if (style.handDrawable != null) {
-                handPos.sub(style.handDrawable.minWidth, 0f)
+            if (handWeaponStyle.handDrawable != null) {
+                handPos.sub(handWeaponStyle.handDrawable.minWidth, 0f)
             }
-            if (style.weaponDrawable != null) {
-                weaponPos.sub(style.weaponDrawable.minWidth, 0f)
+            if (handWeaponStyle.weaponDrawable != null) {
+                weaponPos.sub(handWeaponStyle.weaponDrawable.minWidth, 0f)
             }
         }
 
-        style.handDrawable?.draw(batch, handPos.x, handPos.y, origin.x, origin.y,
-                style.handDrawable.minWidth, style.handDrawable.minHeight,
+        handWeaponStyle.handDrawable?.draw(batch, handPos.x, handPos.y, origin.x, origin.y,
+                handWeaponStyle.handDrawable.minWidth, handWeaponStyle.handDrawable.minHeight,
                 scaleX, scaleY, rotation, !owner.isDirectedToRight, false)
 
-        style.weaponDrawable?.draw(batch, weaponPos.x, weaponPos.y, origin.x, origin.y,
-                style.weaponDrawable.minWidth, style.weaponDrawable.minHeight,
+        handWeaponStyle.weaponDrawable?.draw(batch, weaponPos.x, weaponPos.y, origin.x, origin.y,
+                handWeaponStyle.weaponDrawable.minWidth, handWeaponStyle.weaponDrawable.minHeight,
                 scaleX, scaleY, rotation, !owner.isDirectedToRight, false)
 
         batch.color = batch.color.apply { a = batchAlpha }
@@ -92,8 +91,8 @@ abstract class HandWeapon(
         if (canAttack()) {
             sinceAttack = 0f
             doneAttack = false
-            style.handDrawable?.setPlayingType(AnimationType.ACTION, true)
-            style.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
+            handWeaponStyle.handDrawable?.setPlayingType(AnimationType.ACTION, true)
+            handWeaponStyle.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
             if (sinceAttackTillDamage == 0f) {
                 doAttack()
             }
@@ -103,10 +102,11 @@ abstract class HandWeapon(
     final override fun canAttack() = sinceAttack >= cooldown
 
     override fun dispose(manager: TextureManager) {
-        style.weaponDrawable?.dispose(manager)
-        style.handDrawable?.dispose(manager)
+        handWeaponStyle.weaponDrawable?.dispose(manager)
+        handWeaponStyle.handDrawable?.dispose(manager)
     }
 
+    @SerializationType("handWeaponStyle")
     class Style(
         val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
         @JsonFullSerializable val handPosition: Vector2,

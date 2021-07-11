@@ -204,7 +204,7 @@ object Constructors {
         return mapOf<KClass<out Weapon>, JsonType<out Weapon>>(
                 SimpleMeleeWeapon::class to JsonType("Simple Melee Weapon") { game, json ->
                     SimpleMeleeWeapon(
-                            json["style", handWeaponStyle, game],
+                            json["handWeaponStyle", handWeaponStyle, game],
                             json["attackXYWH", rectangle], json["power", float],
                             json["cooldown", float], json["sinceAttackTillDamage", float]
                     )

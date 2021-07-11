@@ -15,7 +15,7 @@ import com.company.todd.json.SerializationType
 import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
-@SerializationType("halfCollided")
+@SerializationType("igo", "halfCollided")
 open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
                                 drawableSize: Vector2, bodyLowerLeftCornerOffset: Vector2,
                                 bodyPattern: BodyPattern) :

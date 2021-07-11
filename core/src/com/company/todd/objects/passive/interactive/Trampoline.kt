@@ -10,7 +10,7 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.SerializationType
 
-@SerializationType("trampoline")
+@SerializationType("igo", "trampoline")
 class Trampoline(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
                  bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern) :
         HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
