@@ -87,17 +87,27 @@ fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
                        constructors: Map<String, JsonType<out T>>,
                        jsonTypeName: String = "type"): T {
     val json = createJsonValue(jsonWithPrototype)
-    checkContains(json, jsonTypeName, "object type, one of strings ${constructors.keys}") { checkJson ->
-        checkJson.isString && constructors.containsKey(checkJson.asString())
+    if (!constructors.containsKey("")) {
+        checkContains(json, jsonTypeName, "object type, one of strings ${constructors.keys}") { checkJson ->
+            checkJson.isString && constructors.containsKey(checkJson.asString())
+        }
     }
-    return constructors[json[jsonTypeName].asString()]!!.constructor(game, json)
+
+    val constructor = json[jsonTypeName]?.asString()?.let { jsonType ->
+        constructors[jsonType]?.constructor
+    } ?: constructors[""]!!.constructor
+    return try {
+        constructor(game, json)
+    } catch (e: Exception) {
+        throw IllegalArgumentException("Could not parse json, json: $jsonWithPrototype", e)
+    }
 }
 
 fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {
-    parseJsonValue(it, jsonWithPrototype, Constructors.constructors)
+    parseJsonValue(it, jsonWithPrototype, Constructors.igoConstructors)
 }
 
-private val replaceableTypes = mapOf<KClass<*>, JsonType<*>>(
+internal val jsonPrimitives = mapOf<KClass<*>, JsonType<*>>(
     String::class to string,
     Vector2::class to vector,
     Rectangle::class to rectangle,
@@ -119,7 +129,7 @@ private fun getSchema(clazz: KClass<*>): Any.(JsonValue) -> Unit {
         .flatMap { it.declaredMemberProperties }
         .mapNotNull { property ->
             property.annotations.find { it is JsonUpdateSerializable }
-                ?.let { Triple(property, replaceableTypes[property.returnType.jvmErasure], getJsonName(property, it)) }
+                ?.let { Triple(property, jsonPrimitives[property.returnType.jvmErasure], getJsonName(property, it)) }
         }
         .onEach { it.first.isAccessible = true }
 
