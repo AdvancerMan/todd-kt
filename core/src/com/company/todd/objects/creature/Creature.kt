@@ -17,11 +17,10 @@ import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
-import com.company.todd.json.JsonSaveSerializable
-import com.company.todd.json.JsonUpdateSerializable
-import com.company.todd.json.SerializationType
+import com.company.todd.json.*
 import com.company.todd.objects.weapon.Weapon
 import com.company.todd.thinker.Thinker
+import com.company.todd.thinker.operated.ScheduledThinker
 import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.HEALTH_BAR_OFFSET
 import com.company.todd.util.JUMP_COOLDOWN
@@ -177,5 +176,12 @@ open class Creature(
     override fun dispose() {
         healthBar.dispose(game.textureManager)
         super.dispose()
+    }
+
+    companion object {
+        @JsonConstructorDefaults
+        private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+            JsonDefaults.setDefault("thinker", ScheduledThinker(), parsed)
+        }
     }
 }

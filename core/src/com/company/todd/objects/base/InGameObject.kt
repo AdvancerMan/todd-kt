@@ -20,9 +20,7 @@ import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
-import com.company.todd.json.JsonFullSerializable
-import com.company.todd.json.JsonUpdateSerializable
-import com.company.todd.json.ManuallyJsonSerializable
+import com.company.todd.json.*
 
 private var maxID = 0
 
@@ -163,6 +161,19 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
 
     override fun serializeSave(json: JsonValue) {
         // no operations
+    }
+
+    companion object {
+        @JsonConstructorDefaults
+        private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+            JsonDefaults.setDefault("bodyLowerLeftCornerOffset", Vector2(), parsed)
+
+            val bodyPattern = parsed["bodyPattern"]
+            if (bodyPattern != null && bodyPattern.second) {
+                // TODO default drawableSize
+                JsonDefaults.setDefault("drawableSize", Vector2(20f, 20f), parsed)
+            }
+        }
     }
 }
 

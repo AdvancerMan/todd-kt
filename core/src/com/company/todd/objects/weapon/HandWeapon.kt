@@ -120,5 +120,16 @@ abstract class HandWeapon(
         @JsonFullSerializable
         private val weaponDrawableName: String?
             get() = weaponDrawable?.drawableName
+
+        companion object {
+            @JsonConstructorDefaults
+            private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+                JsonDefaults.setDefault("handDrawable", null, parsed)
+                JsonDefaults.setDefault("weaponDrawable", null, parsed)
+                JsonDefaults.setDefault("handPosition", Vector2(), parsed)
+                JsonDefaults.setDefault("weaponPosition", Vector2(), parsed)
+                JsonDefaults.setDefault("origin", Vector2(), parsed)
+            }
+        }
     }
 }
