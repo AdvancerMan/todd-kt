@@ -12,7 +12,7 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "jumper")
-class Jumper(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+class Jumper(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
              bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
              @JsonFullSerializable private val pushPower: Float) :
         HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {

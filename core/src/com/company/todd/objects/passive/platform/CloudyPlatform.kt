@@ -13,7 +13,7 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "cloudy")
-class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
                      bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
                      @JsonFullSerializable private val sinceContactTillInactive: Float,
                      sinceInactiveTillActive: Float) :

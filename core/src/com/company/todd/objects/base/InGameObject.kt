@@ -27,7 +27,7 @@ private var maxID = 0
 private fun getNewID() = maxID++
 
 abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawable,
-                            drawableSize: Vector2, @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
+                            drawableSize: Vector2?, @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
                             @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper) :
     // TODO remove inheritance of BodyWrapper and MyDrawableI, make body and drawable public
     Group(), Disposable, Sensor, BodyWrapper by body, MyDrawableI by drawable,
@@ -48,17 +48,24 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
         // it is guaranteed that link to this is not used by sensor while this creates
         @Suppress("LeakingThis")
         body.putSensor(SensorName.TOP_GROUND_SENSOR, TopGroundSensor(this))
-        width = drawableSize.x
-        height = drawableSize.y
+
+        drawableSize?.let {
+            setSize(it.x, it.y)
+        }  ?: run {
+            width = -1f
+            height = -1f
+        }
     }
 
     protected open fun doInit(gameScreen: GameScreen) {
         this.screen = gameScreen
         body.init(gameScreen)
         body.setOwner(this)
-        sizeChanged()
 
         val aabb = getUnrotatedAABB()
+        if (width < 0 && height < 0) {
+            setSize(aabb.width, aabb.height)
+        }
         drawableCenterOffset
                 .sub(aabb.width / 2, aabb.height / 2)
                 .add(width / 2, height / 2)
@@ -167,12 +174,7 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
         @JsonConstructorDefaults
         private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
             JsonDefaults.setDefault("bodyLowerLeftCornerOffset", Vector2(), parsed)
-
-            val bodyPattern = parsed["bodyPattern"]
-            if (bodyPattern != null && bodyPattern.second) {
-                // TODO default drawableSize
-                JsonDefaults.setDefault("drawableSize", Vector2(20f, 20f), parsed)
-            }
+            JsonDefaults.setDefault("drawableSize", null, parsed)
         }
     }
 }

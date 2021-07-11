@@ -10,6 +10,6 @@ import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "solid")
 open class SolidPlatform(
-    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern
 ) : PassiveObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern))

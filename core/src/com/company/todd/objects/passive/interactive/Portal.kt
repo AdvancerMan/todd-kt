@@ -18,7 +18,7 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "portal")
-class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
              bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
              @JsonFullSerializable private val teleportTo: Vector2,
              @JsonFullSerializable private val teleportDelay: Float) :

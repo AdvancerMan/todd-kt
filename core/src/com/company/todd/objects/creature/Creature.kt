@@ -29,7 +29,7 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 @SerializationType("igo", "creature")
 open class Creature(
-    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2,
+    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,
     @JsonSaveSerializable val thinker: Thinker,
