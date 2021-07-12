@@ -1,12 +1,20 @@
 package com.company.todd.util
 
-import org.reflections.Reflections
+import com.badlogic.gdx.utils.JsonReader
+import com.badlogic.gdx.utils.JsonValue
 import kotlin.reflect.KClass
 
 object Reflection {
-    fun getAllClassesWithAnnotation(annotation: KClass<out Annotation>): List<KClass<*>> =
-        Reflections("com.company.todd")
-            .getTypesAnnotatedWith(annotation.java)
-            .map { it.kotlin }
-            .filter { clazz -> clazz.annotations.any { it.annotationClass == annotation } }
+    private val metadata: JsonValue by lazy {
+        JsonReader().parse(
+            Reflection.javaClass.classLoader
+                .getResource("META-INF/my-reflections/my-reflections.json")!!
+                .openStream()
+        )
+    }
+
+    fun getAllClassesWithSerializationTypeAnnotation(): List<KClass<*>> =
+        metadata["annotatedWithSerializationType"].map {
+            Class.forName(it.asString()).kotlin
+        }
 }

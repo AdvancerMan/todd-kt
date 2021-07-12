@@ -1,7 +1,5 @@
 package com.company.todd.json.deserialization
 
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.MyDrawable
@@ -14,7 +12,6 @@ import com.company.todd.json.*
 import com.company.todd.json.serialization.getJsonName
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
-import com.company.todd.thinker.operated.ThinkerAction
 import com.company.todd.util.Reflection
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -145,7 +142,7 @@ private fun addNonScanningConstructors(map: MutableMap<String, Map<String, JsonT
 }
 
 val jsonConstructors: Map<String, Map<String, JsonType<*>>> by lazy {
-    val result = Reflection.getAllClassesWithAnnotation(SerializationType::class)
+    val result = Reflection.getAllClassesWithSerializationTypeAnnotation()
         .groupBy { it.findAnnotation<SerializationType>()!!.category }
         .mapValues { (_, classes) ->
             classes.associateBy { it.findAnnotation<SerializationType>()!!.type }
