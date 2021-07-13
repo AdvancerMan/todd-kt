@@ -21,9 +21,11 @@ task configureReflection {
     dependsOn classes
 
     doLast {
-        URL[] urls = sourceSets.main.runtimeClasspath.files.collect {
-            it.toURI().toURL()
+        List<URL> urlsList = sourceSets.main.runtimeClasspath.files.collect {
+            it.exists() ? it.toURI().toURL() : null
         }
+        urlsList.removeAll { it == null }
+        URL[] urls = urlsList
         ClassLoader classLoader = new URLClassLoader(urls)
 
         Reflections reflections = new Reflections("com.company.todd", urls, classLoader)
