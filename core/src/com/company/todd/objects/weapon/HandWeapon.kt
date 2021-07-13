@@ -11,12 +11,14 @@ import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.json.*
 
 abstract class HandWeapon(
-    @JsonFullSerializable private val handWeaponStyle: Style,
+    @JsonFullSerializable protected val handWeaponStyle: Style,
     @JsonFullSerializable protected val cooldown: Float,
     @JsonFullSerializable protected val sinceAttackTillDamage: Float
 ) :
         Weapon(), DisposableByManager {
     protected lateinit var owner: InGameObject
+    protected lateinit var screen: GameScreen
+
     @JsonUpdateSerializable
     protected var sinceAttack = cooldown
     private var doneAttack = true
@@ -24,6 +26,7 @@ abstract class HandWeapon(
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
         this.owner = owner
+        this.screen = screen
         updatePositionAndOrigin()
     }
 
@@ -53,6 +56,9 @@ abstract class HandWeapon(
         updatePositionAndOrigin()
     }
 
+    protected fun getDrawablePosition(ownerOffset: Vector2) =
+        ownerOffset.sub(x, y).scl(if (owner.isDirectedToRight) 1f else -1f, 1f).add(x, y)
+
     override fun draw(batch: Batch, parentAlpha: Float) {
         val batchAlpha = batch.color.a
         batch.color = batch.color.apply { a *= parentAlpha }
@@ -61,9 +67,7 @@ abstract class HandWeapon(
         val weaponPos = handWeaponStyle.weaponPosition.cpy()
 
         val origin = Vector2(originX, originY).scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
-        listOf(handPos, weaponPos).forEach {
-            it.sub(x, y).scl(if (owner.isDirectedToRight) 1f else -1f, 1f).add(x, y)
-        }
+        listOf(handPos, weaponPos).forEach { getDrawablePosition(it) }
 
         if (!owner.isDirectedToRight) {
             if (handWeaponStyle.handDrawable != null) {

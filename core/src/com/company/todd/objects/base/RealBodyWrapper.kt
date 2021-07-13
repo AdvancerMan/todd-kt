@@ -90,6 +90,10 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper, Manua
         body.isActive = value
     }
 
+    override fun setBullet(value: Boolean) {
+        body.isBullet = value
+    }
+
     override fun getUnrotatedAABB() =
             // TODO (0, 0) isn't always in AABB
             Rectangle().apply {

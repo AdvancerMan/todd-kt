@@ -13,11 +13,8 @@ abstract class MeleeWeapon(
     cooldown: Float, sinceAttackTillDamage: Float
 ) :
         HandWeapon(handWeaponStyle, cooldown, sinceAttackTillDamage) {
-    protected lateinit var screen: GameScreen
-
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
-        this.screen = screen
         attackAABB.setPosition(attackAABB.x - x, attackAABB.y - y)
     }
 
