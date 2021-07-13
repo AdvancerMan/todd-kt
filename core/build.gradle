@@ -2,6 +2,7 @@ import com.badlogic.gdx.utils.JsonWriter
 import org.reflections.Reflections
 import com.badlogic.gdx.utils.JsonValue
 
+import java.lang.annotation.Annotation
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -29,28 +30,28 @@ task configureReflection {
         JsonValue json = new JsonValue(JsonValue.ValueType.object)
 
         JsonValue annotatedWithSerializationType = new JsonValue(JsonValue.ValueType.array)
-        reflections.getTypesAnnotatedWith(classLoader.loadClass("com.company.todd.json.SerializationType"))
-                .forEach {
-                    annotatedWithSerializationType.addChild(new JsonValue(it.getName()))
-                }
+        reflections.getTypesAnnotatedWith(
+                classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
+        ).forEach {
+            annotatedWithSerializationType.addChild(new JsonValue(it.getName()))
+        }
         json.addChild("annotatedWithSerializationType", annotatedWithSerializationType)
 
         java.nio.file.Path relativePath = Paths.get("META-INF", "my-reflections", "my-reflections.json")
-        sourceSets.main.output.classesDirs.forEach({ file ->
-            Writer writer = null
-            try {
-                java.nio.file.Path jsonPath = file.toPath().resolve(relativePath)
-                Files.createDirectories(jsonPath.parent)
-                writer = Files.newBufferedWriter(jsonPath, StandardCharsets.UTF_8)
-                writer.write(json.toJson(JsonWriter.OutputType.json))
-            } catch (IOException e) {
-                throw new java.io.UncheckedIOException(e)
-            } finally {
-                if (writer != null) {
-                    writer.close()
-                }
+        File file = sourceSets.main.output.classesDirs.asList().get(0)
+        Writer writer = null
+        try {
+            java.nio.file.Path jsonPath = file.toPath().resolve(relativePath)
+            Files.createDirectories(jsonPath.parent)
+            writer = Files.newBufferedWriter(jsonPath, StandardCharsets.UTF_8)
+            writer.write(json.toJson(JsonWriter.OutputType.json))
+        } catch (IOException e) {
+            throw new java.io.UncheckedIOException(e)
+        } finally {
+            if (writer != null) {
+                writer.close()
             }
-        })
+        }
     }
 }
 
