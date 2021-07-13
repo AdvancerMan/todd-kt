@@ -46,11 +46,7 @@ class TextureManager : AssetManager<Texture>(Texture::class.java) {
             try {
                 Texture(fileName)
             } catch (e: GdxRuntimeException) {
-                error("Error while loading $fileName texture:\n" +
-                        StringWriter().let {
-                            e.printStackTrace(PrintWriter(it))
-                            it.toString()
-                        })
+                error("Error while loading $fileName texture: ", e)
                 createAdditionalTexture()
             }
 

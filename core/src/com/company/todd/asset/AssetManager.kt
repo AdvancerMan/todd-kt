@@ -15,6 +15,9 @@ abstract class AssetManager<T: Disposable>(clazz: Class<T>): Disposable {
     protected fun error(message: String) =
             Gdx.app.error(logTag, message)
 
+    protected fun error(message: String, exception: Throwable) =
+            Gdx.app.error(logTag, message, exception)
+
     protected fun debug(message: String) =
             Gdx.app.debug(logTag, message)
 
