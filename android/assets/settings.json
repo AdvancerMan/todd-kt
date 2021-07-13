@@ -1,0 +1,43 @@
+{
+  "input": {
+    // available: slider, touchpad, moveButtons
+    "defaultMovingActor": "touchpad",
+    "slider": {
+      "backgroundDrawableName": "moveSliderBackground",
+      "knobDrawableName": "moveSliderKnob",
+      "position": [30, 30],
+      "size": [140, 20],
+      "activationFraction": 0.2
+    },
+    "touchpad": {
+      "backgroundDrawableName": "moveTouchpadBackground",
+      "knobDrawableName": "moveTouchpadKnob",
+      "position": [30, 30],
+      "size": [100, 100]
+    },
+    "moveButtonLeft": {
+      "upDrawableName": "moveButtonLeftUp",
+      "downDrawableName": "moveButtonLeftDown",
+      "position": [30, 30],
+      "size": [50, 50]
+    },
+    "moveButtonRight": {
+      "upDrawableName": "moveButtonRightUp",
+      "downDrawableName": "moveButtonRightDown",
+      "position": [90, 30],
+      "size": [50, 50]
+    },
+    "jumpButton": {
+      "upDrawableName": "jumpButtonUp",
+      "downDrawableName": "jumpButtonDown",
+      "position": [-90, 30],
+      "size": [50, 50]
+    },
+    "attackButton": {
+      "upDrawableName": "attackButtonUp",
+      "downDrawableName": "attackButtonDown",
+      "position": [-90, 100],
+      "size": [50, 50]
+    }
+  }
+}

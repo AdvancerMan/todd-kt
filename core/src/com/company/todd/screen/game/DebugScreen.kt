@@ -30,10 +30,13 @@ class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name ==
 
     override fun update(delta: Float) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            playerThinker.setInputActorType(MovingInputType.SLIDER)
+            playerThinker.setMovingActor(MovingInputType.SLIDER)
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-            playerThinker.setInputActorType(MovingInputType.TOUCHPAD)
+            playerThinker.setMovingActor(MovingInputType.TOUCHPAD)
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            playerThinker.setMovingActor(MovingInputType.MOVING_BUTTONS)
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             pressedPlay = !pressedPlay
