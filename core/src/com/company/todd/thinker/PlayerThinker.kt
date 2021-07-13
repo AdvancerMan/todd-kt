@@ -11,10 +11,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Pools
 import com.company.todd.gui.ButtonInputActor
 import com.company.todd.gui.ScreenInputActor
-import com.company.todd.json.deserialization.float
-import com.company.todd.json.deserialization.get
-import com.company.todd.json.deserialization.jsonSettings
-import com.company.todd.json.deserialization.string
+import com.company.todd.json.deserialization.*
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.game.GameScreen
@@ -50,7 +47,11 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                 Slider.SliderStyle(
                     resources["slider"]!!["background"]!!,
                     resources["slider"]!!["knob"]!!
-                )
+                ).apply {
+                    val size = settings["slider"]["size", vector]
+                    background.minWidth = size.x
+                    background.minHeight = size.y
+                }
             ), settings["slider"]
         ) {
             private val activationFraction = settings["slider"]["activationFraction", float]

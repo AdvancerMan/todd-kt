@@ -39,6 +39,15 @@ class NineTiledDrawable(private val info: NineTiledRegionInfo?,
             region, lw, uh, region.regionWidth - lw - rw, region.regionHeight - uh - dh
     ))
 
+    init {
+        minWidth = lTile.minWidth + mTile.minWidth + rTile.minWidth
+        minHeight = uTile.minHeight + mTile.minHeight + dTile.minHeight
+        leftWidth = lTile.minWidth
+        rightWidth = rTile.minWidth
+        topHeight = uTile.minHeight
+        bottomHeight = dTile.minHeight
+    }
+
     override fun draw(batch: Batch, x: Float, y: Float, width: Float, height: Float) {
         draw(batch, x, y, 0f, 0f, width, height, 1f, 1f, 0f)
     }

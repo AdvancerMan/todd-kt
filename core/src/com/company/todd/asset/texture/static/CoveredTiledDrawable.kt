@@ -26,6 +26,11 @@ class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo?,
     private val cover = TransformTiledDrawable(null, coverTile)
     private val body = TransformTiledDrawable(null, bodyTile)
 
+    init {
+        minWidth = cover.minWidth + body.minWidth
+        minHeight = cover.minHeight + body.minHeight
+    }
+
     override fun draw(batch: Batch, x: Float, y: Float, width: Float, height: Float) {
         val h = min(cover.minHeight, height)
         cover.draw(batch, x, y + height - h, width, h)
