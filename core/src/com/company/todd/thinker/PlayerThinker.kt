@@ -51,6 +51,9 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                     val size = settings["slider"]["size", vector]
                     background.minWidth = size.x
                     background.minHeight = size.y
+                    val knobSize = settings["slider"]["knobSize", vector]
+                    knob.minWidth = knobSize.x
+                    knob.minHeight = knobSize.y
                 }
             ), settings["slider"]
         ) {
@@ -72,7 +75,11 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                 Touchpad.TouchpadStyle(
                     resources["touchpad"]!!["background"]!!,
                     resources["touchpad"]!!["knob"]!!
-                )
+                ).apply {
+                    val knobSize = settings["touchpad"]["knobSize", vector]
+                    knob.minWidth = knobSize.x
+                    knob.minHeight = knobSize.y
+                }
             ), settings["touchpad"]
         ) {
             override fun changed(event: ChangeListener.ChangeEvent) {

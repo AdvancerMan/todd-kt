@@ -34,6 +34,7 @@ open class Bullet(
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         body.setBullet(true)
+        body.setAngle(tmp_velocity.angleRad())
     }
 
     override fun act(delta: Float) {

@@ -7,13 +7,15 @@
       "knobDrawableName": "moveSliderKnob",
       "position": [30, 30],
       "size": [140, 20],
+      "knobSize": [20, 20],
       "activationFraction": 0.2
     },
     "touchpad": {
       "backgroundDrawableName": "moveTouchpadBackground",
       "knobDrawableName": "moveTouchpadKnob",
       "position": [30, 30],
-      "size": [100, 100]
+      "size": [100, 100],
+      "knobSize": [20, 20]
     },
     "moveButtonLeft": {
       "upDrawableName": "moveButtonLeftUp",
