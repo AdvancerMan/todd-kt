@@ -170,6 +170,9 @@ open class Creature(
     override fun takeDamage(amount: Float) {
         super.takeDamage(amount)
         healthBar.value -= amount
+        if (healthBar.value <= 0) {
+            kill()
+        }
         sinceDamage = 0f
     }
 

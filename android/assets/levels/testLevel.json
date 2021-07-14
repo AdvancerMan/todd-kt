@@ -97,8 +97,7 @@
         "bulletBuilder": {
           "type": "simpleBuilder",
           "drawableName":  "rocket",
-          "drawableSize": [24, 7],
-          "radius": 10,
+          "radius": 5,
           "speed": 10000,
           "ownerFriendlyPeriod": 0.1
         }

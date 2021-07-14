@@ -62,6 +62,10 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     }
 
     protected open fun destroyObjects() {
+        objects.children.map { it as InGameObject }
+            .filter { !it.alive }
+            .forEach { justDestroyedObjects.add(it) }
+
         justDestroyedObjects.forEach {
             objects.removeActor(it)
             it.dispose()

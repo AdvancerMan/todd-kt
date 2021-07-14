@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
+import com.badlogic.gdx.physics.box2d.Manifold
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.createCircleBP
@@ -42,20 +43,27 @@ open class Bullet(
     }
 
     override fun beginContact(
-        otherSensor: Sensor,
-        other: InGameObject,
-        myFixture: Fixture,
-        otherFixture: Fixture,
+        otherSensor: Sensor, other: InGameObject,
+        myFixture: Fixture, otherFixture: Fixture,
         contact: Contact
     ) {
-        super.beginContact(otherSensor, other, myFixture, otherFixture, contact)
         if (
             (other != owner || other == owner && sinceCreation > ownerFriendlyPeriod)
-            && !myFixture.isSensor && !otherFixture.isSensor
+            && !myFixture.isSensor && !otherFixture.isSensor && alive
         ) {
             other.takeDamage(power)
             takeDamage(Float.MAX_VALUE)
         }
+        contact.isEnabled = false
+        contact.tangentSpeed = 0f
+    }
+
+    override fun preSolve(
+        otherSensor: Sensor, other: InGameObject,
+        myFixture: Fixture, otherFixture: Fixture,
+        contact: Contact, oldManifold: Manifold
+    ) {
+        beginContact(otherSensor, other, myFixture, otherFixture, contact)
     }
 
     override fun takeDamage(amount: Float) {
