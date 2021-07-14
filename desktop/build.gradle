@@ -24,6 +24,10 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
+jar {
+    processResources.exclude("*")
+}
+
 task dist(type: Jar) {
     manifest {
         attributes 'Main-Class': project.mainClassName
@@ -37,5 +41,3 @@ task dist(type: Jar) {
 
 
 dist.dependsOn classes
-
-//eclipse.project.name = appName + "-desktop"
