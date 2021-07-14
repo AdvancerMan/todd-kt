@@ -115,7 +115,8 @@ internal val jsonPrimitives = mapOf<KClass<*>, JsonType<*>>(
     Float::class to float,
     Int::class to int,
     Long::class to long,
-    ThinkerAction::class to thinkerAction
+    ThinkerAction::class to thinkerAction,
+    JsonValue::class to identityJson
 )
 
 private val cachedSchemas = mutableMapOf<KClass<*>, Any.(JsonValue) -> Unit>()

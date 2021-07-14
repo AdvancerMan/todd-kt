@@ -3,6 +3,7 @@ package com.company.todd.json.serialization
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.JsonValue
+import com.badlogic.gdx.utils.JsonWriter
 import com.company.todd.json.*
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -33,6 +34,7 @@ private fun toJson(obj: Any?, vararg annotations: KClass<*>): JsonValue {
         is Boolean -> obj.toJsonValue()
         is Float -> obj.toJsonValue()
         is Enum<*> -> obj.name.toJsonValue()
+        is JsonValue -> obj.toJson(JsonWriter.OutputType.json).toJsonValue()
         is List<*> -> {
             val result = JsonValue(JsonValue.ValueType.array)
             obj.map { toJson(it, *annotations) }.forEach { result.addChild(it) }

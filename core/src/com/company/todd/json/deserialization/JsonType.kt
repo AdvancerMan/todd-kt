@@ -8,6 +8,8 @@ import com.company.todd.thinker.operated.ThinkerAction
 
 class JsonType<T>(val typeName: String, val constructor: (ToddGame?, JsonValue) -> T)
 
+val identityJson = JsonType("json") { _, json -> json }
+
 val string = JsonType("string") { _, json -> json.asString() }
 
 val int = JsonType("integer") { _, json -> json.asInt() }
