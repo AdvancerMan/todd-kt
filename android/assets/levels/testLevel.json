@@ -80,45 +80,57 @@
       }
     },
     {
-      "type": "creature",
+      "type": "spawner",
       "drawableName": "stupidMeleeEnemy",
-      "weapon": {
-        "type": "simpleGun",
-        "handWeaponStyle": {
-          "handPosition": [0, 0],
-          "weaponDrawableName": "simpleWeapon",
-          "weaponPosition": [0, 25],
-          "origin": [0, 0]
-        },
-        "power": 3,
-        "cooldown": 1,
-        "sinceAttackTillDamage": 0.3,
-        "bulletOffset": [10, 20],
-        "bulletBuilder": {
-          "type": "simpleBuilder",
-          "drawableName":  "rocket",
-          "radius": 5,
-          "speed": 10000,
-          "ownerFriendlyPeriod": 0.1
-        }
-      },
       "bodyPattern": {
         "bodyPatternType": "rectangleWithTopGSBottomGS",
-        "b2dType": "dynamic",
-        "bodyPosition": [-100, 200],
-        "bodySize": [30, 91]
+        "b2dType": "static",
+        "bodyPosition": [200, 200],
+        "bodySize": [50, 50]
       },
-      "healthBar": {
-        "maxHealth": 100,
-        "backgroundDrawableName": "healthBarBackground",
-        "healthDrawableName": "healthBarHealth"
-      },
-      "speed": 200,
-      "jumpPower": 500,
-      "thinker": {
-        "type": "stupidMeleeThinker",
-        "jumpCooldown": 1.5,
-        "maxDistanceFromTarget": 3
+      "maxAmount": 3,
+      "spawnPeriod": 3,
+      "igoPattern": {
+        "type": "creature",
+        "drawableName": "stupidMeleeEnemy",
+        "weapon": {
+          "type": "simpleGun",
+          "handWeaponStyle": {
+            "handPosition": [0, 0],
+            "weaponDrawableName": "simpleWeapon",
+            "weaponPosition": [0, 25],
+            "origin": [0, 0]
+          },
+          "power": 3,
+          "cooldown": 1,
+          "sinceAttackTillDamage": 0.3,
+          "bulletOffset": [10, 20],
+          "bulletBuilder": {
+            "type": "simpleBuilder",
+            "drawableName":  "rocket",
+            "radius": 5,
+            "speed": 10000,
+            "ownerFriendlyPeriod": 0.1
+          }
+        },
+        "bodyPattern": {
+          "bodyPatternType": "rectangleWithTopGSBottomGS",
+          "b2dType": "dynamic",
+          "bodyPosition": [200, 250],
+          "bodySize": [30, 91]
+        },
+        "healthBar": {
+          "maxHealth": 100,
+          "backgroundDrawableName": "healthBarBackground",
+          "healthDrawableName": "healthBarHealth"
+        },
+        "speed": 200,
+        "jumpPower": 500,
+        "thinker": {
+          "type": "stupidMeleeThinker",
+          "jumpCooldown": 1.5,
+          "maxDistanceFromTarget": 3
+        }
       }
     }
   ]

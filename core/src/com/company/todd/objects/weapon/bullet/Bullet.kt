@@ -17,7 +17,7 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.screen.game.GameScreen
 
-@SerializationType("bullet", "simpleBullet")
+@SerializationType("igo", "simpleBullet")
 open class Bullet(
     game: ToddGame, drawable: MyDrawable,
     drawableSize: Vector2?, bodyLowerLeftCornerOffset: Vector2,
@@ -27,7 +27,7 @@ open class Bullet(
     @JsonFullSerializable protected val tmp_velocity: Vector2,
     @JsonFullSerializable protected val ownerFriendlyPeriod: Float,
     // TODO serialize igo???
-    @JsonFullSerializable protected val owner: InGameObject
+    @JsonFullSerializable protected val owner: InGameObject?
 ) : InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
     private var sinceCreation = 0f
 
