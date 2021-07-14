@@ -53,7 +53,7 @@ jobs:
       - name: Rename generated .jar
         run: |
           cd desktop/build/libs
-          JAR_NAME=$(ls | grep .jar | head -n1)
+          JAR_NAME=$(ls | grep \.jar | head -n1)
           cd ../../../
           mv "desktop/build/libs/$JAR_NAME" .
           mv "$JAR_NAME" todd.jar
