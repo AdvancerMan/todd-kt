@@ -57,6 +57,23 @@ jobs:
           cd ../../../
           mv "desktop/build/libs/$JAR_NAME" .
           mv "$JAR_NAME" todd.jar
+          
+      - name: Install jq
+        run: sudo apt-get install jq
+      - name: Download assets from Yandex disk
+        run: |
+          wget -O /dev/stdout https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=https://disk.yandex.ru/d/aDPC8GOW5l2ZXQ | jq -r '.["href"]' > .url
+          wget -i .url -O assets.zip
+          rm .url
+          
+      - name: Put assets and .jar into one .zip
+        run: |
+          unzip assets.zip
+          cp -r android/assets .
+          cp todd.jar assets
+          cd assets
+          zip ../todd-with-assets.zip *
+          cd ..
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -64,4 +81,6 @@ jobs:
           automatic_release_tag: "v1-alpha"
           prerelease: true
           title: "Development Desktop Build"
-          files: todd.jar
+          files: |
+            todd.jar
+            todd-with-assets.zip
