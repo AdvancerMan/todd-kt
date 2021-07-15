@@ -72,7 +72,7 @@ jobs:
           cp -r android/assets .
           cp todd.jar assets
           cd assets
-          zip ../todd-with-assets.zip *
+          zip -r ../todd-with-assets.zip *
           cd ..
 
       - uses: "marvinpinto/action-automatic-releases@latest"
