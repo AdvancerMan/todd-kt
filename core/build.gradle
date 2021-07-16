@@ -4,9 +4,11 @@ import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.KClasses
+import kotlin.reflect.jvm.ReflectJvmMapping
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.reflections.scanners.TypeAnnotationsScanner
+import org.reflections.scanners.MethodAnnotationsScanner
 import com.badlogic.gdx.utils.JsonValue
 
 import java.lang.annotation.Annotation
@@ -37,7 +39,7 @@ static Annotation findSerializationNameAnnotation(KProperty1<?, ?> property) {
 static boolean isManuallyConstructable(KClass<?> clazz, Class<? extends Annotation> manualConstructorAnnotation) {
     def companion = KClasses.getCompanionObject(clazz)
     if (companion != null) {
-        return KClasses.getFunctions(companion).grep {
+        return KClasses.getDeclaredFunctions(companion).grep {
             it.annotations.any { it.annotationType() == manualConstructorAnnotation }
         }.size() != 0
     }
@@ -73,22 +75,21 @@ static List<String> getClassParametersName(KClass<? extends Object> clazz) {
     if (constructor == null) {
         throw new IllegalArgumentException("Class $clazz should have a primary constructor to be serializable")
     }
-    constructor.parameters.collect { propertyJsonNames[it.name] ?: it.name }
+    constructor.parameters.collect {
+        if (it.name == null) {
+            throw new IllegalStateException("Reflections cannot be configured without parameter names")
+        }
+        propertyJsonNames[it.name] ?: it.name
+    }
 }
 
-static def addMetaInf(ClassLoader classLoader, Reflections reflections, JsonValue json) {
-    JsonValue serializationTypeClassesOld = new JsonValue(JsonValue.ValueType.array)
-    reflections.getTypesAnnotatedWith(
-            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
-    ).forEach { serializationTypeClassesOld.addChild(new JsonValue(it.getName())) }
-    json.addChild("serializationTypeClassesOld", serializationTypeClassesOld)
-
+static def addSerializationTypeClasses(
+        Reflections reflections, JsonValue json,
+        Class<? extends Annotation> serializationTypeAnnotation,
+        Class<? extends Annotation> manualConstructorAnnotation
+) {
     JsonValue serializationTypeClasses = new JsonValue(JsonValue.ValueType.object)
-    Class<? extends Annotation> manualConstructorAnnotation =
-            classLoader.loadClass("com.company.todd.json.ManualJsonConstructor") as Class<? extends Annotation>
-    reflections.getTypesAnnotatedWith(
-            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
-    )
+    reflections.getTypesAnnotatedWith(serializationTypeAnnotation)
             .forEach { clazz ->
                 KClass<?> kotlinClass = Reflection.createKotlinClass(clazz)
                 JsonValue result = new JsonValue(JsonValue.ValueType.object)
@@ -107,6 +108,46 @@ static def addMetaInf(ClassLoader classLoader, Reflections reflections, JsonValu
     json.addChild("serializationTypeClasses", serializationTypeClasses)
 }
 
+static def addSerializationTypeFunctions(
+        Reflections reflections, JsonValue json,
+        Class<? extends Annotation> serializationTypeAnnotation
+) {
+    JsonValue serializationTypeFunctions = new JsonValue(JsonValue.ValueType.object)
+    def allMethods = reflections.getMethodsAnnotatedWith(serializationTypeAnnotation)
+    allMethods.groupBy { it.declaringClass }
+            .entrySet()
+            .forEach { entry ->
+                def classJson = new JsonValue(JsonValue.ValueType.object)
+                entry.value.forEach { method ->
+                    def methodJson = new JsonValue(JsonValue.ValueType.array)
+                    ReflectJvmMapping.getKotlinFunction(method).parameters.collect().tail().forEach {
+                        if (it.name == null) {
+                            throw new IllegalStateException("Reflections cannot be configured without parameter names")
+                        }
+                        methodJson.addChild(new JsonValue(it.name as String))
+                    }
+                    classJson.addChild(method.name, methodJson)
+                }
+                serializationTypeFunctions.addChild(entry.key.getName(), classJson)
+            }
+    json.addChild("serializationTypeFunctions", serializationTypeFunctions)
+}
+
+static def addMetaInf(ClassLoader classLoader, Reflections reflections, JsonValue json) {
+    JsonValue serializationTypeClassesOld = new JsonValue(JsonValue.ValueType.array)
+    reflections.getTypesAnnotatedWith(
+            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
+    ).forEach { serializationTypeClassesOld.addChild(new JsonValue(it.getName())) }
+    json.addChild("serializationTypeClassesOld", serializationTypeClassesOld)
+
+    Class<? extends Annotation> serializationTypeAnnotation =
+            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
+    Class<? extends Annotation> manualConstructorAnnotation =
+            classLoader.loadClass("com.company.todd.json.ManualJsonConstructor") as Class<? extends Annotation>
+    addSerializationTypeClasses(reflections, json, serializationTypeAnnotation, manualConstructorAnnotation)
+    addSerializationTypeFunctions(reflections, json, serializationTypeAnnotation)
+}
+
 task configureReflection {
     dependsOn classes
 
@@ -122,7 +163,8 @@ task configureReflection {
                 "com.company.todd",
                 urls, classLoader,
                 new SubTypesScanner(false),
-                new TypeAnnotationsScanner()
+                new TypeAnnotationsScanner(),
+                new MethodAnnotationsScanner()
         )
         JsonValue json = new JsonValue(JsonValue.ValueType.object)
         addMetaInf(classLoader, reflections, json)
