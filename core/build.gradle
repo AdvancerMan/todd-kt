@@ -38,14 +38,14 @@ static Annotation findSerializationNameAnnotation(KProperty1<?, ?> property) {
     return property.annotations.find { it.annotationType().simpleName in annotations }
 }
 
-static boolean isManuallyConstructable(KClass<?> clazz, Class<? extends Annotation> manualConstructorAnnotation) {
+static String getManualConstructorClass(KClass<?> clazz, Class<? extends Annotation> manualConstructorAnnotation) {
     def companion = KClasses.getCompanionObject(clazz)
     if (companion != null) {
         return KClasses.getDeclaredFunctions(companion).grep {
             it.annotations.any { it.annotationType() == manualConstructorAnnotation }
-        }.size() != 0
+        }.empty ? null : KClassesJvm.getJvmName(companion)
     }
-    return false
+    return null
 }
 
 static Map<String, String> getPropertyJsonNames(KClass<?> clazz) {
@@ -103,13 +103,13 @@ static def addSerializationTypeClasses(
                     }
                     JsonValue result = new JsonValue(JsonValue.ValueType.object)
 
-                    boolean manuallyConstructable = isManuallyConstructable(
-                            kClass, manualConstructorAnnotation
-                    )
-                    result.addChild("manuallyConstructable", new JsonValue(manuallyConstructable))
+                    String manualConstructorObject = getManualConstructorClass(kClass, manualConstructorAnnotation)
+                    if (manualConstructorObject != null) {
+                        result.addChild("manualConstructorClass", new JsonValue(manualConstructorObject))
+                    }
 
-                    JsonValue parametersName
                     if (kClass == kSerializationClass) {
+                        JsonValue parametersName
                         parametersName = new JsonValue(JsonValue.ValueType.array)
                         getClassParametersName(kClass)
                                 .forEach { parametersName.addChild(new JsonValue(it)) }
@@ -118,7 +118,7 @@ static def addSerializationTypeClasses(
 
                     def superclass = kClass.supertypes.collect {
                         if (it.classifier != null) {
-                            JvmClassMappingKt.getJavaClass(it.classifier as KClass<?>)
+                            JvmClassMappingKt.getJavaClass(it.classifier as KClass<? extends Object>)
                         } else {
                             null
                         }
@@ -127,8 +127,15 @@ static def addSerializationTypeClasses(
                     if (superclass != null) {
                         result.addChild("superclass", new JsonValue(superclass.name))
                     }
+
                     serializationTypeClasses.remove(className)
                     serializationTypeClasses.addChild(className, result)
+                    // TODO bug in libgdx
+                    serializationTypeClasses.size++
+                    def jsonList = serializationTypeClasses.collect()
+                    if (jsonList.size > 1) {
+                        jsonList.last().prev = jsonList[jsonList.size - 2] as JsonValue
+                    }
                 }
             }
     json.addChild("serializationTypeClasses", serializationTypeClasses)
