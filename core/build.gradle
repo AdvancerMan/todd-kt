@@ -1,5 +1,12 @@
 import com.badlogic.gdx.utils.JsonWriter
+import kotlin.jvm.internal.Reflection
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.KClasses
 import org.reflections.Reflections
+import org.reflections.scanners.SubTypesScanner
+import org.reflections.scanners.TypeAnnotationsScanner
 import com.badlogic.gdx.utils.JsonValue
 
 import java.lang.annotation.Annotation
@@ -13,8 +20,91 @@ sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = ["src/"]
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+
+static String getJsonName(KCallable<?> member, Annotation annotation) {
+    if (annotation.name().blank) {
+        return member.name
+    } else {
+        return annotation.name()
+    }
+}
+
+static Annotation findSerializationNameAnnotation(KProperty1<?, ?> property) {
+    def annotations = ["JsonUpdateSerializable", "JsonFullSerializable", "JsonSaveSerializable"]
+    return property.annotations.find { it.annotationType().simpleName in annotations }
+}
+
+static boolean isManuallyConstructable(KClass<?> clazz, Class<? extends Annotation> manualConstructorAnnotation) {
+    def companion = KClasses.getCompanionObject(clazz)
+    if (companion != null) {
+        return KClasses.getFunctions(companion).grep {
+            it.annotations.any { it.annotationType() == manualConstructorAnnotation }
+        }.size() != 0
+    }
+    return false
+}
+
+static Map<String, String> getPropertyJsonNames(KClass<?> clazz) {
+    def classes = new ArrayList<KClass<?>>()
+    classes.add(clazz)
+    classes.addAll(KClasses.getAllSuperclasses(clazz))
+    return classes.collect { KClasses.getDeclaredMemberProperties(it) }
+            .flatten()
+            .collect { it as KProperty1<?, ?> }
+            .collect {
+                def annotation = findSerializationNameAnnotation(it)
+                if (annotation != null) {
+                    return new AbstractMap.SimpleImmutableEntry(it, annotation)
+                }
+                return null
+            }
+            .grep { it != null }
+            .collectEntries {
+                new AbstractMap.SimpleImmutableEntry(
+                        it.key.name,
+                        getJsonName(it.key as KCallable<?>, it.value as Annotation)
+                )
+            }
+}
+
+static List<String> getClassParametersName(KClass<? extends Object> clazz) {
+    def propertyJsonNames = getPropertyJsonNames(clazz)
+    def constructor = KClasses.getPrimaryConstructor(clazz)
+    if (constructor == null) {
+        throw new IllegalArgumentException("Class $clazz should have a primary constructor to be serializable")
+    }
+    constructor.parameters.collect { propertyJsonNames[it.name] ?: it.name }
+}
+
+static def addMetaInf(ClassLoader classLoader, Reflections reflections, JsonValue json) {
+    JsonValue serializationTypeClassesOld = new JsonValue(JsonValue.ValueType.array)
+    reflections.getTypesAnnotatedWith(
+            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
+    ).forEach { serializationTypeClassesOld.addChild(new JsonValue(it.getName())) }
+    json.addChild("serializationTypeClassesOld", serializationTypeClassesOld)
+
+    JsonValue serializationTypeClasses = new JsonValue(JsonValue.ValueType.object)
+    Class<? extends Annotation> manualConstructorAnnotation =
+            classLoader.loadClass("com.company.todd.json.ManualJsonConstructor") as Class<? extends Annotation>
+    reflections.getTypesAnnotatedWith(
+            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
+    )
+            .forEach { clazz ->
+                KClass<?> kotlinClass = Reflection.createKotlinClass(clazz)
+                JsonValue result = new JsonValue(JsonValue.ValueType.object)
+
+                boolean manuallyConstructable = isManuallyConstructable(kotlinClass, manualConstructorAnnotation)
+                result.addChild("manuallyConstructable", new JsonValue(manuallyConstructable))
+
+                JsonValue parametersName = new JsonValue(JsonValue.ValueType.array)
+                getClassParametersName(kotlinClass).forEach { parametersName.addChild(new JsonValue(it)) }
+                result.addChild("parametersName", parametersName)
+
+                def superclass = new JsonValue(clazz.superclass?.name) ?: new JsonValue(JsonValue.ValueType.nullValue)
+                result.addChild("superclass", superclass)
+                serializationTypeClasses.addChild(clazz.name, result)
+            }
+    json.addChild("serializationTypeClasses", serializationTypeClasses)
 }
 
 task configureReflection {
@@ -28,16 +118,14 @@ task configureReflection {
         URL[] urls = urlsList
         ClassLoader classLoader = new URLClassLoader(urls)
 
-        Reflections reflections = new Reflections("com.company.todd", urls, classLoader)
+        Reflections reflections = new Reflections(
+                "com.company.todd",
+                urls, classLoader,
+                new SubTypesScanner(false),
+                new TypeAnnotationsScanner()
+        )
         JsonValue json = new JsonValue(JsonValue.ValueType.object)
-
-        JsonValue annotatedWithSerializationType = new JsonValue(JsonValue.ValueType.array)
-        reflections.getTypesAnnotatedWith(
-                classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
-        ).forEach {
-            annotatedWithSerializationType.addChild(new JsonValue(it.getName()))
-        }
-        json.addChild("annotatedWithSerializationType", annotatedWithSerializationType)
+        addMetaInf(classLoader, reflections, json)
 
         java.nio.file.Path relativePath = Paths.get("META-INF", "my-reflections", "my-reflections.json")
         File file = sourceSets.main.output.classesDirs.asList().get(0)

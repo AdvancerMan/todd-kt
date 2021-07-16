@@ -1,7 +1,7 @@
 package com.company.todd.json
 
 @Target(AnnotationTarget.FUNCTION)
-annotation class JsonConstructorDefaults
+annotation class ManualJsonConstructor
 
 object JsonDefaults {
     fun setDefault(key: String, value: Any?, map: MutableMap<String, Pair<Any?, Boolean>>): Any? {

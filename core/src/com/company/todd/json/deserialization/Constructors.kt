@@ -37,7 +37,7 @@ fun getConstructorDefaults(clazz: KClass<*>): List<Pair<Any, KCallable<*>>> {
         .asIterable()
         .mapNotNull { it.companionObject }
         .flatMap { companion -> generateSequence { companion.objectInstance }.asIterable().zip(companion.functions) }
-        .filter { it.second.hasAnnotation<JsonConstructorDefaults>() }
+        .filter { it.second.hasAnnotation<ManualJsonConstructor>() }
         .onEach { it.second.isAccessible = true }
         .reversed()
 }
@@ -142,7 +142,7 @@ private fun addNonScanningConstructors(map: MutableMap<String, Map<String, JsonT
 }
 
 val jsonConstructors: Map<String, Map<String, JsonType<*>>> by lazy {
-    val result = Reflection.getAllClassesWithSerializationTypeAnnotation()
+    val result = Reflection.serializationTypeClasses
         .groupBy { it.findAnnotation<SerializationType>()!!.category }
         .mapValues { (_, classes) ->
             classes.associateBy { it.findAnnotation<SerializationType>()!!.type }

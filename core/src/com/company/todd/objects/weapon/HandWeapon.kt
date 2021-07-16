@@ -126,7 +126,7 @@ abstract class HandWeapon(
             get() = weaponDrawable?.drawableName
 
         companion object {
-            @JsonConstructorDefaults
+            @ManualJsonConstructor
             private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
                 JsonDefaults.setDefault("handDrawable", null, parsed)
                 JsonDefaults.setDefault("weaponDrawable", null, parsed)

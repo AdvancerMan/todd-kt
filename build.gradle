@@ -22,6 +22,7 @@ buildscript {
         classpath "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         classpath "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         classpath "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
         classpath "org.reflections:reflections:$reflectionsVersion"
     }
 }
@@ -89,6 +90,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     }
 }
 

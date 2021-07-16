@@ -182,7 +182,7 @@ open class Creature(
     }
 
     companion object {
-        @JsonConstructorDefaults
+        @ManualJsonConstructor
         private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
             JsonDefaults.setDefault("thinker", ScheduledThinker(), parsed)
         }

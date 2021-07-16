@@ -13,8 +13,7 @@ object Reflection {
         )
     }
 
-    fun getAllClassesWithSerializationTypeAnnotation(): List<KClass<*>> =
-        metadata["annotatedWithSerializationType"].map {
-            Class.forName(it.asString()).kotlin
-        }
+    val serializationTypeClasses by lazy {
+        metadata["serializationTypeClassesOld"].map { Class.forName(it.asString()).kotlin }
+    }
 }

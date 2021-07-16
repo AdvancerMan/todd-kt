@@ -9,7 +9,7 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.createCircleBP
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.json.JsonConstructorDefaults
+import com.company.todd.json.ManualJsonConstructor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 import com.company.todd.launcher.ToddGame
@@ -102,7 +102,7 @@ open class Bullet(
         }
 
         companion object {
-            @JsonConstructorDefaults
+            @ManualJsonConstructor
             private fun getJsonConstructorDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
                 InGameObject.getJsonConstructorDefaults(parsed)
             }
