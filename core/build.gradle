@@ -1,9 +1,11 @@
 import com.badlogic.gdx.utils.JsonWriter
+import kotlin.jvm.JvmClassMappingKt
 import kotlin.jvm.internal.Reflection
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.KClasses
+import kotlin.reflect.jvm.KClassesJvm
 import kotlin.reflect.jvm.ReflectJvmMapping
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
@@ -90,20 +92,44 @@ static def addSerializationTypeClasses(
 ) {
     JsonValue serializationTypeClasses = new JsonValue(JsonValue.ValueType.object)
     reflections.getTypesAnnotatedWith(serializationTypeAnnotation)
-            .forEach { clazz ->
-                KClass<?> kotlinClass = Reflection.createKotlinClass(clazz)
-                JsonValue result = new JsonValue(JsonValue.ValueType.object)
+            .forEach { serializationClass ->
+                KClass<?> kSerializationClass = Reflection.createKotlinClass(serializationClass)
+                def list = KClasses.getAllSuperclasses(kSerializationClass)
+                list.add(kSerializationClass)
+                list.forEach { kClass ->
+                    def className = KClassesJvm.getJvmName(kClass)
+                    if (kClass != kSerializationClass && serializationTypeClasses.has(className)) {
+                        return
+                    }
+                    JsonValue result = new JsonValue(JsonValue.ValueType.object)
 
-                boolean manuallyConstructable = isManuallyConstructable(kotlinClass, manualConstructorAnnotation)
-                result.addChild("manuallyConstructable", new JsonValue(manuallyConstructable))
+                    boolean manuallyConstructable = isManuallyConstructable(
+                            kClass, manualConstructorAnnotation
+                    )
+                    result.addChild("manuallyConstructable", new JsonValue(manuallyConstructable))
 
-                JsonValue parametersName = new JsonValue(JsonValue.ValueType.array)
-                getClassParametersName(kotlinClass).forEach { parametersName.addChild(new JsonValue(it)) }
-                result.addChild("parametersName", parametersName)
+                    JsonValue parametersName
+                    if (kClass == kSerializationClass) {
+                        parametersName = new JsonValue(JsonValue.ValueType.array)
+                        getClassParametersName(kClass)
+                                .forEach { parametersName.addChild(new JsonValue(it)) }
+                        result.addChild("parametersName", parametersName)
+                    }
 
-                def superclass = new JsonValue(clazz.superclass?.name) ?: new JsonValue(JsonValue.ValueType.nullValue)
-                result.addChild("superclass", superclass)
-                serializationTypeClasses.addChild(clazz.name, result)
+                    def superclass = kClass.supertypes.collect {
+                        if (it.classifier != null) {
+                            JvmClassMappingKt.getJavaClass(it.classifier as KClass<?>)
+                        } else {
+                            null
+                        }
+                    }.find { it != null && !it.isInterface() }
+
+                    if (superclass != null) {
+                        result.addChild("superclass", new JsonValue(superclass.name))
+                    }
+                    serializationTypeClasses.remove(className)
+                    serializationTypeClasses.addChild(className, result)
+                }
             }
     json.addChild("serializationTypeClasses", serializationTypeClasses)
 }
