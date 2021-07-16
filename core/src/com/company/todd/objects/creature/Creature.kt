@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.gui.HealthBar
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
@@ -183,7 +184,10 @@ open class Creature(
 
     companion object {
         @ManualJsonConstructor
-        private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+        private fun getJsonDefaults(
+            @Suppress("UNUSED_PARAMETER") json: JsonValue,
+            parsed: MutableMap<String, Pair<Any?, Boolean>>
+        ) {
             JsonDefaults.setDefault("thinker", ScheduledThinker(), parsed)
         }
     }

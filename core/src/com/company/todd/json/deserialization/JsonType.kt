@@ -40,3 +40,5 @@ val vectorArray = vector.toArray("array of vectors (2-element arrays)")
 val intRectangleArray = intRectangle.toArray("array of integer rectangles (4-element arrays)")
 
 val thinkerAction = JsonType("thinker action") { _, json -> ThinkerAction.valueOf(json.asString()) }
+
+val b2dType = JsonType("Box2D body type") { _, json -> Constructors.b2dTypes[json.asString()] }

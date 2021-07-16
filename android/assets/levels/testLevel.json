@@ -3,42 +3,42 @@
   "objects": [
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [-50, -75],
+      "worldBodyPosition": [-50, -75],
       "bodySize": [100, 25]
     },
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [-150, -75],
+      "worldBodyPosition": [-150, -75],
       "bodySize": [100, 25]
     },
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [50, -35],
+      "worldBodyPosition": [50, -35],
       "bodySize": [500, 100]
     },
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [550, -24],
+      "worldBodyPosition": [550, -24],
       "bodySize": [500, 100]
     },
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [750, 76],
+      "worldBodyPosition": [750, 76],
       "bodySize": [50, 50]
     },
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [1050, -23],
+      "worldBodyPosition": [1050, -23],
       "bodySize": [500, 100]
     },
     {
       "prototype": "arenaSolid",
-      "bodyPosition": [-650, -25],
+      "worldBodyPosition": [-650, -25],
       "bodySize": [500, 100]
     },
     {
       "prototype": "arenaPortal",
-      "bodyCenter": [1600, 127],
+      "worldBodyCenter": [1600, 127],
       "bodyRadius": 50,
       "teleportTo": [0, 100]
     },
@@ -63,7 +63,7 @@
       "bodyPattern": {
         "bodyPatternType": "rectangleWithTopGSBottomGS",
         "b2dType": "dynamic",
-        "bodyPosition": [-100, 200],
+        "worldBodyPosition": [-100, 200],
         "bodySize": [30, 91]
       },
       "healthBar": {
@@ -85,7 +85,7 @@
       "bodyPattern": {
         "bodyPatternType": "rectangleWithTopGSBottomGS",
         "b2dType": "static",
-        "bodyPosition": [200, 200],
+        "worldBodyPosition": [200, 200],
         "bodySize": [50, 50]
       },
       "maxAmount": 3,
@@ -116,7 +116,7 @@
         "bodyPattern": {
           "bodyPatternType": "rectangleWithTopGSBottomGS",
           "b2dType": "dynamic",
-          "bodyPosition": [200, 250],
+          "worldBodyPosition": [200, 250],
           "bodySize": [30, 91]
         },
         "healthBar": {

@@ -167,12 +167,6 @@ static def addSerializationTypeFunctions(
 }
 
 static def addMetaInf(ClassLoader classLoader, Reflections reflections, JsonValue json) {
-    JsonValue serializationTypeClassesOld = new JsonValue(JsonValue.ValueType.array)
-    reflections.getTypesAnnotatedWith(
-            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
-    ).forEach { serializationTypeClassesOld.addChild(new JsonValue(it.getName())) }
-    json.addChild("serializationTypeClassesOld", serializationTypeClassesOld)
-
     Class<? extends Annotation> serializationTypeAnnotation =
             classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
     Class<? extends Annotation> manualConstructorAnnotation =

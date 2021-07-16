@@ -5,9 +5,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
+import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.box2d.bodyPattern.BodyPatterns
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
-import com.company.todd.box2d.bodyPattern.createCircleBP
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.ManualJsonConstructor
 import com.company.todd.json.JsonFullSerializable
@@ -92,7 +93,7 @@ open class Bullet(
             return Bullet(
                 game, game.textureManager.loadDrawable(drawableName),
                 drawableSize, bodyLowerLeftCornerOffset,
-                createCircleBP(BodyDef.BodyType.DynamicBody, position.add(radius, radius), radius),
+                BodyPatterns.createCircleBP(BodyDef.BodyType.DynamicBody, position.add(radius, radius), radius),
                 power,
                 direction.apply {
                     x *= speed
@@ -103,8 +104,10 @@ open class Bullet(
 
         companion object {
             @ManualJsonConstructor
-            private fun getJsonConstructorDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-                InGameObject.getJsonConstructorDefaults(parsed)
+            private fun getJsonConstructorDefaults(
+                json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>
+            ) {
+                InGameObject.getJsonConstructorDefaults(json, parsed)
             }
         }
     }

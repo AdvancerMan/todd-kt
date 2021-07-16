@@ -2,6 +2,7 @@ package com.company.todd.objects.weapon
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.DisposableByManager
@@ -127,7 +128,10 @@ abstract class HandWeapon(
 
         companion object {
             @ManualJsonConstructor
-            private fun getJsonDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+            private fun getJsonDefaults(
+                @Suppress("UNUSED_PARAMETER") json: JsonValue,
+                parsed: MutableMap<String, Pair<Any?, Boolean>>
+            ) {
                 JsonDefaults.setDefault("handDrawable", null, parsed)
                 JsonDefaults.setDefault("weaponDrawable", null, parsed)
                 JsonDefaults.setDefault("handPosition", Vector2(), parsed)

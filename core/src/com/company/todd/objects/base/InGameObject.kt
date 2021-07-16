@@ -172,7 +172,10 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
 
     companion object {
         @ManualJsonConstructor
-        fun getJsonConstructorDefaults(parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+        fun getJsonConstructorDefaults(
+            @Suppress("UNUSED_PARAMETER") json: JsonValue,
+            parsed: MutableMap<String, Pair<Any?, Boolean>>
+        ) {
             JsonDefaults.setDefault("bodyLowerLeftCornerOffset", Vector2(), parsed)
             JsonDefaults.setDefault("drawableSize", null, parsed)
         }

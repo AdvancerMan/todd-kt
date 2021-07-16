@@ -16,7 +16,7 @@
       "drawableName": "arenaSolid",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
-      "bodyPosition": [0, -50],
+      "worldBodyPosition": [0, -50],
       "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
@@ -28,7 +28,7 @@
       "bodyPattern": {
         "bodyPatternType": "rectangleWithTopGS",
         "b2dType": "static",
-        "bodyPosition": [-200, -50],
+        "worldBodyPosition": [-200, -50],
         "bodySize": [200, 50]
       },
       "drawableSize": [200, 50],
@@ -42,7 +42,7 @@
         "bodyPatternType": "polygonWithTopGS",
         "b2dType": "static",
         "worldBodyCenter": [-300, 50],
-        "localVertices": [[-100, 100], [-100, -100], [100, -100], [100, 0], [0, 100]]
+        "localBodyVertices": [[-100, 100], [-100, -100], [100, -100], [100, 0], [0, 100]]
       },
       "drawableSize": [200, 200],
       "bodyLowerLeftCornerOffset": [0, 0]
@@ -53,7 +53,7 @@
       "drawableName": "arenaHalfCollided",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
-      "bodyPosition": [200, -50],
+      "worldBodyPosition": [200, -50],
       "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
@@ -64,7 +64,7 @@
       "drawableName": "arenaCloudy",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
-      "bodyPosition": [400, -50],
+      "worldBodyPosition": [400, -50],
       "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0],
@@ -77,7 +77,7 @@
       "drawableName": "arenaJumper",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
-      "bodyPosition": [600, -50],
+      "worldBodyPosition": [600, -50],
       "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0],
@@ -89,7 +89,7 @@
       "drawableName": "arenaPortal",
       "bodyPatternType": "circle",
       "b2dType": "static",
-      "bodyCenter": [850, -25],
+      "worldBodyCenter": [850, -25],
       "bodyRadius": 50,
       "drawableSize": [100, 100],
       "bodyLowerLeftCornerOffset": [0, 0],
@@ -102,7 +102,7 @@
       "drawableName": "arenaTrampoline",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
-      "bodyPosition": [900, -50],
+      "worldBodyPosition": [900, -50],
       "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0]
@@ -113,7 +113,7 @@
       "drawableName": "arenaTravolator",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
-      "bodyPosition": [1100, -50],
+      "worldBodyPosition": [1100, -50],
       "bodySize": [200, 50],
       "drawableSize": [200, 50],
       "bodyLowerLeftCornerOffset": [0, 0],

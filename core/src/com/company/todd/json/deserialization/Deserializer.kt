@@ -3,6 +3,7 @@ package com.company.todd.json.deserialization
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.json.JsonUpdateSerializable
 import com.company.todd.json.ManuallyJsonSerializable
@@ -116,7 +117,8 @@ internal val jsonPrimitives = mapOf<KClass<*>, JsonType<*>>(
     Int::class to int,
     Long::class to long,
     ThinkerAction::class to thinkerAction,
-    JsonValue::class to identityJson
+    JsonValue::class to identityJson,
+    BodyDef.BodyType::class to b2dType
 )
 
 private val cachedSchemas = mutableMapOf<KClass<*>, Any.(JsonValue) -> Unit>()
