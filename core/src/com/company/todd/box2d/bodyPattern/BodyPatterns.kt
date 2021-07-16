@@ -32,6 +32,7 @@ object BodyPatterns {
 
     @ManualJsonConstructor("createPolygonBPWithTGS")
     private fun polygonBPWithTGSManualConstructor(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+        JsonDefaults.setDefault("worldBodyCenter", Vector2(), parsed)
         if (!parsed["localBodyVertices"]!!.second) {
             parsed["localBodyVertices"] = json["localBodyVertices", vectorArray] to true
         }
@@ -57,6 +58,7 @@ object BodyPatterns {
         @Suppress("UNUSED_PARAMETER") json: JsonValue,
         parsed: MutableMap<String, Pair<Any?, Boolean>>
     ) {
+        JsonDefaults.setDefault("worldBodyPosition", Vector2(), parsed)
         JsonDefaults.setDefault("localBodyCenter", Vector2(), parsed)
     }
 
@@ -80,6 +82,7 @@ object BodyPatterns {
         @Suppress("UNUSED_PARAMETER") json: JsonValue,
         parsed: MutableMap<String, Pair<Any?, Boolean>>
     ) {
+        JsonDefaults.setDefault("worldBodyPosition", Vector2(), parsed)
         JsonDefaults.setDefault("localBodyCenter", Vector2(), parsed)
     }
 
@@ -92,4 +95,12 @@ object BodyPatterns {
                 it.addChild("worldBodyCenter", worldBodyCenter.toJsonValue())
                 it.addChild("bodyRadius", bodyRadius.toJsonValue())
             }
+
+    @ManualJsonConstructor("createCircleBP")
+    private fun circleBPDefaults(
+        @Suppress("UNUSED_PARAMETER") json: JsonValue,
+        parsed: MutableMap<String, Pair<Any?, Boolean>>
+    ) {
+        JsonDefaults.setDefault("worldBodyCenter", Vector2(), parsed)
+    }
 }
