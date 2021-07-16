@@ -14,8 +14,8 @@
       "backgroundDrawableName": "moveTouchpadBackground",
       "knobDrawableName": "moveTouchpadKnob",
       "position": [30, 30],
-      "size": [100, 100],
-      "knobSize": [20, 20]
+      "size": [108, 108],
+      "knobSize": [42, 42]
     },
     "moveButtonLeft": {
       "upDrawableName": "moveButtonLeftUp",
