@@ -11,7 +11,7 @@ class ConnectingScreen(game: ToddGame, address: SocketAddress): MenuScreen(game)
     private var disconnected = false
 
     init {
-        client.start(address)
+        client.start(game, address)
         screenActors.addActor(label("Connecting...").apply { setFillParent(true) })
     }
 

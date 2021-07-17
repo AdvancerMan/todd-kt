@@ -8,7 +8,7 @@ import com.company.todd.net.ToddBroadcastListener
 import java.net.SocketAddress
 
 class FindServerScreen(game: ToddGame) : MenuScreen(game), ToddBroadcastListener.ToddServersListener {
-    private val broadcastListener = ToddBroadcastListener(this).also { it.start() }
+    private val broadcastListener = ToddBroadcastListener(this).also { it.start(game) }
     private val servers = mutableListOf<SocketAddress>()
     private val table = Table()
 

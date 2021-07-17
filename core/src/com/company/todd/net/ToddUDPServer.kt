@@ -1,6 +1,8 @@
 package com.company.todd.net
 
+import com.company.todd.launcher.ToddGame
 import com.company.todd.util.contentEquals
+import com.company.todd.util.withExceptionHandler
 import java.io.Closeable
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -21,15 +23,19 @@ class ToddUDPServer(
     private val updates = ArrayBlockingQueue<String>(30, true)
     private var lastActiveMoment: MutableMap<SocketAddress, Long> = mutableMapOf()
 
-    fun start() {
+    fun start(game: ToddGame) {
         socket = DatagramSocket()
-        listeningThread = Thread { listen() }.also { it.start() }
+        listeningThread = Thread({ listen() }, "Todd UDP server listening thread")
+            .withExceptionHandler(game.logger)
+            .also { it.start() }
 
-        sendUpdatesThread = Thread { sendUpdates() }.also { it.start() }
+        sendUpdatesThread = Thread({ sendUpdates() }, "Todd UDP server sending thread")
+            .withExceptionHandler(game.logger)
+            .also { it.start() }
 
         broadcastServer = ToddBroadcastServer(
             (BROADCAST_PREFIX + socket!!.localPort.toString()).toByteArray(), BROADCAST_PERIOD
-        ).also { it.start() }
+        ).also { it.start(game) }
     }
 
     fun send(update: String) {

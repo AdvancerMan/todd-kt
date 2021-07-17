@@ -1,5 +1,7 @@
 package com.company.todd.net
 
+import com.company.todd.launcher.ToddGame
+import com.company.todd.util.withExceptionHandler
 import java.io.Closeable
 import java.io.IOException
 import java.net.DatagramPacket
@@ -11,9 +13,11 @@ class ToddBroadcastServer(private val message: ByteArray, private val sendPeriod
     private var socket: DatagramSocket? = null
 //    TODO @Volatile var broadcast: Boolean = true
 
-    fun start() {
+    fun start(game: ToddGame) {
         socket = DatagramSocket()
-        thread = Thread { doBroadcast() }.also { it.start() }
+        thread = Thread({ doBroadcast() }, "Todd broadcast server thread")
+            .withExceptionHandler(game.logger)
+            .also { it.start() }
     }
 
     private fun doBroadcast() {

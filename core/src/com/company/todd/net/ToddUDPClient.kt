@@ -1,6 +1,8 @@
 package com.company.todd.net
 
+import com.company.todd.launcher.ToddGame
 import com.company.todd.util.contentEquals
+import com.company.todd.util.withExceptionHandler
 import java.io.Closeable
 import java.lang.IllegalStateException
 import java.net.DatagramPacket
@@ -19,14 +21,20 @@ class ToddUDPClient(@Volatile var updatesListener: ClientUpdatesListener) : Clos
     private var pingThread: Thread? = null
     private var pingSocket: DatagramSocket? = null
 
-    fun start(serverAddress: SocketAddress) {
+    fun start(game: ToddGame, serverAddress: SocketAddress) {
         socket = DatagramSocket()
         if (connect(serverAddress)) {
-            listeningThread = Thread { listenUpdates() }.also { it.start() }
-            sendingThread = Thread { sendUpdates(serverAddress) }.also { it.start() }
+            listeningThread = Thread({ listenUpdates() }, "Todd UDP client listening thread")
+                .withExceptionHandler(game.logger)
+                .also { it.start() }
+            sendingThread = Thread({ sendUpdates(serverAddress) }, "Todd UDP client sending thread")
+                .withExceptionHandler(game.logger)
+                .also { it.start() }
 
             pingSocket = DatagramSocket()
-            pingThread = Thread { pingServer(serverAddress) }.also { it.start() }
+            pingThread = Thread({ pingServer(serverAddress) }, "Todd UDP client ping thread")
+                .withExceptionHandler(game.logger)
+                .also { it.start() }
         } else {
             socket!!.close()
         }

@@ -9,7 +9,8 @@ import java.time.Instant
 import java.util.*
 import kotlin.random.Random
 
-class FileLogger(fileName: String, private val innerLogger: ApplicationLogger? = null) : ApplicationLogger, Disposable {
+class FileLogger(fileName: String, private val innerLogger: ApplicationLogger? = null)
+    : MyApplicationLogger, Disposable {
     private val printer = PrintWriter(Gdx.files.local(fileName).writer(false, Charsets.UTF_8.toString()))
 
     @Suppress("SimpleDateFormat")
@@ -59,5 +60,9 @@ class FileLogger(fileName: String, private val innerLogger: ApplicationLogger? =
 
     override fun dispose() {
         printer.close()
+    }
+
+    override fun uncaughtException(thread: Thread, throwable: Throwable) {
+        error("UncaughtException", "Unexpected error occurred in thread ${thread.name}", throwable)
     }
 }

@@ -91,7 +91,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
         super.update(delta)
 
         if (!started) {
-            server.start()
+            server.start(game)
             started = true
         }
 

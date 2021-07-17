@@ -71,3 +71,17 @@ inline fun <T> MutableIterable<T>.removeWhile(predicate: (T) -> Boolean): List<T
     }
     return result
 }
+
+fun Thread.withExceptionHandler(handler: Thread.UncaughtExceptionHandler): Thread {
+    val previousHandler = uncaughtExceptionHandler
+    uncaughtExceptionHandler = previousHandler?.let {
+        Thread.UncaughtExceptionHandler { thread, throwable ->
+            try {
+                it.uncaughtException(thread, throwable)
+            } finally {
+                handler.uncaughtException(thread, throwable)
+            }
+        }
+    } ?: handler
+    return this
+}

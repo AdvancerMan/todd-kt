@@ -1,6 +1,8 @@
 package com.company.todd.net
 
 import com.badlogic.gdx.Gdx
+import com.company.todd.launcher.ToddGame
+import com.company.todd.util.withExceptionHandler
 import java.io.Closeable
 import java.io.IOException
 import java.lang.NumberFormatException
@@ -12,9 +14,11 @@ class ToddBroadcastListener(private val listener: ToddServersListener) : Closeab
     @Volatile
     private var closed = false
 
-    fun start() {
+    fun start(game: ToddGame) {
         socket = DatagramSocket(ToddBroadcastServer.BROADCAST_PORT)
-        thread = Thread { run() }.also { it.start() }
+        thread = Thread({ run() }, "Todd broadcast listener thread")
+            .withExceptionHandler(game.logger)
+            .also { it.start() }
     }
 
     private fun run() {
