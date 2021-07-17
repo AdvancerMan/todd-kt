@@ -6,9 +6,10 @@ import com.badlogic.gdx.utils.JsonValue
 import com.badlogic.gdx.utils.JsonWriter
 import com.badlogic.gdx.utils.SerializationException
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.creature.Player
 import com.company.todd.objects.passive.Level
 import com.company.todd.json.JsonUpdateSerializable
+import com.company.todd.json.deserialization.jsonSettings
+import com.company.todd.json.deserialization.parseInGameObject
 import com.company.todd.json.deserialization.updateFromJson
 import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.json.serialization.toJsonUpdates
@@ -26,7 +27,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     private val server = ToddUDPServer(this, info.toByteArray())
     private var started = false
     private val incomingUpdates = mutableListOf<Pair<SocketAddress, ClientGameScreen.Action>>()
-    private val connectedPlayers = mutableMapOf<SocketAddress, Pair<Player, ScheduledThinker>>()
+    private val connectedPlayers = mutableMapOf<SocketAddress, Pair<Creature, ScheduledThinker>>()
 
     private val actionsToSend = mutableListOf<Action>()
     private val addedObjectsToSend = mutableListOf<InGameObject>()
@@ -61,7 +62,8 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     @Synchronized
     override fun getOnConnectInfo(socketAddress: SocketAddress): String {
         val thinker = ScheduledThinker()
-        val newPlayer = Player(game, thinker)
+        val newPlayer = parseInGameObject(jsonSettings["tmp_player"])(game) as Creature
+        newPlayer.thinker = thinker
         val id = newPlayer.id
 
         addObject(newPlayer)

@@ -70,7 +70,9 @@ private fun getSchema(clazz: KClass<*>, annotations: Array<out KClass<*>>): (Any
             if (JsonFullSerializable::class in annotations) {
                 obj.serializeFull(result)
             }
-            obj.serializeUpdates(result)
+            if (JsonUpdateSerializable::class in annotations) {
+                obj.serializeUpdates(result)
+            }
         }
 
         result
@@ -85,3 +87,6 @@ fun Any.toJsonFull() =
 
 fun Any.toJsonUpdates() =
     toJson(this, JsonUpdateSerializable::class)
+
+fun Any.toJsonPrimitive() =
+    toJson(this)

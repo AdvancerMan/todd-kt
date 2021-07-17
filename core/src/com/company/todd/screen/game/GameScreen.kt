@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.ToddGame
-import com.company.todd.objects.creature.Player
 import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
@@ -17,9 +16,7 @@ import com.company.todd.objects.passive.Level
 import com.company.todd.box2d.MyContactListener
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.ManuallyJsonSerializable
-import com.company.todd.json.deserialization.get
-import com.company.todd.json.deserialization.updateFromJson
-import com.company.todd.json.deserialization.vector
+import com.company.todd.json.deserialization.*
 import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.json.serialization.toJsonSave
 import com.company.todd.json.serialization.toJsonUpdates
@@ -37,7 +34,11 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
     protected val playerThinker = PlayerThinker(game)
     protected val justAddedObjects = mutableListOf<InGameObject>()
     protected val justDestroyedObjects = mutableSetOf<InGameObject>()
-    val player = Player(game, playerThinker)
+    val player = parseInGameObject(jsonSettings["tmp_player"])(game).also {
+        if (it is Creature) {
+            it.thinker = playerThinker
+        }
+    }
 
     init {
         level?.create(game)?.forEach { addObject(it) }
