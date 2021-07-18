@@ -41,8 +41,8 @@ private object AnimationOrders {
             it.then(stay) { o, _ -> o.isOnGround }
         }
 
-        jump.then(preFall) { o, _ -> o.getVelocity().y <= 0 }
-        preFall.then(fall) { o, _ -> o.isAnimationFinished() }
+        jump.then(preFall) { o, _ -> o.body.getVelocity().y <= 0 }
+        preFall.then(fall) { o, _ -> o.drawable.isAnimationFinished() }
     }
 }
 

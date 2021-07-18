@@ -23,8 +23,8 @@ class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name ==
             debugDraw()
         }
 
-        if (player.initialized && player.getCenter().y < -200f) {
-            player.setPosition(0f, 0f, true)
+        if (player.initialized && player.body.getCenter().y < -200f) {
+            player.body.setPosition(0f, 0f)
         }
     }
 

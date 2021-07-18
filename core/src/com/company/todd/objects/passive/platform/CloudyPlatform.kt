@@ -38,7 +38,7 @@ class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2
 
     override fun postAct(delta: Float) {
         super.postAct(delta)
-        setActive(sinceContact <= sinceContactTillInactive || sinceContact >= sinceContactTillActive)
+        body.setActive(sinceContact <= sinceContactTillInactive || sinceContact >= sinceContactTillActive)
     }
 
     override fun postSolve(otherSensor: Sensor, other: InGameObject, myFixture: Fixture,

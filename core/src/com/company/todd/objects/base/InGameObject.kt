@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Align
@@ -14,8 +13,6 @@ import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.MyDrawable
-import com.company.todd.asset.texture.MyDrawableI
-import com.company.todd.asset.texture.TextureManager
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
@@ -26,12 +23,12 @@ private var maxID = 0
 
 private fun getNewID() = maxID++
 
-abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawable,
-                            drawableSize: Vector2?, @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
+abstract class InGameObject(protected val game: ToddGame,
+                            val drawable: MyDrawable, drawableSize: Vector2?,
+                            @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
+                            // TODO what if static body wrapper?
                             @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper) :
-    // TODO remove inheritance of BodyWrapper and MyDrawableI, make body and drawable public
-    Group(), Disposable, Sensor, BodyWrapper by body, MyDrawableI by drawable,
-    TopGroundListener, ManuallyJsonSerializable {
+    Group(), Disposable, Sensor, TopGroundListener, ManuallyJsonSerializable {
     // before init() it is drawableLowerLeftCornerOffset
     private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy()
     @JsonUpdateSerializable
@@ -62,20 +59,20 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
         body.init(gameScreen)
         body.setOwner(this)
 
-        val aabb = getUnrotatedAABB()
+        val aabb = body.getUnrotatedAABB()
         if (width < 0 && height < 0) {
             setSize(aabb.width, aabb.height)
         }
         drawableCenterOffset
                 .sub(aabb.width / 2, aabb.height / 2)
                 .add(width / 2, height / 2)
-        getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
+        body.getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
 
         setScale(1f)
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
     }
 
-    final override fun init(gameScreen: GameScreen) {
+    fun init(gameScreen: GameScreen) {
         if (!initialized) {
             initialized = true
             doInit(gameScreen)
@@ -92,7 +89,7 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
     }
 
     open fun postAct(delta: Float) {
-        val newPosition = getCenter().add(drawableCenterOffset)
+        val newPosition = body.getCenter().add(drawableCenterOffset)
         if (!isDirectedToRight) {
             newPosition.x -= drawableCenterOffset.x * 2
         }
@@ -132,21 +129,6 @@ abstract class InGameObject(protected val game: ToddGame, val drawable: MyDrawab
             screen.destroyBody(body)
         }
         drawable.dispose(game.textureManager)
-    }
-
-    // update from MyDrawable interface
-    final override fun update(delta: Float) {
-        Gdx.app.error("IGO", "To update IGO act(Float) should be called")
-    }
-
-    // dispose from MyDrawable interface
-    final override fun dispose(manager: TextureManager) {
-        Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
-    }
-
-    // destroy from BodyWrapper interface
-    final override fun destroy(world: World) {
-        Gdx.app.error("IGO", "To free IGO native resources dispose() should be called")
     }
 
     @JsonFullSerializable("drawableSize")

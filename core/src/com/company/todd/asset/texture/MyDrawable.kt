@@ -9,7 +9,17 @@ interface DisposableByManager {
     fun dispose(manager: TextureManager)
 }
 
-interface MyDrawableI : DisposableByManager {
+interface FlipTransformDrawable : TransformDrawable {
+    fun draw(
+            batch: Batch, x: Float, y: Float,
+            originX: Float, originY: Float,
+            width: Float, height: Float,
+            scaleX: Float, scaleY: Float, rotation: Float,
+            flipX: Boolean, flipY: Boolean
+    )
+}
+
+interface MyDrawable : FlipTransformDrawable, DisposableByManager {
     @JsonFullSerializable
     var drawableName: String?
 
@@ -21,15 +31,3 @@ interface MyDrawableI : DisposableByManager {
     fun getPlayingType(): AnimationType = AnimationType.STAY
     fun isAnimationFinished() = true
 }
-
-interface FlipTransformDrawable : TransformDrawable {
-    fun draw(
-            batch: Batch, x: Float, y: Float,
-            originX: Float, originY: Float,
-            width: Float, height: Float,
-            scaleX: Float, scaleY: Float, rotation: Float,
-            flipX: Boolean, flipY: Boolean
-    )
-}
-
-interface MyDrawable : FlipTransformDrawable, MyDrawableI

@@ -18,6 +18,6 @@ class Jumper(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
         HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
-        other.setYVelocity(pushPower)
+        other.body.setYVelocity(pushPower)
     }
 }

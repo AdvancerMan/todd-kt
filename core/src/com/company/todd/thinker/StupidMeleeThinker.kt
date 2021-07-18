@@ -19,8 +19,8 @@ class StupidMeleeThinker(
             operatedObject.attack()
         }
 
-        val myAABB = operatedObject.getAABB()
-        val targetAABB = screen.player.getAABB()
+        val myAABB = operatedObject.body.getAABB()
+        val targetAABB = screen.player.body.getAABB()
 
         if (targetAABB.x - myAABB.x - myAABB.width > maxDistanceFromTarget) {
             operatedObject.isDirectedToRight = true

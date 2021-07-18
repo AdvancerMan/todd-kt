@@ -25,7 +25,7 @@ class Travolator(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
         val impulseMap = if (pushPower > 0) objectToTravolatorPositiveImpulse else objectToTravolatorNegativeImpulse
         val impulse = impulseMap[other] ?: 0f
         if (abs(impulse) < abs(pushPower)) {
-            other.applyLinearImpulseToCenter(Vector2(pushPower - impulse, 0f))
+            other.body.applyLinearImpulseToCenter(Vector2(pushPower - impulse, 0f))
             impulseMap[other] = pushPower
         }
     }

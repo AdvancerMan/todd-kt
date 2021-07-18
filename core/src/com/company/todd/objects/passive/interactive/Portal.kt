@@ -29,7 +29,8 @@ class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
     override fun act(delta: Float) {
         timeSinceCreation += delta
         while (delayedObjects.notEmpty() && delayedObjects.first().second < timeSinceCreation) {
-            delayedObjects.removeFirst().first.setPosition(teleportTo.x, teleportTo.y, false)
+            delayedObjects.removeFirst().first.body
+                .setPosition(teleportTo.x, teleportTo.y, false)
         }
         super.act(delta)
     }

@@ -24,8 +24,7 @@ open class Bullet(
     drawableSize: Vector2?, bodyLowerLeftCornerOffset: Vector2,
     bodyPattern: BodyPattern,
     @JsonFullSerializable protected val power: Float,
-    // TODO change to velocity
-    @JsonFullSerializable protected val tmp_velocity: Vector2,
+    @JsonFullSerializable protected val velocity: Vector2,
     @JsonFullSerializable protected val ownerFriendlyPeriod: Float,
     // TODO serialize igo???
     @JsonFullSerializable protected val owner: InGameObject?
@@ -35,13 +34,13 @@ open class Bullet(
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         body.setBullet(true)
-        body.setAngle(tmp_velocity.angleRad())
+        body.setAngle(velocity.angleRad())
     }
 
     override fun act(delta: Float) {
         super.act(delta)
         sinceCreation += delta
-        body.setVelocity(tmp_velocity.cpy())
+        body.setVelocity(velocity.cpy())
     }
 
     override fun beginContact(

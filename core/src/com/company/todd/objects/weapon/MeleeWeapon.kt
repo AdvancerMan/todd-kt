@@ -22,7 +22,7 @@ abstract class MeleeWeapon(
         val attacked = mutableSetOf<InGameObject>()
         worldAABBFor(Rectangle(attackAABB)).let { aabb ->
             if (!owner.isDirectedToRight) {
-                aabb.setPosition(aabb.x - aabb.width - owner.getAABB().width, aabb.y)
+                aabb.setPosition(aabb.x - aabb.width - owner.body.getAABB().width, aabb.y)
             }
 
             screen.queryAABB(aabb.x, aabb.y, aabb.x + aabb.width, aabb.y + aabb.height) {

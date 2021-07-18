@@ -46,7 +46,7 @@ open class Creature(
     @JsonUpdateSerializable
     private var sinceDamage = DAMAGE_TINT_TIME + 1
     var isOnGround = false
-        get() = field && getVelocity().y <= Y_VEL_JUMP_THRESHOLD && sinceJump >= JUMP_COOLDOWN
+        get() = field && body.getVelocity().y <= Y_VEL_JUMP_THRESHOLD && sinceJump >= JUMP_COOLDOWN
         private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()
@@ -124,7 +124,7 @@ open class Creature(
     override fun postAct(delta: Float) {
         super.postAct(delta)
         animationTypeNow = animationTypeNow.next(this, preferredAnimationType)
-        setPlayingType(animationTypeNow.type)
+        drawable.setPlayingType(animationTypeNow.type)
     }
 
     fun jump() {
@@ -141,7 +141,7 @@ open class Creature(
     }
 
     fun run(toRight: Boolean) {
-        if (getPlayingType() != AnimationType.JUMP) {
+        if (drawable.getPlayingType() != AnimationType.JUMP) {
             preferredAnimationType = AnimationType.RUN
         }
         preVelocity.x += if (toRight) speed else -speed
@@ -154,11 +154,11 @@ open class Creature(
     }
 
     protected fun updateXVelocity() {
-        applyLinearImpulseToCenter(Vector2(preVelocity.x - getVelocity().x, 0f))
+        body.applyLinearImpulseToCenter(Vector2(preVelocity.x - body.getVelocity().x, 0f))
     }
 
     protected fun updateYVelocity() {
-        setYVelocity(preVelocity.y)
+        body.setYVelocity(preVelocity.y)
     }
 
     fun canAttack() = weapon?.canAttack() ?: false

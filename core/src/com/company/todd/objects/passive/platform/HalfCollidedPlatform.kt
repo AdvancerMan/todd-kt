@@ -50,13 +50,18 @@ open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable,
 
     protected open fun isGroundInContact(otherSensor: Sensor, other: InGameObject, myFixture: Fixture,
                                          otherFixture: Fixture, contact: Contact, oldManifold: Manifold) =
-            other.getVelocity().y <= Y_VEL_JUMP_THRESHOLD
+            other.body.getVelocity().y <= Y_VEL_JUMP_THRESHOLD
                     && (groundFor.containsKey(other)
                     || contact.worldManifold.numberOfContactPoints == 2
                     && contact.worldManifold.points
                     .all { myFixture.testPoint(it) }
                     && contact.worldManifold.points
-                    .map { it.cpy().sub(0f, other.getVelocity().y.toMeters() * SPF * HALF_COL_GROUND_VEL_SCL) }
+                    .map {
+                        it.cpy().sub(
+                            0f,
+                            other.body.getVelocity().y.toMeters() * SPF * HALF_COL_GROUND_VEL_SCL
+                        )
+                    }
                     .all { !myFixture.testPoint(it) })
 
     protected open fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {}
