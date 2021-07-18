@@ -4,16 +4,22 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.WithZIndex
+import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.ManuallyJsonSerializable
 import com.company.todd.json.deserialization.updateFromJson
 import com.company.todd.json.serialization.toJsonFull
 import com.company.todd.json.serialization.toJsonSave
 import com.company.todd.json.serialization.toJsonUpdates
 
-class DrawableActor : Actor(), ManuallyJsonSerializable {
+class DrawableActor : Actor(), ManuallyJsonSerializable, WithZIndex {
     var flipX: Boolean = false
     var flipY: Boolean = false
     var drawable: MyDrawable? = null
+
+    @JsonFullSerializable("zIndex")
+    override val myZIndex: Int
+        get() = drawable!!.myZIndex
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         val batchColor = batch.color.cpy()

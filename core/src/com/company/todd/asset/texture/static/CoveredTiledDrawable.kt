@@ -13,7 +13,7 @@ class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo?,
                            coverTile: TextureRegion, bodyTile: TextureRegion) :
         BaseDrawable(), MyDrawable {
     override var drawableName: String? = null
-    override var zIndex: Int = 0
+    override var myZIndex: Int = 0
 
     constructor(info: CoveredTiledRegionInfo?, region: TextureRegion, uh: Int) :
             this(

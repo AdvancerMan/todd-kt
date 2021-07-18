@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Pools
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.WithZIndex
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
@@ -129,14 +130,13 @@ abstract class InGameObject(
     }
 
     override fun addActor(actor: Actor) {
-        if (actor !is DrawableActor) {
+        if (actor !is WithZIndex) {
             super.addActor(actor)
             return
         }
 
-        val actorDrawable = actor.drawable!!
         val nextActor = children.firstOrNull {
-            it is DrawableActor && it.drawable!!.zIndex > actorDrawable.zIndex
+            it is WithZIndex && it.myZIndex > actor.myZIndex
         }
         if (nextActor == null) {
             super.addActor(actor)

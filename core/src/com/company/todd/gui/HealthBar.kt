@@ -5,10 +5,8 @@ import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.DisposableByManager
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
-import com.company.todd.json.JsonFullSerializable
-import com.company.todd.json.JsonUpdateSerializable
-import com.company.todd.json.ManuallyJsonSerializable
-import com.company.todd.json.SerializationType
+import com.company.todd.asset.texture.WithZIndex
+import com.company.todd.json.*
 import com.company.todd.json.deserialization.float
 import com.company.todd.json.deserialization.get
 import com.company.todd.json.serialization.toJsonValue
@@ -16,7 +14,8 @@ import com.company.todd.json.serialization.toJsonValue
 @SerializationType("healthBar")
 class HealthBar(
         maxHealth: Float, private val background: MyDrawable,
-        private val healthDrawable: MyDrawable
+        private val healthDrawable: MyDrawable,
+        @JsonFullSerializable("zIndex") override val myZIndex: Int
 ) :
         ProgressBar(
                 0f, maxHealth, STEP_SIZE, false,
@@ -24,7 +23,7 @@ class HealthBar(
                     this.background = background
                     this.knobBefore = healthDrawable
                 }
-        ), DisposableByManager, ManuallyJsonSerializable {
+        ), DisposableByManager, ManuallyJsonSerializable, WithZIndex {
     init {
         background.minHeight = 10f
         background.minWidth = 0f
@@ -51,7 +50,6 @@ class HealthBar(
     @JsonFullSerializable("healthDrawableName")
     private fun getHealthDrawableName() = healthDrawable.drawableName
 
-
     override fun serializeUpdates(json: JsonValue) {
         json.addChild("maxHealth", maxValue.toJsonValue())
         json.addChild("value", value.toJsonValue())
@@ -73,5 +71,13 @@ class HealthBar(
     companion object {
         const val ANIMATE_DURATION = 0.1f
         const val STEP_SIZE = 0.1f
+
+        @ManualJsonConstructor
+        fun getJsonConstructorDefaults(
+            @Suppress("UNUSED_PARAMETER") json: JsonValue,
+            parsed: MutableMap<String, Pair<Any?, Boolean>>
+        ) {
+            JsonDefaults.setDefault("zIndex", 0, parsed)
+        }
     }
 }

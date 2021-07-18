@@ -11,7 +11,7 @@ import kotlin.math.ceil
 
 class TransformTiledDrawable(private val info: TiledRegionInfo?, region: TextureRegion) : TiledDrawable(region), MyDrawable {
     override var drawableName: String? = null
-    override var zIndex: Int = 0
+    override var myZIndex: Int = 0
     private val temp: Color = Color()
 
     /**

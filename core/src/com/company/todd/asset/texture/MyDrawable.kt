@@ -19,11 +19,12 @@ interface FlipTransformDrawable : TransformDrawable {
     )
 }
 
-interface MyDrawable : FlipTransformDrawable, DisposableByManager {
+interface MyDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex {
     @JsonFullSerializable
     var drawableName: String?
+
     @JsonFullSerializable
-    var zIndex: Int
+    override var myZIndex: Int
 
     fun update(delta: Float) {}
 

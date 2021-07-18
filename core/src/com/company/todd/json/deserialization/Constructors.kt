@@ -39,7 +39,7 @@ private fun getFromJson(
                             null
                         } else {
                             game.textureManager.loadDrawable(it["name", string]).apply {
-                                zIndex = it["zIndex", int, game, 0]
+                                myZIndex = it["zIndex", int, game, 0]
                             }
                         }
                     }
