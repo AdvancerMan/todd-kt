@@ -22,6 +22,8 @@ interface FlipTransformDrawable : TransformDrawable {
 interface MyDrawable : FlipTransformDrawable, DisposableByManager {
     @JsonFullSerializable
     var drawableName: String?
+    @JsonFullSerializable
+    var zIndex: Int
 
     fun update(delta: Float) {}
 

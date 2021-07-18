@@ -125,6 +125,7 @@ open class Creature(
         super.postAct(delta)
         animationTypeNow = animationTypeNow.next(this, preferredAnimationType)
         drawable.setPlayingType(animationTypeNow.type)
+        weapon?.postUpdate(delta)
     }
 
     fun jump() {

@@ -1,6 +1,5 @@
 package com.company.todd.objects.base
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
@@ -10,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.JsonValue
+import com.badlogic.gdx.utils.Pools
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.MyDrawable
@@ -23,21 +23,34 @@ private var maxID = 0
 
 private fun getNewID() = maxID++
 
-abstract class InGameObject(protected val game: ToddGame,
-                            val drawable: MyDrawable, drawableSize: Vector2?,
-                            @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
-                            // TODO what if static body wrapper?
-                            @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper) :
-    Group(), Disposable, Sensor, TopGroundListener, ManuallyJsonSerializable {
+abstract class InGameObject(
+    protected val game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
+    @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
+    // TODO what if static body wrapper?
+    @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper
+) : Group(), Disposable, Sensor, TopGroundListener, ManuallyJsonSerializable {
+    private val drawableActor: DrawableActor = drawable.toDrawableActor().apply {
+        this.setPosition(0f, 0f)
+    }
+
+    @JsonFullSerializable
+    val drawable: MyDrawable
+        get() = drawableActor.drawable!!
+
     // before init() it is drawableLowerLeftCornerOffset
     private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy()
+
     @JsonUpdateSerializable
     var id: Int = getNewID()
+
     var initialized = false
         private set
+
     protected lateinit var screen: GameScreen
+
     var alive = true
         private set
+
     @JsonUpdateSerializable
     var isDirectedToRight = true
 
@@ -70,6 +83,8 @@ abstract class InGameObject(protected val game: ToddGame,
 
         setScale(1f)
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
+
+        addActor(drawableActor)
     }
 
     fun init(gameScreen: GameScreen) {
@@ -80,13 +95,14 @@ abstract class InGameObject(protected val game: ToddGame,
     }
 
     override fun act(delta: Float) {
-        drawable.update(delta)
+        children.filterIsInstance<DrawableActor>().forEach { it.drawable!!.update(delta) }
         super.act(delta)
     }
 
     open fun updateColor() {
         color.set(1f, 1f, 1f, 1f)
     }
+
 
     open fun postAct(delta: Float) {
         val newPosition = body.getCenter().add(drawableCenterOffset)
@@ -101,16 +117,37 @@ abstract class InGameObject(protected val game: ToddGame,
 
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
         updateColor()
+
+        drawableActor.flipX = !isDirectedToRight
+        drawableActor.flipY = false
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         if (getActorAABB().overlaps(screen.getCameraAABB())) {
-            val batchColor = batch.color.cpy()
-            batch.color = batch.color.mul(color).apply { a *= parentAlpha }
-            drawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, !isDirectedToRight, false)
-            batch.color = batchColor
-            super.draw(batch, parentAlpha)
+            super.draw(batch, parentAlpha * color.a)
         }
+    }
+
+    override fun addActor(actor: Actor) {
+        if (actor !is DrawableActor) {
+            super.addActor(actor)
+            return
+        }
+
+        val actorDrawable = actor.drawable!!
+        val nextActor = children.firstOrNull {
+            it is DrawableActor && it.drawable!!.zIndex > actorDrawable.zIndex
+        }
+        if (nextActor == null) {
+            super.addActor(actor)
+        } else {
+            addActorBefore(nextActor, actor)
+        }
+    }
+
+    override fun setSize(width: Float, height: Float) {
+        super.setSize(width, height)
+        drawableActor.setSize(width, height)
     }
 
     open fun takeDamage(amount: Float) {}
@@ -129,10 +166,12 @@ abstract class InGameObject(protected val game: ToddGame,
             screen.destroyBody(body)
         }
         drawable.dispose(game.textureManager)
+        drawableActor.drawable = null
+        Pools.free(drawableActor)
     }
 
     @JsonFullSerializable("drawableSize")
-    private fun getActorDrawableSize(): Vector2 {
+    private fun getDrawableActorSize(): Vector2 {
         return Vector2(width, height)
     }
 
@@ -179,3 +218,6 @@ fun Actor.worldAABBFor(rectangle: Rectangle) =
                     .also { set(it[0].x, it[0].y, 0f, 0f) }
                     .fold(this) { r, v -> r.merge(v) }
         }
+
+fun MyDrawable.toDrawableActor() =
+    Pools.obtain(DrawableActor::class.java)!!.also { it.drawable = this }

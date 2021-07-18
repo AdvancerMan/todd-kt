@@ -1,8 +1,8 @@
 package com.company.todd.objects.weapon
 
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.JsonValue
+import com.badlogic.gdx.utils.Pools
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.DisposableByManager
@@ -10,15 +10,17 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.json.*
+import com.company.todd.objects.base.toDrawableActor
 
 abstract class HandWeapon(
     @JsonFullSerializable protected val handWeaponStyle: Style,
     @JsonFullSerializable protected val cooldown: Float,
     @JsonFullSerializable protected val sinceAttackTillDamage: Float
-) :
-        Weapon(), DisposableByManager {
+) : Weapon(), DisposableByManager {
     protected lateinit var owner: InGameObject
     protected lateinit var screen: GameScreen
+    private val handDrawableActor = handWeaponStyle.handDrawable?.toDrawableActor()
+    private val weaponDrawableActor = handWeaponStyle.weaponDrawable?.toDrawableActor()
 
     @JsonUpdateSerializable
     protected var sinceAttack = cooldown
@@ -28,14 +30,8 @@ abstract class HandWeapon(
         super.init(owner, screen)
         this.owner = owner
         this.screen = screen
-        updatePositionAndOrigin()
-    }
-
-    private fun updatePositionAndOrigin() {
-        x = owner.width / 2
-        y = 0f
-        originX = handWeaponStyle.origin.x - x
-        originY = handWeaponStyle.origin.y - y
+        handDrawableActor?.let { owner.addActor(it) }
+        weaponDrawableActor?.let { owner.addActor(it) }
     }
 
     override fun act(delta: Float) {
@@ -48,46 +44,41 @@ abstract class HandWeapon(
 
         listOf(handWeaponStyle.handDrawable, handWeaponStyle.weaponDrawable).forEach { drawable ->
             drawable?.apply {
-                update(delta)
                 if (getPlayingType() == AnimationType.ACTION && isAnimationFinished()) {
                     setPlayingType(AnimationType.STAY)
                 }
             }
         }
-        updatePositionAndOrigin()
     }
 
-    protected fun getDrawablePosition(ownerOffset: Vector2) =
-        ownerOffset.sub(x, y).scl(if (owner.isDirectedToRight) 1f else -1f, 1f).add(x, y)
+    protected fun getDrawablePosition(ownerOffset: Vector2, drawableWidth: Float) =
+        ownerOffset.sub(owner.width / 2, 0f)
+            .scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
+            .sub(if (owner.isDirectedToRight) 0f else drawableWidth, 0f)
+            .add(owner.width / 2, 0f)!!
 
-    override fun draw(batch: Batch, parentAlpha: Float) {
-        val batchAlpha = batch.color.a
-        batch.color = batch.color.apply { a *= parentAlpha }
 
-        val handPos = handWeaponStyle.handPosition.cpy()
-        val weaponPos = handWeaponStyle.weaponPosition.cpy()
+    override fun postUpdate(delta: Float) {
+        listOf(
+            Triple(handWeaponStyle.handPosition, handWeaponStyle.handSize, handDrawableActor),
+            Triple(handWeaponStyle.weaponPosition, handWeaponStyle.weaponSize, weaponDrawableActor)
+        ).forEach { (pos, size, nullableActor) ->
+            nullableActor?.let { actor ->
+                val newPos = getDrawablePosition(pos.cpy(), size.x)
+                actor.setSize(size.x, size.y)
+                actor.setPosition(newPos.x, newPos.y)
 
-        val origin = Vector2(originX, originY).scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
-        listOf(handPos, weaponPos).forEach { getDrawablePosition(it) }
+                val origin = Vector2(
+                    handWeaponStyle.origin.x - owner.width / 2, handWeaponStyle.origin.y
+                ).scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
+                actor.setOrigin(origin.x, origin.y)
 
-        if (!owner.isDirectedToRight) {
-            if (handWeaponStyle.handDrawable != null) {
-                handPos.sub(handWeaponStyle.handDrawable.minWidth, 0f)
-            }
-            if (handWeaponStyle.weaponDrawable != null) {
-                weaponPos.sub(handWeaponStyle.weaponDrawable.minWidth, 0f)
+                actor.setScale(scaleX, scaleY)
+                actor.rotation = rotation
+                actor.flipX = !owner.isDirectedToRight
+                actor.flipY = false
             }
         }
-
-        handWeaponStyle.handDrawable?.draw(batch, handPos.x, handPos.y, origin.x, origin.y,
-                handWeaponStyle.handDrawable.minWidth, handWeaponStyle.handDrawable.minHeight,
-                scaleX, scaleY, rotation, !owner.isDirectedToRight, false)
-
-        handWeaponStyle.weaponDrawable?.draw(batch, weaponPos.x, weaponPos.y, origin.x, origin.y,
-                handWeaponStyle.weaponDrawable.minWidth, handWeaponStyle.weaponDrawable.minHeight,
-                scaleX, scaleY, rotation, !owner.isDirectedToRight, false)
-
-        batch.color = batch.color.apply { a = batchAlpha }
     }
 
     abstract fun doAttack()
@@ -107,15 +98,23 @@ abstract class HandWeapon(
     final override fun canAttack() = sinceAttack >= cooldown
 
     override fun dispose(manager: TextureManager) {
-        handWeaponStyle.weaponDrawable?.dispose(manager)
-        handWeaponStyle.handDrawable?.dispose(manager)
+        listOf(handDrawableActor, weaponDrawableActor).forEach { actor ->
+            actor?.let {
+                it.drawable!!.dispose(manager)
+                it.drawable = null
+                owner.removeActor(it)
+                Pools.free(it)
+            }
+        }
     }
 
     @SerializationType("handWeaponStyle")
     class Style(
         val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
         @JsonFullSerializable val handPosition: Vector2,
+        @JsonFullSerializable val handSize: Vector2,
         @JsonFullSerializable val weaponPosition: Vector2,
+        @JsonFullSerializable val weaponSize: Vector2,
         @JsonFullSerializable val origin: Vector2
     ) {
         @JsonFullSerializable
@@ -136,6 +135,8 @@ abstract class HandWeapon(
                 JsonDefaults.setDefault("weaponDrawable", null, parsed)
                 JsonDefaults.setDefault("handPosition", Vector2(), parsed)
                 JsonDefaults.setDefault("weaponPosition", Vector2(), parsed)
+                JsonDefaults.setDefault("handSize", Vector2(), parsed)
+                JsonDefaults.setDefault("weaponSize", Vector2(), parsed)
                 JsonDefaults.setDefault("origin", Vector2(), parsed)
             }
         }

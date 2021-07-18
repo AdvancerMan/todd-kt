@@ -10,6 +10,7 @@ import com.company.todd.asset.texture.TextureManager
 open class MyTextureRegionDrawable(private val info: RegionInfo?, region: TextureRegion) :
         TextureRegionDrawable(region), MyDrawable {
     override var drawableName: String? = null
+    override var zIndex: Int = 0
 
     override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float, flipX: Boolean, flipY: Boolean) {
         batch.draw(

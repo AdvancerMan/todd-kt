@@ -24,14 +24,27 @@ private fun getFromJson(
         // TODO drawable resource leak on exception
         clazz.isSubclassOf(MyDrawable::class) -> {
             val lowerName = name.lowercase()
-            val jsonName = when {
+            val jsonDrawableName = when {
                 lowerName.endsWith("drawablename") -> name
                 lowerName.endsWith("drawable") -> name + "Name"
                 else -> name + "DrawableName"
             }
-            json[jsonName]?.let {
-                if (it.isNull) null else game.textureManager.loadDrawable(it.asString()) to true
-            } ?: null to false
+            val jsonDrawableObject = jsonDrawableName.substring(0, jsonDrawableName.length - 4)
+
+            val result = json[jsonDrawableName]?.asString()
+                ?.let { game.textureManager.loadDrawable(it) }
+                ?: json[jsonDrawableObject]
+                    ?.let { it ->
+                        if (it.isNull) {
+                            null
+                        } else {
+                            game.textureManager.loadDrawable(it["name", string]).apply {
+                                zIndex = it["zIndex", int, game, 0]
+                            }
+                        }
+                    }
+
+            result?.let { it to true } ?: null to false
         }
         clazz.isSubclassOf(BodyPattern::class) -> {
             val bodyPatternJson = jsonByName ?: json
