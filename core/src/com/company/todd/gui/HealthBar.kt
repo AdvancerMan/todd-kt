@@ -3,10 +3,7 @@ package com.company.todd.gui
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar
 import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.asset.texture.DisposableByManager
-import com.company.todd.asset.texture.MyDrawable
-import com.company.todd.asset.texture.TextureManager
-import com.company.todd.asset.texture.WithZIndex
+import com.company.todd.asset.texture.*
 import com.company.todd.json.*
 import com.company.todd.json.deserialization.float
 import com.company.todd.json.deserialization.get
@@ -28,11 +25,9 @@ class HealthBar(
                 }
         ), DisposableByManager, ManuallyJsonSerializable, WithZIndex {
     init {
-        backgroundDrawable.minWidth = backgroundDrawable.size.x
-        backgroundDrawable.minHeight = backgroundDrawable.size.y
+        backgroundDrawable.withMinSize()
+        healthDrawable.withMinSize()
         setSize(backgroundDrawable.size.x, backgroundDrawable.size.y)
-        healthDrawable.minWidth = healthDrawable.size.x
-        healthDrawable.minHeight = healthDrawable.size.y
         value = maxHealth
         setAnimateDuration(ANIMATE_DURATION)
     }

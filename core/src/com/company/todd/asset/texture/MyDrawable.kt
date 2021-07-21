@@ -41,3 +41,8 @@ interface MyDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex {
     fun getPlayingType(): AnimationType = AnimationType.STAY
     fun isAnimationFinished() = true
 }
+
+fun MyDrawable.withMinSize() = apply {
+    minWidth = size.x
+    minHeight = size.y
+}

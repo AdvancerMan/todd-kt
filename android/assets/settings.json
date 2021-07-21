@@ -42,6 +42,18 @@
       "size": [50, 50]
     }
   },
+  "menu": {
+    "button": {
+      "up": {
+        "name": "menuButtonUp",
+        "size": [300, 60]
+      },
+      "down": {
+        "name": "menuButtonDown",
+        "size": [300, 60]
+      }
+    }
+  },
   "tmp_player": {
     "type": "creature",
     "drawable": {

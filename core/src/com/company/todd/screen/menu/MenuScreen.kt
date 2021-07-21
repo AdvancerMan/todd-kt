@@ -4,23 +4,32 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.utils.JsonValue
+import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.withMinSize
+import com.company.todd.json.deserialization.jsonConstructors
+import com.company.todd.json.deserialization.jsonSettings
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.MyScreen
 
 open class MenuScreen(game: ToddGame) : MyScreen(game) {
+    private val settings = jsonSettings["menu"]
+        ?: throw IllegalArgumentException("settings.json should contain menu parameter")
+
+    @Suppress("UNCHECKED_CAST")
+    private val drawableFromJson = jsonConstructors["drawable"]!![""]!!.constructor
+            as (ToddGame, JsonValue) -> MyDrawable
+
     // TODO menu font
     private val font = BitmapFont()
 
-    // TODO load from settings
-    // not pressed, button value = false
-    private val buttonUpDrawable = game.textureManager.loadDrawable("menuButtonUp")
-    // not pressed, button value = true
-    private val buttonCheckedDrawable = game.textureManager.loadDrawable("menuButtonChecked")
-    // pressed
-    private val buttonDownDrawable = game.textureManager.loadDrawable("menuButtonDown")
+    private val buttonUpDrawable = drawableFromJson(game, settings["button"]!!["up"]!!)
+        .withMinSize()
+    private val buttonDownDrawable = drawableFromJson(game, settings["button"]!!["down"]!!)
+        .withMinSize()
 
     protected fun textButton(text: String) =
-        TextButton(text, TextButton.TextButtonStyle(buttonUpDrawable, buttonDownDrawable, buttonCheckedDrawable, font))
+        TextButton(text, TextButton.TextButtonStyle(buttonUpDrawable, buttonDownDrawable, null, font))
 
     protected fun label(text: String) =
         Label(text, Label.LabelStyle(font, Color.BLACK))
