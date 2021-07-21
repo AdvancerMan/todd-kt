@@ -40,7 +40,8 @@ object Reflection {
                     nonNullClass.declaredFunctions.find { it.hasAnnotation<ManualJsonConstructor>() }!!
                         .also { it.isAccessible = true }
                 },
-                if (json.has("parametersName")) clazz.primaryConstructor!! else null,
+                (if (json.has("parametersName")) clazz.primaryConstructor!! else null)
+                    ?.apply { isAccessible = true },
                 clazz.jvmName,
                 json["parametersName"]?.asStringArray()?.asList(),
                 json["superclass"]?.asString()?.let { loadClass(it).kotlin }
@@ -61,6 +62,7 @@ object Reflection {
             val objectInstance = clazz.objectInstance
 
             constructors.map {
+                it.isAccessible = true
                 val serializationTypeAnnotation = it.findAnnotation<SerializationType>()!!
                 SerializationTypeData(
                     serializationTypeAnnotation.category, serializationTypeAnnotation.type,

@@ -3,6 +3,7 @@ package com.company.todd.asset.texture.static
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
@@ -12,6 +13,9 @@ import kotlin.math.ceil
 class TransformTiledDrawable(private val info: TiledRegionInfo?, region: TextureRegion) : TiledDrawable(region), MyDrawable {
     override var drawableName: String? = null
     override var myZIndex: Int = 0
+    override val size = Vector2()
+    override val offset = Vector2()
+
     private val temp: Color = Color()
 
     /**

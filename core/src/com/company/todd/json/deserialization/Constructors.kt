@@ -20,38 +20,17 @@ private fun getFromJson(
 ): Pair<Any?, Boolean> {
     val jsonByName = json[name]
     return when {
-        name == "game" -> game to true
-        // TODO drawable resource leak on exception
-        clazz.isSubclassOf(MyDrawable::class) -> {
-            val lowerName = name.lowercase()
-            val jsonDrawableName = when {
-                lowerName.endsWith("drawablename") -> name
-                lowerName.endsWith("drawable") -> name + "Name"
-                else -> name + "DrawableName"
-            }
-            val jsonDrawableObject = jsonDrawableName.substring(0, jsonDrawableName.length - 4)
-
-            val result = json[jsonDrawableName]?.asString()
-                ?.let { game.textureManager.loadDrawable(it) }
-                ?: json[jsonDrawableObject]
-                    ?.let { it ->
-                        if (it.isNull) {
-                            null
-                        } else {
-                            game.textureManager.loadDrawable(it["name", string]).apply {
-                                myZIndex = it["zIndex", int, game, 0]
-                            }
-                        }
-                    }
-
-            result?.let { it to true } ?: null to false
-        }
-        clazz.isSubclassOf(BodyPattern::class) -> {
+        clazz == ToddGame::class -> game to true
+        clazz == BodyPattern::class -> {
             val bodyPatternJson = jsonByName ?: json
             // expecting name = "bodyPattern"
             parseJsonValue(game, bodyPatternJson, constructors[name]!!, "bodyPatternType") to true
         }
         jsonByName == null -> null to false
+        // TODO drawable resource leak on exception
+        clazz == MyDrawable::class -> {
+            parseJsonValue(game, jsonByName, constructors["drawable"]!!) to true
+        }
         clazz in jsonPrimitives.keys -> json[name, jsonPrimitives[clazz]!!, game] to true
         name in constructors.keys -> parseJsonValue(game, jsonByName, constructors[name]!!) to true
         else -> null to false

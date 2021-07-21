@@ -4,18 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
-import com.company.todd.asset.texture.FlipTransformDrawable
-import com.company.todd.asset.texture.MyDrawable
-import com.company.todd.asset.texture.NineTiledRegionInfo
-import com.company.todd.asset.texture.TextureManager
+import com.company.todd.asset.texture.*
 import kotlin.math.max
 
-class NineTiledDrawable(private val info: NineTiledRegionInfo?,
-                        region: TextureRegion, lw: Int, rw: Int, uh: Int, dh: Int) :
-        BaseDrawable(), MyDrawable {
-    override var drawableName: String? = null
-    override var myZIndex: Int = 0
-
+class NineTiledDrawable(
+    private val info: NineTiledRegionInfo?, region: TextureRegion,
+    lw: Int, rw: Int, uh: Int, dh: Int
+) : BaseMyDrawable() {
     constructor(info: NineTiledRegionInfo, region: TextureRegion) :
             this(info, region, info.lw, info.rw, info.uh, info.dh)
 

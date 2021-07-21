@@ -2,16 +2,14 @@ package com.company.todd.asset.texture.animated
 
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.company.todd.asset.texture.BaseMyDrawable
 import com.company.todd.asset.texture.MyDrawable
 
 enum class AnimationType {
     STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, ACTION
 }
 
-abstract class AnimatedDrawable(playingNow: Animation<MyDrawable>) : MyDrawable {
-    override var drawableName: String? = null
-    override var myZIndex: Int = 0
-
+abstract class AnimatedDrawable(playingNow: Animation<MyDrawable>) : BaseMyDrawable() {
     protected var elapsed = 0f
     protected var frame = playingNow.getKeyFrame(0f)!!
     protected var playingNow = playingNow
@@ -33,11 +31,11 @@ abstract class AnimatedDrawable(playingNow: Animation<MyDrawable>) : MyDrawable 
         frame.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, flipX, flipY)
     }
 
-    override fun draw(batch: Batch?, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float) {
+    override fun draw(batch: Batch, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, scaleX: Float, scaleY: Float, rotation: Float) {
         frame.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
     }
 
-    override fun draw(batch: Batch?, x: Float, y: Float, width: Float, height: Float) {
+    override fun draw(batch: Batch, x: Float, y: Float, width: Float, height: Float) {
         frame.draw(batch, x, y, width, height)
     }
 

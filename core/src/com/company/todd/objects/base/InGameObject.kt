@@ -19,14 +19,14 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundListener
 import com.company.todd.box2d.bodyPattern.sensor.TopGroundSensor
 import com.company.todd.json.*
+import com.company.todd.util.mirrorIf
 
 private var maxID = 0
 
 private fun getNewID() = maxID++
 
 abstract class InGameObject(
-    protected val game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
-    @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
+    protected val game: ToddGame, drawable: MyDrawable,
     // TODO what if static body wrapper?
     @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper
 ) : Group(), Disposable, Sensor, TopGroundListener, ManuallyJsonSerializable {
@@ -37,9 +37,6 @@ abstract class InGameObject(
     @JsonFullSerializable
     val drawable: MyDrawable
         get() = drawableActor.drawable!!
-
-    // before init() it is drawableLowerLeftCornerOffset
-    private val drawableCenterOffset = bodyLowerLeftCornerOffset.cpy()
 
     @JsonUpdateSerializable
     var id: Int = getNewID()
@@ -60,12 +57,7 @@ abstract class InGameObject(
         @Suppress("LeakingThis")
         body.putSensor(SensorName.TOP_GROUND_SENSOR, TopGroundSensor(this))
 
-        drawableSize?.let {
-            setSize(it.x, it.y)
-        }  ?: run {
-            width = -1f
-            height = -1f
-        }
+        setSize(drawable.size.x, drawable.size.y)
     }
 
     protected open fun doInit(gameScreen: GameScreen) {
@@ -73,18 +65,12 @@ abstract class InGameObject(
         body.init(gameScreen)
         body.setOwner(this)
 
-        val aabb = body.getUnrotatedAABB()
-        if (width < 0 && height < 0) {
+        if (width == 0f && height == 0f) {
+            val aabb = body.getUnrotatedAABB()
             setSize(aabb.width, aabb.height)
         }
-        drawableCenterOffset
-                .sub(aabb.width / 2, aabb.height / 2)
-                .add(width / 2, height / 2)
-        body.getCenter().add(drawableCenterOffset).let { setPosition(it.x, it.y, Align.center) }
 
         setScale(1f)
-        this.rotation = MathUtils.radiansToDegrees * body.getAngle()
-
         addActor(drawableActor)
     }
 
@@ -104,20 +90,21 @@ abstract class InGameObject(
         color.set(1f, 1f, 1f, 1f)
     }
 
-
     open fun postAct(delta: Float) {
-        val newPosition = body.getCenter().add(drawableCenterOffset)
-        if (!isDirectedToRight) {
-            newPosition.x -= drawableCenterOffset.x * 2
-        }
-        setPosition(newPosition.x, newPosition.y, Align.center)
+        val aabb = body.getUnrotatedAABB()
+        val centerOffset = drawable.offset.cpy()
+            .add(width / 2, height / 2)
+            .sub(aabb.width / 2, aabb.height / 2)
+            .mirrorIf(!isDirectedToRight, 0f)
+        body.getCenter().add(centerOffset).let { setPosition(it.x, it.y, Align.center) }
 
         setOrigin(Align.center)
-        originX -= drawableCenterOffset.x * if (isDirectedToRight) 1 else -1
-        originY -= drawableCenterOffset.y
+        originX -= centerOffset.x
+        originY -= centerOffset.y
 
         this.rotation = MathUtils.radiansToDegrees * body.getAngle()
         updateColor()
+        drawableActor.color = color
 
         drawableActor.flipX = !isDirectedToRight
         drawableActor.flipY = false
@@ -145,9 +132,13 @@ abstract class InGameObject(
         }
     }
 
-    override fun setSize(width: Float, height: Float) {
+    final override fun setSize(width: Float, height: Float) {
         super.setSize(width, height)
         drawableActor.setSize(width, height)
+    }
+
+    final override fun setPosition(x: Float, y: Float) {
+        super.setPosition(x, y)
     }
 
     open fun takeDamage(amount: Float) {}
@@ -170,11 +161,6 @@ abstract class InGameObject(
         Pools.free(drawableActor)
     }
 
-    @JsonFullSerializable("drawableSize")
-    private fun getDrawableActorSize(): Vector2 {
-        return Vector2(width, height)
-    }
-
     override fun deserializeUpdates(json: JsonValue) {
         // no operations
     }
@@ -189,17 +175,6 @@ abstract class InGameObject(
 
     override fun serializeSave(json: JsonValue) {
         // no operations
-    }
-
-    companion object {
-        @ManualJsonConstructor
-        fun getJsonConstructorDefaults(
-            @Suppress("UNUSED_PARAMETER") json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
-            JsonDefaults.setDefault("bodyLowerLeftCornerOffset", Vector2(), parsed)
-            JsonDefaults.setDefault("drawableSize", null, parsed)
-        }
     }
 }
 

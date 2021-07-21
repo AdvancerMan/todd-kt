@@ -4,6 +4,18 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 
+fun Vector2.mirrorIf(
+    shouldMirror: Boolean,
+    originX: Float = 0f,
+    addXIfMirrored: Float = 0f
+): Vector2 {
+    return if (!shouldMirror) {
+        this
+    } else {
+        sub(originX, 0f).scl(-1f, 1f).add(originX + addXIfMirrored, 0f)
+    }
+}
+
 fun Rectangle.scale(originX: Float, originY: Float, scaleX: Float, scaleY: Float) =
     setPosition(x - originX, y - originY)
         .set(x * scaleX, y * scaleY, width * scaleX, height * scaleY)

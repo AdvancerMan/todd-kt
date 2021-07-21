@@ -18,11 +18,10 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "portal")
-class Portal(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
-             bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+class Portal(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
              @JsonFullSerializable private val teleportTo: Vector2,
              @JsonFullSerializable private val teleportDelay: Float) :
-        PassiveObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
+        PassiveObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private val delayedObjects = Queue<Pair<InGameObject, Float>>()
     private var timeSinceCreation = 0f
 

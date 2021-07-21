@@ -11,6 +11,7 @@ open class MenuScreen(game: ToddGame) : MyScreen(game) {
     // TODO menu font
     private val font = BitmapFont()
 
+    // TODO load from settings
     // not pressed, button value = false
     private val buttonUpDrawable = game.textureManager.loadDrawable("menuButtonUp")
     // not pressed, button value = true

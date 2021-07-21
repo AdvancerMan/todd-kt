@@ -17,7 +17,6 @@ class DrawableActor : Actor(), ManuallyJsonSerializable, WithZIndex {
     var flipY: Boolean = false
     var drawable: MyDrawable? = null
 
-    @JsonFullSerializable("zIndex")
     override val myZIndex: Int
         get() = drawable!!.myZIndex
 

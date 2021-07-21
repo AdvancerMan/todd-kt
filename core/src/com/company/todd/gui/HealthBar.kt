@@ -1,5 +1,6 @@
 package com.company.todd.gui
 
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.DisposableByManager
@@ -11,44 +12,45 @@ import com.company.todd.json.deserialization.float
 import com.company.todd.json.deserialization.get
 import com.company.todd.json.serialization.toJsonValue
 
+// TODO make global z index
 @SerializationType("healthBar")
 class HealthBar(
-        maxHealth: Float, private val background: MyDrawable,
-        private val healthDrawable: MyDrawable,
-        @JsonFullSerializable("zIndex") override val myZIndex: Int
+    maxHealth: Float,
+    @JsonFullSerializable private val backgroundDrawable: MyDrawable,
+    @JsonFullSerializable private val healthDrawable: MyDrawable,
+    @JsonFullSerializable("zIndex") override val myZIndex: Int
 ) :
         ProgressBar(
                 0f, maxHealth, STEP_SIZE, false,
                 ProgressBarStyle().apply {
-                    this.background = background
+                    this.background = backgroundDrawable
                     this.knobBefore = healthDrawable
                 }
         ), DisposableByManager, ManuallyJsonSerializable, WithZIndex {
     init {
-        background.minHeight = 10f
-        background.minWidth = 0f
-        healthDrawable.minHeight = 10f
-        healthDrawable.minWidth = 0f
+        backgroundDrawable.minWidth = backgroundDrawable.size.x
+        backgroundDrawable.minHeight = backgroundDrawable.size.y
+        setSize(backgroundDrawable.size.x, backgroundDrawable.size.y)
+        healthDrawable.minWidth = healthDrawable.size.x
+        healthDrawable.minHeight = healthDrawable.size.y
         value = maxHealth
         setAnimateDuration(ANIMATE_DURATION)
     }
 
     override fun act(delta: Float) {
         super.act(delta)
-        background.update(delta)
+        backgroundDrawable.update(delta)
         healthDrawable.update(delta)
     }
 
-    override fun dispose(manager: TextureManager) {
-        background.dispose(manager)
-        healthDrawable.dispose(manager)
+    override fun draw(batch: Batch?, parentAlpha: Float) {
+        super.draw(batch, parentAlpha)
     }
 
-    @JsonFullSerializable("backgroundDrawableName")
-    private fun getBackgroundDrawableName() = background.drawableName
-
-    @JsonFullSerializable("healthDrawableName")
-    private fun getHealthDrawableName() = healthDrawable.drawableName
+    override fun dispose(manager: TextureManager) {
+        backgroundDrawable.dispose(manager)
+        healthDrawable.dispose(manager)
+    }
 
     override fun serializeUpdates(json: JsonValue) {
         json.addChild("maxHealth", maxValue.toJsonValue())

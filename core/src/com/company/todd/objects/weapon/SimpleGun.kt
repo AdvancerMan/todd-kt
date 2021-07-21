@@ -20,9 +20,12 @@ open class SimpleGun(
                 game,
                 power,
                 getDrawablePosition(
-                    handWeaponStyle.handPosition.cpy()
-                        .add(handWeaponStyle.weaponPosition)
-                        .add(bulletOffset),
+                    listOf(
+                        handWeaponStyle.handDrawable?.offset,
+                        handWeaponStyle.weaponDrawable?.offset
+                    )
+                        .mapNotNull { it }
+                        .fold(bulletOffset.cpy()) { v1, v2 -> v1.add(v2) },
                     0f  // TODO add width if x flipped
                 ).add(owner.x, owner.y),
                 if (owner.isDirectedToRight) Vector2(1f, 0f) else Vector2(-1f, 0f),

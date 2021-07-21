@@ -14,12 +14,11 @@ import com.company.todd.objects.base.RealBodyWrapper
 
 @SerializationType("igo", "spawner")
 class Spawner(
-    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
-    bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val igoPattern: JsonValue,
     @JsonFullSerializable private val maxAmount: Int,
     @JsonFullSerializable private val spawnPeriod: Float,
-) : PassiveObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
+) : PassiveObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     @JsonUpdateSerializable
     private var sinceSpawn = 0f
 

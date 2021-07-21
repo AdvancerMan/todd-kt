@@ -1,6 +1,5 @@
 package com.company.todd.objects.passive.platform
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.Fixture
@@ -13,11 +12,10 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "cloudy")
-class CloudyPlatform(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
-                     bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+class CloudyPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
                      @JsonFullSerializable private val sinceContactTillInactive: Float,
                      sinceInactiveTillActive: Float) :
-        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
+        HalfCollidedPlatform(game, drawable, bodyPattern) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1
 

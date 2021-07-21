@@ -11,6 +11,7 @@ import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.json.*
 import com.company.todd.objects.base.toDrawableActor
+import com.company.todd.util.mirrorIf
 
 abstract class HandWeapon(
     @JsonFullSerializable protected val handWeaponStyle: Style,
@@ -52,25 +53,23 @@ abstract class HandWeapon(
     }
 
     protected fun getDrawablePosition(ownerOffset: Vector2, drawableWidth: Float) =
-        ownerOffset.sub(owner.width / 2, 0f)
-            .scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
-            .sub(if (owner.isDirectedToRight) 0f else drawableWidth, 0f)
-            .add(owner.width / 2, 0f)!!
-
+        ownerOffset.mirrorIf(!owner.isDirectedToRight, owner.width / 2, -drawableWidth)
 
     override fun postUpdate(delta: Float) {
-        listOf(
-            Triple(handWeaponStyle.handPosition, handWeaponStyle.handSize, handDrawableActor),
-            Triple(handWeaponStyle.weaponPosition, handWeaponStyle.weaponSize, weaponDrawableActor)
-        ).forEach { (pos, size, nullableActor) ->
-            nullableActor?.let { actor ->
-                val newPos = getDrawablePosition(pos.cpy(), size.x)
+        val handPos = handDrawableActor?.drawable?.offset ?: Vector2()
+        val weaponPos = weaponDrawableActor?.let {
+            it.drawable!!.offset.cpy().add(handPos)
+        }
+        listOf(handPos to handDrawableActor,  weaponPos to weaponDrawableActor)
+            .filter { it.second != null }
+            .forEach { (pos, actor) ->
+                val size = actor!!.drawable!!.size
+                val newPos = getDrawablePosition(pos!!, size.x)
                 actor.setSize(size.x, size.y)
                 actor.setPosition(newPos.x, newPos.y)
 
-                val origin = Vector2(
-                    handWeaponStyle.origin.x - owner.width / 2, handWeaponStyle.origin.y
-                ).scl(if (owner.isDirectedToRight) 1f else -1f, 1f)
+                val origin = handWeaponStyle.origin.cpy()
+                    .mirrorIf(!owner.isDirectedToRight, owner.width / 2)
                 actor.setOrigin(origin.x, origin.y)
 
                 actor.setScale(scaleX, scaleY)
@@ -78,7 +77,6 @@ abstract class HandWeapon(
                 actor.flipX = !owner.isDirectedToRight
                 actor.flipY = false
             }
-        }
     }
 
     abstract fun doAttack()
@@ -110,21 +108,10 @@ abstract class HandWeapon(
 
     @SerializationType("handWeaponStyle")
     class Style(
-        val handDrawable: MyDrawable?, val weaponDrawable: MyDrawable?,
-        @JsonFullSerializable val handPosition: Vector2,
-        @JsonFullSerializable val handSize: Vector2,
-        @JsonFullSerializable val weaponPosition: Vector2,
-        @JsonFullSerializable val weaponSize: Vector2,
+        @JsonFullSerializable val handDrawable: MyDrawable?,
+        @JsonFullSerializable val weaponDrawable: MyDrawable?,
         @JsonFullSerializable val origin: Vector2
     ) {
-        @JsonFullSerializable
-        private val handDrawableName: String?
-            get() = handDrawable?.drawableName
-
-        @JsonFullSerializable
-        private val weaponDrawableName: String?
-            get() = weaponDrawable?.drawableName
-
         companion object {
             @ManualJsonConstructor
             private fun getJsonDefaults(
@@ -133,10 +120,6 @@ abstract class HandWeapon(
             ) {
                 JsonDefaults.setDefault("handDrawable", null, parsed)
                 JsonDefaults.setDefault("weaponDrawable", null, parsed)
-                JsonDefaults.setDefault("handPosition", Vector2(), parsed)
-                JsonDefaults.setDefault("weaponPosition", Vector2(), parsed)
-                JsonDefaults.setDefault("handSize", Vector2(), parsed)
-                JsonDefaults.setDefault("weaponSize", Vector2(), parsed)
                 JsonDefaults.setDefault("origin", Vector2(), parsed)
             }
         }

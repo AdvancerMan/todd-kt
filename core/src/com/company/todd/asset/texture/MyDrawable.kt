@@ -1,6 +1,7 @@
 package com.company.todd.asset.texture
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
 import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.json.JsonFullSerializable
@@ -20,11 +21,17 @@ interface FlipTransformDrawable : TransformDrawable {
 }
 
 interface MyDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex {
-    @JsonFullSerializable
+    @JsonFullSerializable("name")
     var drawableName: String?
 
-    @JsonFullSerializable
+    @JsonFullSerializable("zIndex")
     override var myZIndex: Int
+
+    @JsonFullSerializable
+    val size: Vector2
+
+    @JsonFullSerializable
+    val offset: Vector2
 
     fun update(delta: Float) {}
 

@@ -20,15 +20,13 @@ import com.company.todd.screen.game.GameScreen
 
 @SerializationType("igo", "simpleBullet")
 open class Bullet(
-    game: ToddGame, drawable: MyDrawable,
-    drawableSize: Vector2?, bodyLowerLeftCornerOffset: Vector2,
-    bodyPattern: BodyPattern,
+    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable protected val power: Float,
     @JsonFullSerializable protected val velocity: Vector2,
     @JsonFullSerializable protected val ownerFriendlyPeriod: Float,
     // TODO serialize igo???
     @JsonFullSerializable protected val owner: InGameObject?
-) : InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
+) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private var sinceCreation = 0f
 
     override fun doInit(gameScreen: GameScreen) {
@@ -79,8 +77,6 @@ open class Bullet(
     @SerializationType("bulletBuilder", "simpleBuilder")
     data class SimpleBuilder(
         @JsonFullSerializable private val drawableName: String,
-        @JsonFullSerializable private val drawableSize: Vector2?,
-        @JsonFullSerializable private val bodyLowerLeftCornerOffset: Vector2,
         @JsonFullSerializable private val radius: Float,
         @JsonFullSerializable private val speed: Float,
         @JsonFullSerializable private val ownerFriendlyPeriod: Float
@@ -91,7 +87,6 @@ open class Bullet(
         ): Bullet {
             return Bullet(
                 game, game.textureManager.loadDrawable(drawableName),
-                drawableSize, bodyLowerLeftCornerOffset,
                 BodyPatterns.createCircleBP(BodyDef.BodyType.DynamicBody, position.add(radius, radius), radius),
                 power,
                 direction.apply {
@@ -99,15 +94,6 @@ open class Bullet(
                     y *= speed
                 }, ownerFriendlyPeriod, owner
             )
-        }
-
-        companion object {
-            @ManualJsonConstructor
-            private fun getJsonConstructorDefaults(
-                json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>
-            ) {
-                InGameObject.getJsonConstructorDefaults(json, parsed)
-            }
         }
     }
 }

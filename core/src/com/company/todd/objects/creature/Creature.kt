@@ -30,14 +30,13 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 @SerializationType("igo", "creature")
 open class Creature(
-    game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
-    bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,
     @JsonSaveSerializable var thinker: Thinker,
     @JsonUpdateSerializable val healthBar: HealthBar,
     @JsonUpdateSerializable private var speed: Float,
     @JsonUpdateSerializable private var jumpPower: Float
-) : InGameObject(game, drawable, drawableSize, bodyLowerLeftCornerOffset, RealBodyWrapper(bodyPattern)) {
+) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
     protected var animationTypeNow = stayAnimation()

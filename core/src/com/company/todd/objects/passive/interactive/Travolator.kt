@@ -16,10 +16,9 @@ private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
 @SerializationType("igo", "travolator")
-class Travolator(game: ToddGame, drawable: MyDrawable, drawableSize: Vector2?,
-                 bodyLowerLeftCornerOffset: Vector2, bodyPattern: BodyPattern,
+class Travolator(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
                  @JsonFullSerializable private val pushPower: Float) :
-        HalfCollidedPlatform(game, drawable, drawableSize, bodyLowerLeftCornerOffset, bodyPattern) {
+        HalfCollidedPlatform(game, drawable, bodyPattern) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         val impulseMap = if (pushPower > 0) objectToTravolatorPositiveImpulse else objectToTravolatorNegativeImpulse
