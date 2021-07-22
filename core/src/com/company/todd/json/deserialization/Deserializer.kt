@@ -55,35 +55,6 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
                         )
                 )
 
-
-val prototypes by lazy {
-    crawlJsonListsWithComments(PROTOTYPES_PATH)
-            .associateBy {
-                it["protoName"]?.asString()
-                        ?: throw IllegalArgumentException(getJsonErrorMessage(it, "Prototype should contain parameter \"protoName\""))
-            }
-}
-
-fun createJsonValue(
-        jsonWithPrototype: JsonValue,
-        out: JsonValue = JsonValue(JsonValue.ValueType.`object`)
-): JsonValue {
-    jsonWithPrototype.forEach {
-        if (it.name != null && it.name !in listOf("prototype", "protoName") && !out.has(it.name)) {
-            out.addChild(it.name, it)
-        }
-    }
-
-    return jsonWithPrototype["prototype"]?.asString()?.let { name ->
-        prototypes[name]?.let { createJsonValue(it, out) }
-                ?: out.also {
-                    Gdx.app.error("Json", getJsonErrorMessage(jsonWithPrototype,
-                            "prototype name $name was not found in prototype map")
-                    )
-                }
-    } ?: out
-}
-
 fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
                        constructors: Map<String, JsonType<out T>>,
                        jsonTypeName: String = "type"): T {
