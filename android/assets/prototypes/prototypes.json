@@ -4,8 +4,10 @@
   "drawable": {
     "name": "arenaSolid"
   },
-  "bodyPatternType": "rectangleWithTopGS",
-  "b2dType": "static"
+  "bodyPattern": {
+    "type": "rectangleWithTopGS",
+    "b2dType": "static"
+  }
 }
 
 {
@@ -14,7 +16,9 @@
   "drawable": {
     "name": "arenaPortal"
   },
-  "teleportDelay": 0.1,
-  "bodyPatternType": "circle",
-  "b2dType": "static"
+  "bodyPattern": {
+    "type": "circle",
+    "b2dType": "static"
+  },
+  "teleportDelay": 0.1
 }

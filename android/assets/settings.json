@@ -75,9 +75,9 @@
       "sinceAttackTillDamage": 0.3
     },
     "bodyPattern": {
-      "bodyPatternType": "rectangleWithTopGSBottomGS",
+      "type": "rectangleWithTopGSBottomGS",
       "b2dType": "dynamic",
-      "bodySize": [30, 91]
+      "size": [30, 91]
     },
     "healthBar": {
       "maxHealth": 100,

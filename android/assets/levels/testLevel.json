@@ -3,43 +3,59 @@
   "objects": [
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [-50, -75],
-      "bodySize": [100, 25]
+      "bodyPattern": {
+        "worldPosition": [-50, -75],
+        "size": [100, 25]
+      }
     },
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [-150, -75],
-      "bodySize": [100, 25]
+      "bodyPattern": {
+        "worldPosition": [-150, -75],
+        "size": [100, 25]
+      }
     },
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [50, -35],
-      "bodySize": [500, 100]
+      "bodyPattern": {
+        "worldPosition": [50, -35],
+        "size": [500, 100]
+      }
     },
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [550, -24],
-      "bodySize": [500, 100]
+      "bodyPattern": {
+        "worldPosition": [550, -24],
+        "size": [500, 100]
+      }
     },
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [750, 76],
-      "bodySize": [50, 50]
+      "bodyPattern": {
+        "worldPosition": [750, 76],
+        "size": [50, 50]
+      }
     },
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [1050, -23],
-      "bodySize": [500, 100]
+      "bodyPattern": {
+        "worldPosition": [1050, -23],
+        "size": [500, 100]
+      }
     },
     {
       "prototype": "arenaSolid",
-      "worldBodyPosition": [-650, -25],
-      "bodySize": [500, 100]
+      "bodyPattern": {
+        "worldPosition": [-650, -25],
+        "size": [500, 100]
+      }
     },
     {
       "prototype": "arenaPortal",
-      "worldBodyCenter": [1600, 127],
-      "bodyRadius": 50,
+      "bodyPattern": {
+        "worldCenter": [1600, 127],
+        "radius": 50
+      },
       "teleportTo": [0, 100]
     },
     {
@@ -67,10 +83,10 @@
         "sinceAttackTillDamage": 0.3
       },
       "bodyPattern": {
-        "bodyPatternType": "rectangleWithTopGSBottomGS",
+        "type": "rectangleWithTopGSBottomGS",
         "b2dType": "dynamic",
-        "worldBodyPosition": [-100, 200],
-        "bodySize": [30, 91]
+        "worldPosition": [-100, 200],
+        "size": [30, 91]
       },
       "healthBar": {
         "maxHealth": 100,
@@ -97,10 +113,10 @@
         "name": "stupidMeleeEnemy"
       },
       "bodyPattern": {
-        "bodyPatternType": "rectangleWithTopGSBottomGS",
+        "type": "rectangleWithTopGSBottomGS",
         "b2dType": "static",
-        "worldBodyPosition": [200, 200],
-        "bodySize": [50, 50]
+        "worldPosition": [200, 200],
+        "size": [50, 50]
       },
       "maxAmount": 3,
       "spawnPeriod": 3,
@@ -134,10 +150,10 @@
           }
         },
         "bodyPattern": {
-          "bodyPatternType": "rectangleWithTopGSBottomGS",
+          "type": "rectangleWithTopGSBottomGS",
           "b2dType": "dynamic",
-          "worldBodyPosition": [200, 250],
-          "bodySize": [30, 91]
+          "worldPosition": [200, 250],
+          "size": [30, 91]
         },
         "healthBar": {
           "maxHealth": 100,

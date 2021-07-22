@@ -18,10 +18,12 @@
         "size": [200, 50],
         "offset": [0, 0]
       },
-      "bodyPatternType": "rectangleWithTopGS",
-      "b2dType": "static",
-      "worldBodyPosition": [0, -50],
-      "bodySize": [200, 50]
+      "bodyPattern": {
+        "type": "rectangleWithTopGS",
+        "b2dType": "static",
+        "worldPosition": [0, -50],
+        "size": [200, 50]
+      }
     },
 
     {
@@ -32,10 +34,10 @@
         "offset": [0, 0]
       },
       "bodyPattern": {
-        "bodyPatternType": "rectangleWithTopGS",
+        "type": "rectangleWithTopGS",
         "b2dType": "static",
-        "worldBodyPosition": [-200, -50],
-        "bodySize": [200, 50]
+        "worldPosition": [-200, -50],
+        "size": [200, 50]
       }
     },
 
@@ -47,10 +49,10 @@
         "offset": [0, 0]
       },
       "bodyPattern": {
-        "bodyPatternType": "polygonWithTopGS",
+        "type": "polygonWithTopGS",
         "b2dType": "static",
-        "worldBodyCenter": [-300, 50],
-        "localBodyVertices": [[-100, 100], [-100, -100], [100, -100], [100, 0], [0, 100]]
+        "worldCenter": [-300, 50],
+        "localVertices": [[-100, 100], [-100, -100], [100, -100], [100, 0], [0, 100]]
       }
     },
 
@@ -61,11 +63,12 @@
         "size": [200, 50],
         "offset": [0, 0]
       },
-      "drawableName": "arenaHalfCollided",
-      "bodyPatternType": "rectangleWithTopGS",
-      "b2dType": "static",
-      "worldBodyPosition": [200, -50],
-      "bodySize": [200, 50]
+      "bodyPattern": {
+        "type": "rectangleWithTopGS",
+        "b2dType": "static",
+        "worldPosition": [200, -50],
+        "size": [200, 50]
+      }
     },
 
     {
@@ -74,12 +77,13 @@
         "name": "arenaCloudy",
         "size": [200, 50],
         "offset": [0, 0]
-      },      "bodyLowerLeftCornerOffset": [0, 0],
-
-      "bodyPatternType": "rectangleWithTopGS",
-      "b2dType": "static",
-      "worldBodyPosition": [400, -50],
-      "bodySize": [200, 50],
+      },
+      "bodyPattern": {
+        "type": "rectangleWithTopGS",
+        "b2dType": "static",
+        "worldPosition": [400, -50],
+        "size": [200, 50]
+      },
       "sinceContactTillInactive": 1,
       "sinceInactiveTillActive": 1
     },
@@ -91,10 +95,12 @@
         "size": [200, 50],
         "offset": [0, 0]
       },
-      "bodyPatternType": "rectangleWithTopGS",
-      "b2dType": "static",
-      "worldBodyPosition": [600, -50],
-      "bodySize": [200, 50],
+      "bodyPattern": {
+        "type": "rectangleWithTopGS",
+        "b2dType": "static",
+        "worldPosition": [600, -50],
+        "size": [200, 50]
+      },
       "pushPower": 800
     },
 
@@ -105,10 +111,12 @@
         "size": [100, 100],
         "offset": [0, 0]
       },
-      "bodyPatternType": "circle",
-      "b2dType": "static",
-      "worldBodyCenter": [850, -25],
-      "bodyRadius": 50,
+      "bodyPattern": {
+        "type": "circle",
+        "b2dType": "static",
+        "worldCenter": [850, -25],
+        "radius": 50
+      },
       "teleportTo": [0, 0],
       "teleportDelay": 0.1
     },
@@ -120,10 +128,12 @@
         "size": [200, 50],
         "offset": [0, 0]
       },
-      "bodyPatternType": "rectangleWithTopGS",
-      "b2dType": "static",
-      "worldBodyPosition": [900, -50],
-      "bodySize": [200, 50]
+      "bodyPattern": {
+        "type": "rectangleWithTopGS",
+        "b2dType": "static",
+        "worldPosition": [900, -50],
+        "size": [200, 50]
+      }
     },
 
     {
@@ -133,10 +143,12 @@
         "size": [200, 50],
         "offset": [0, 0]
       },
-      "bodyPatternType": "rectangleWithTopGS",
-      "b2dType": "static",
-      "worldBodyPosition": [1100, -50],
-      "bodySize": [200, 50],
+      "bodyPattern": {
+        "type": "rectangleWithTopGS",
+        "b2dType": "static",
+        "worldPosition": [1100, -50],
+        "size": [200, 50]
+      },
       "pushPower": 200
     }
   ]

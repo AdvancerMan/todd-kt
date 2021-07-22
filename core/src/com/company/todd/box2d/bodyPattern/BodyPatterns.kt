@@ -18,39 +18,39 @@ object BodyPatterns {
     @SerializationType("bodyPattern", "polygonWithTopGS")
     fun createPolygonBPWithTGS(
         b2dType: BodyDef.BodyType,
-        worldBodyCenter: Vector2,
-        localBodyVertices: Array<Vector2>
+        worldCenter: Vector2,
+        localVertices: Array<Vector2>
     ): BodyPattern =
-        TopGroundSensorPolygonBodyPattern(b2dType, worldBodyCenter, localBodyVertices)
-            .combine(PolygonBodyPattern(b2dType, worldBodyCenter, localBodyVertices))
+        TopGroundSensorPolygonBodyPattern(b2dType, worldCenter, localVertices)
+            .combine(PolygonBodyPattern(b2dType, worldCenter, localVertices))
             .withSerializer {
-                it.addChild("bodyPatternType", "polygonWithTopGS".toJsonValue())
+                it.addChild("type", "polygonWithTopGS".toJsonValue())
                 it.addChild("b2dType", b2dType.toJsonValue())
-                it.addChild("worldBodyCenter", worldBodyCenter.toJsonValue())
-                it.addChild("localBodyVertices", localBodyVertices.toJsonValue { v -> v.toJsonValue() })
+                it.addChild("worldCenter", worldCenter.toJsonValue())
+                it.addChild("localVertices", localVertices.toJsonValue { v -> v.toJsonValue() })
             }
 
     @ManualJsonConstructor("createPolygonBPWithTGS")
     private fun polygonBPWithTGSManualConstructor(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
         JsonDefaults.setDefault("worldBodyCenter", Vector2(), parsed)
-        if (!parsed["localBodyVertices"]!!.second) {
-            parsed["localBodyVertices"] = json["localBodyVertices", vectorArray] to true
+        if (!parsed["localVertices"]!!.second) {
+            parsed["localVertices"] = json["localVertices", vectorArray] to true
         }
     }
 
     @SerializationType("bodyPattern", "rectangleWithTopGS")
     fun createRectangleBPWithTGS(
-        b2dType: BodyDef.BodyType, worldBodyPosition: Vector2,
-        bodySize: Vector2, localBodyCenter: Vector2
+        b2dType: BodyDef.BodyType, worldPosition: Vector2,
+        size: Vector2, localCenter: Vector2
     ): BodyPattern =
-        TopGroundSensorRectangleBodyPattern(b2dType, worldBodyPosition, bodySize, localBodyCenter)
-            .combine(RectangleBodyPattern(b2dType, worldBodyPosition, bodySize, localBodyCenter))
+        TopGroundSensorRectangleBodyPattern(b2dType, worldPosition, size, localCenter)
+            .combine(RectangleBodyPattern(b2dType, worldPosition, size, localCenter))
             .withSerializer {
-                it.addChild("bodyPatternType", "rectangleWithTopGS".toJsonValue())
+                it.addChild("type", "rectangleWithTopGS".toJsonValue())
                 it.addChild("b2dType", b2dType.toJsonValue())
-                it.addChild("worldBodyPosition", worldBodyPosition.toJsonValue())
-                it.addChild("bodySize", bodySize.toJsonValue())
-                it.addChild("localBodyCenter", localBodyCenter.toJsonValue())
+                it.addChild("worldPosition", worldPosition.toJsonValue())
+                it.addChild("size", size.toJsonValue())
+                it.addChild("localCenter", localCenter.toJsonValue())
             }
 
     @ManualJsonConstructor("createRectangleBPWithTGS")
@@ -58,23 +58,23 @@ object BodyPatterns {
         @Suppress("UNUSED_PARAMETER") json: JsonValue,
         parsed: MutableMap<String, Pair<Any?, Boolean>>
     ) {
-        JsonDefaults.setDefault("worldBodyPosition", Vector2(), parsed)
-        JsonDefaults.setDefault("localBodyCenter", Vector2(), parsed)
+        JsonDefaults.setDefault("worldPosition", Vector2(), parsed)
+        JsonDefaults.setDefault("localCenter", Vector2(), parsed)
     }
 
     @SerializationType("bodyPattern", "rectangleWithTopGSBottomGS")
     fun createRectangleBPWithTGSBGS(
-        b2dType: BodyDef.BodyType, worldBodyPosition: Vector2,
-        bodySize: Vector2, localBodyCenter: Vector2
+        b2dType: BodyDef.BodyType, worldPosition: Vector2,
+        size: Vector2, localCenter: Vector2
     ): BodyPattern =
-        createRectangleBPWithTGS(b2dType, worldBodyPosition, bodySize, localBodyCenter)
-            .combine(BottomGroundSensorRectangleBodyPattern(b2dType, worldBodyPosition, bodySize, localBodyCenter))
+        createRectangleBPWithTGS(b2dType, worldPosition, size, localCenter)
+            .combine(BottomGroundSensorRectangleBodyPattern(b2dType, worldPosition, size, localCenter))
             .withSerializer {
-                it.addChild("bodyPatternType", "rectangleWithTopGSBottomGS".toJsonValue())
+                it.addChild("type", "rectangleWithTopGSBottomGS".toJsonValue())
                 it.addChild("b2dType", b2dType.toJsonValue())
-                it.addChild("worldBodyPosition", worldBodyPosition.toJsonValue())
-                it.addChild("bodySize", bodySize.toJsonValue())
-                it.addChild("localBodyCenter", localBodyCenter.toJsonValue())
+                it.addChild("worldPosition", worldPosition.toJsonValue())
+                it.addChild("size", size.toJsonValue())
+                it.addChild("localCenter", localCenter.toJsonValue())
             }
 
     @ManualJsonConstructor("createRectangleBPWithTGSBGS")
@@ -82,18 +82,18 @@ object BodyPatterns {
         @Suppress("UNUSED_PARAMETER") json: JsonValue,
         parsed: MutableMap<String, Pair<Any?, Boolean>>
     ) {
-        JsonDefaults.setDefault("worldBodyPosition", Vector2(), parsed)
-        JsonDefaults.setDefault("localBodyCenter", Vector2(), parsed)
+        JsonDefaults.setDefault("worldPosition", Vector2(), parsed)
+        JsonDefaults.setDefault("localCenter", Vector2(), parsed)
     }
 
     @SerializationType("bodyPattern", "circle")
-    fun createCircleBP(b2dType: BodyDef.BodyType, worldBodyCenter: Vector2, bodyRadius: Float): BodyPattern =
-        CircleBodyPattern(b2dType, worldBodyCenter, bodyRadius)
+    fun createCircleBP(b2dType: BodyDef.BodyType, worldCenter: Vector2, radius: Float): BodyPattern =
+        CircleBodyPattern(b2dType, worldCenter, radius)
             .withSerializer {
-                it.addChild("bodyPatternType", "circle".toJsonValue())
+                it.addChild("type", "circle".toJsonValue())
                 it.addChild("b2dType", b2dType.toJsonValue())
-                it.addChild("worldBodyCenter", worldBodyCenter.toJsonValue())
-                it.addChild("bodyRadius", bodyRadius.toJsonValue())
+                it.addChild("worldCenter", worldCenter.toJsonValue())
+                it.addChild("radius", radius.toJsonValue())
             }
 
     @ManualJsonConstructor("createCircleBP")
@@ -101,6 +101,6 @@ object BodyPatterns {
         @Suppress("UNUSED_PARAMETER") json: JsonValue,
         parsed: MutableMap<String, Pair<Any?, Boolean>>
     ) {
-        JsonDefaults.setDefault("worldBodyCenter", Vector2(), parsed)
+        JsonDefaults.setDefault("worldCenter", Vector2(), parsed)
     }
 }

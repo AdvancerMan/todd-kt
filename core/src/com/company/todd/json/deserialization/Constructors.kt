@@ -21,11 +21,6 @@ private fun getFromJson(
     val jsonByName = json[name]
     return when {
         clazz == ToddGame::class -> game to true
-        clazz == BodyPattern::class -> {
-            val bodyPatternJson = jsonByName ?: json
-            // expecting name = "bodyPattern"
-            parseJsonValue(game, bodyPatternJson, constructors[name]!!, "bodyPatternType") to true
-        }
         jsonByName == null -> null to false
         // TODO drawable resource leak on exception
         clazz == MyDrawable::class -> {
