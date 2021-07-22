@@ -28,8 +28,10 @@ class Portal(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     override fun act(delta: Float) {
         timeSinceCreation += delta
         while (delayedObjects.notEmpty() && delayedObjects.first().second < timeSinceCreation) {
-            delayedObjects.removeFirst().first.body
-                .setPosition(teleportTo.x, teleportTo.y, false)
+            val igo = delayedObjects.removeFirst().first
+            if (igo.alive) {
+                igo.body.setPosition(teleportTo.x, teleportTo.y, false)
+            }
         }
         super.act(delta)
     }

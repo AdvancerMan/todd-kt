@@ -13,110 +13,130 @@
   "objects": [
     {
       "type": "solid",
-      "drawableName": "arenaSolid",
+      "drawable": {
+        "name": "arenaSolid",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
       "worldBodyPosition": [0, -50],
-      "bodySize": [200, 50],
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [200, 50]
     },
 
     {
       "type": "solid",
-      "drawableName": "arenaSolid",
+      "drawable": {
+        "name": "arenaSolid",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },
       "bodyPattern": {
         "bodyPatternType": "rectangleWithTopGS",
         "b2dType": "static",
         "worldBodyPosition": [-200, -50],
         "bodySize": [200, 50]
-      },
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      }
     },
 
     {
       "type": "solid",
-      "drawableName": "arenaSolid",
+      "drawable": {
+        "name": "arenaSolid",
+        "size": [200, 200],
+        "offset": [0, 0]
+      },
       "bodyPattern": {
         "bodyPatternType": "polygonWithTopGS",
         "b2dType": "static",
         "worldBodyCenter": [-300, 50],
         "localBodyVertices": [[-100, 100], [-100, -100], [100, -100], [100, 0], [0, 100]]
-      },
-      "drawableSize": [200, 200],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      }
     },
 
     {
       "type": "halfCollided",
+      "drawable": {
+        "name": "arenaHalfCollided",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },
       "drawableName": "arenaHalfCollided",
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
       "worldBodyPosition": [200, -50],
-      "bodySize": [200, 50],
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [200, 50]
     },
 
     {
       "type": "cloudy",
-      "drawableName": "arenaCloudy",
+      "drawable": {
+        "name": "arenaCloudy",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },      "bodyLowerLeftCornerOffset": [0, 0],
+
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
       "worldBodyPosition": [400, -50],
       "bodySize": [200, 50],
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0],
       "sinceContactTillInactive": 1,
       "sinceInactiveTillActive": 1
     },
 
     {
       "type": "jumper",
-      "drawableName": "arenaJumper",
+      "drawable": {
+        "name": "arenaJumper",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
       "worldBodyPosition": [600, -50],
       "bodySize": [200, 50],
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0],
       "pushPower": 800
     },
 
     {
       "type": "portal",
-      "drawableName": "arenaPortal",
+      "drawable": {
+        "name": "arenaPortal",
+        "size": [100, 100],
+        "offset": [0, 0]
+      },
       "bodyPatternType": "circle",
       "b2dType": "static",
       "worldBodyCenter": [850, -25],
       "bodyRadius": 50,
-      "drawableSize": [100, 100],
-      "bodyLowerLeftCornerOffset": [0, 0],
       "teleportTo": [0, 0],
       "teleportDelay": 0.1
     },
 
     {
       "type": "trampoline",
-      "drawableName": "arenaTrampoline",
+      "drawable": {
+        "name": "arenaTrampoline",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
       "worldBodyPosition": [900, -50],
-      "bodySize": [200, 50],
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0]
+      "bodySize": [200, 50]
     },
 
     {
       "type": "travolator",
-      "drawableName": "arenaTravolator",
+      "drawable": {
+        "name": "arenaTravolator",
+        "size": [200, 50],
+        "offset": [0, 0]
+      },
       "bodyPatternType": "rectangleWithTopGS",
       "b2dType": "static",
       "worldBodyPosition": [1100, -50],
       "bodySize": [200, 50],
-      "drawableSize": [200, 50],
-      "bodyLowerLeftCornerOffset": [0, 0],
       "pushPower": 200
     }
   ]
