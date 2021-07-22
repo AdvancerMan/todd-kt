@@ -86,7 +86,7 @@ open class GameScreen(game: ToddGame, level: Level? = null): MyScreen(game), Man
         objects.children.forEach { (it as InGameObject).postAct(delta) }
 
         centerCameraAt(player.body.getCenter())
-        stage.camera.up.set(Vector2(0f, 1f).rotate(player.rotation), 0f)
+        stage.camera.up.set(Vector2(0f, 1f).rotateDeg(player.rotation), 0f)
         tick++
         super.postUpdate(delta)
     }

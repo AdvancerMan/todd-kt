@@ -90,7 +90,7 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable, Post
             setPosition(camera.position.x, camera.position.y, Align.center)
             setOrigin(Align.center)
             setScale((camera as OrthographicCamera).zoom)
-            rotation = Vector2(camera.up.x, camera.up.y).angle() - 90
+            rotation = Vector2(camera.up.x, camera.up.y).angleDeg() - 90
 
             toFront()
         }

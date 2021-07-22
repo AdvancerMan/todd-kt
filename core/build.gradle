@@ -130,12 +130,6 @@ static def addSerializationTypeClasses(
 
                     serializationTypeClasses.remove(className)
                     serializationTypeClasses.addChild(className, result)
-                    // TODO bug in libgdx
-                    serializationTypeClasses.size++
-                    def jsonList = serializationTypeClasses.collect()
-                    if (jsonList.size > 1) {
-                        jsonList.last().prev = jsonList[jsonList.size - 2] as JsonValue
-                    }
                 }
             }
     json.addChild("serializationTypeClasses", serializationTypeClasses)

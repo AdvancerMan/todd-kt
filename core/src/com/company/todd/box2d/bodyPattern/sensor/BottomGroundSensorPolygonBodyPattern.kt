@@ -46,10 +46,10 @@ private fun List<Vector2>.takeEdges() =
             val edgeJ = this[j].cpy().sub(v)
             val edgeK = v.cpy().sub(this[k])
 
-            360 - BOTTOM_GROUND_ANGLE < edgeJ.angle()
-                    || edgeJ.angle() < BOTTOM_GROUND_ANGLE
-                    || 360 - BOTTOM_GROUND_ANGLE < edgeK.angle()
-                    || edgeK.angle() < BOTTOM_GROUND_ANGLE
+            360 - BOTTOM_GROUND_ANGLE < edgeJ.angleDeg()
+                    || edgeJ.angleDeg() < BOTTOM_GROUND_ANGLE
+                    || 360 - BOTTOM_GROUND_ANGLE < edgeK.angleDeg()
+                    || edgeK.angleDeg() < BOTTOM_GROUND_ANGLE
         }
 
 private fun List<Vector2>.atLeast2() =

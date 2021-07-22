@@ -27,7 +27,5 @@ fun Rectangle.toJsonValue() = arrayOf(x, y, width, height).toJsonValue { it.toJs
 fun <T> Array<T>.toJsonValue(elementToJson: (T) -> JsonValue): JsonValue {
     val jsonArray = JsonValue(JsonValue.ValueType.array)
     forEach { jsonArray.addChild(elementToJson(it)) }
-    // TODO bug in libgdx
-    jsonArray.size = this.size
     return jsonArray
 }
