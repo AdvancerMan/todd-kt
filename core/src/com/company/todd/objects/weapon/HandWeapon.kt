@@ -16,7 +16,8 @@ import com.company.todd.util.mirrorIf
 abstract class HandWeapon(
     @JsonFullSerializable protected val handWeaponStyle: Style,
     @JsonFullSerializable protected val cooldown: Float,
-    @JsonFullSerializable protected val sinceAttackTillDamage: Float
+    @JsonFullSerializable protected val safeAttackPeriod: Float,
+    @JsonFullSerializable protected val dangerousAttackPeriod: Float
 ) : Weapon(), DisposableByManager {
     protected lateinit var owner: InGameObject
     protected lateinit var screen: GameScreen
@@ -25,7 +26,7 @@ abstract class HandWeapon(
 
     @JsonUpdateSerializable
     protected var sinceAttack = cooldown
-    private var doneAttack = true
+    protected var doingFirstHit = false
 
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
@@ -36,11 +37,11 @@ abstract class HandWeapon(
     }
 
     override fun act(delta: Float) {
-        super.act(delta)
         sinceAttack += delta
-        if (!doneAttack && sinceAttack >= sinceAttackTillDamage) {
-            doneAttack = true
+        super.act(delta)
+        if (safeAttackPeriod <= sinceAttack && (sinceAttack <= dangerousAttackPeriod || doingFirstHit)) {
             doAttack()
+            doingFirstHit = false
         }
 
         listOf(handWeaponStyle.handDrawable, handWeaponStyle.weaponDrawable).forEach { drawable ->
@@ -84,12 +85,9 @@ abstract class HandWeapon(
     final override fun attack() {
         if (canAttack()) {
             sinceAttack = 0f
-            doneAttack = false
+            doingFirstHit = true
             handWeaponStyle.handDrawable?.setPlayingType(AnimationType.ACTION, true)
             handWeaponStyle.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
-            if (sinceAttackTillDamage == 0f) {
-                doAttack()
-            }
         }
     }
 
@@ -102,6 +100,19 @@ abstract class HandWeapon(
                 it.drawable = null
                 owner.removeActor(it)
                 Pools.free(it)
+            }
+        }
+    }
+
+    companion object {
+        @ManualJsonConstructor
+        private fun getJsonDefaults(
+            @Suppress("UNUSED_PARAMETER") json: JsonValue,
+            parsed: MutableMap<String, Pair<Any?, Boolean>>
+        ) {
+            val safeAttackPeriod = parsed["safeAttackPeriod"]
+            if (safeAttackPeriod != null && safeAttackPeriod.second) {
+                JsonDefaults.setDefault("dangerousAttackPeriod", safeAttackPeriod.first, parsed)
             }
         }
     }

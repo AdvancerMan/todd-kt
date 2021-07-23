@@ -9,12 +9,15 @@ import com.company.todd.objects.weapon.bullet.Bullet
 @SerializationType("weapon", "simpleGun")
 open class SimpleGun(
     private val game: ToddGame,
-    handWeaponStyle: Style, override val power: Float,
-    cooldown: Float, sinceAttackTillDamage: Float,
+    handWeaponStyle: Style, override val power: Float, cooldown: Float,
+    safeAttackPeriod: Float, dangerousAttackPeriod: Float,
     @JsonFullSerializable protected val bulletOffset: Vector2,
     @JsonFullSerializable protected val bulletBuilder: Bullet.Builder
-) : HandWeapon(handWeaponStyle, cooldown, sinceAttackTillDamage) {
+) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, dangerousAttackPeriod) {
     override fun doAttack() {
+        if (!doingFirstHit) {
+            return
+        }
         screen.addObject(
             bulletBuilder.build(
                 game,

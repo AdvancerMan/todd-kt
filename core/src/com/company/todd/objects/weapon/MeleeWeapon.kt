@@ -10,29 +10,34 @@ import com.company.todd.screen.game.GameScreen
 abstract class MeleeWeapon(
     handWeaponStyle: Style,
     @JsonFullSerializable("attackXYWH") protected val attackAABB: Rectangle,
-    cooldown: Float, sinceAttackTillDamage: Float
-) :
-        HandWeapon(handWeaponStyle, cooldown, sinceAttackTillDamage) {
+    cooldown: Float, safeAttackPeriod: Float, dangerousAttackPeriod: Float
+) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, dangerousAttackPeriod) {
+    private val attacked = mutableSetOf<InGameObject>()
+
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
         attackAABB.setPosition(attackAABB.x - x, attackAABB.y - y)
     }
 
     override fun doAttack() {
-        val attacked = mutableSetOf<InGameObject>()
+        if (doingFirstHit) {
+            attacked.clear()
+        }
         worldAABBFor(Rectangle(attackAABB)).let { aabb ->
             if (!owner.isDirectedToRight) {
                 aabb.setPosition(aabb.x - aabb.width - owner.body.getAABB().width, aabb.y)
             }
 
             screen.queryAABB(aabb.x, aabb.y, aabb.x + aabb.width, aabb.y + aabb.height) {
-                if (shouldAttack(it)) {
-                    attacked.add(it.body.userData as InGameObject)
+                val igo = it.body.userData as InGameObject
+                // TODO remove attacked set (attack everybody on each frame)
+                //  and add invulnerability for creatures
+                if (shouldAttack(it) && attacked.add(igo)) {
+                    igo.takeDamage(power)
                 }
                 true
             }
         }
-        attacked.forEach { if (it != owner) it.takeDamage(power) }
     }
 
     protected abstract fun shouldAttack(fixture: Fixture): Boolean

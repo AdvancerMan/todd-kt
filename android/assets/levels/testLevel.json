@@ -81,7 +81,8 @@
         "attackXYWH": [30, 1, 20, 89],
         "power": 3,
         "cooldown": 1,
-        "sinceAttackTillDamage": 0.3
+        "safeAttackPeriod": 0.3,
+        "dangerousAttackPeriod": 0.4
       },
       "bodyPattern": {
         "type": "rectangleWithTopGSBottomGS",
@@ -140,7 +141,7 @@
           },
           "power": 3,
           "cooldown": 1,
-          "sinceAttackTillDamage": 0.3,
+          "safeAttackPeriod": 0.3,
           "bulletOffset": [30, 20],
           "bulletBuilder": {
             "type": "simpleBuilder",

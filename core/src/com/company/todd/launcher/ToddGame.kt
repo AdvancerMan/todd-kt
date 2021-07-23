@@ -24,7 +24,7 @@ class ToddGame: ApplicationListener {
         Thread.currentThread().withExceptionHandler(logger)
 
         textureManager = TextureManager()
-        screenManager = ScreenManager(MainMenuScreen(this))
+        screenManager = ScreenManager(DebugScreen(this))
     }
 
     override fun render() {
