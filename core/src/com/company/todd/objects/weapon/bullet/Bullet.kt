@@ -25,8 +25,9 @@ open class Bullet(
     @JsonFullSerializable protected val velocity: Vector2,
     @JsonFullSerializable protected val ownerFriendlyPeriod: Float,
     // TODO serialize igo???
-    @JsonFullSerializable protected val owner: InGameObject?
-) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
+    @JsonFullSerializable protected val owner: InGameObject?,
+    scale: Float
+) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private var sinceCreation = 0f
 
     override fun doInit(gameScreen: GameScreen) {
@@ -74,6 +75,7 @@ open class Bullet(
         fun build(game: ToddGame, power: Float, position: Vector2, direction: Vector2, owner: InGameObject): Bullet
     }
 
+    // TODO bullet serialization from json (not from builder)
     @SerializationType("bulletBuilder", "simpleBuilder")
     data class SimpleBuilder(
         @JsonFullSerializable private val drawableName: String,
@@ -87,12 +89,12 @@ open class Bullet(
         ): Bullet {
             return Bullet(
                 game, game.textureManager.loadDrawable(drawableName),
-                BodyPatterns.createCircleBP(BodyDef.BodyType.DynamicBody, position.add(radius, radius), radius),
+                BodyPatterns.createCircleBP(BodyDef.BodyType.DynamicBody, position.add(radius, radius), radius, 1f),
                 power,
                 direction.apply {
                     x *= speed
                     y *= speed
-                }, ownerFriendlyPeriod, owner
+                }, ownerFriendlyPeriod, owner, 1f
             )
         }
     }

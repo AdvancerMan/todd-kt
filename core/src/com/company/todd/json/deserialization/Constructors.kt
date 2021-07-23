@@ -24,10 +24,10 @@ private fun getFromJson(
         jsonByName == null -> null to false
         // TODO drawable resource leak on exception
         clazz == MyDrawable::class -> {
-            parseJsonValue(game, jsonByName, constructors["drawable"]!!) to true
+            parseNonPrototypeJsonValue(game, jsonByName, constructors["drawable"]!!) to true
         }
         clazz in jsonPrimitives.keys -> json[name, jsonPrimitives[clazz]!!, game] to true
-        name in constructors.keys -> parseJsonValue(game, jsonByName, constructors[name]!!) to true
+        name in constructors.keys -> parseNonPrototypeJsonValue(game, jsonByName, constructors[name]!!) to true
         else -> null to false
     }
 }

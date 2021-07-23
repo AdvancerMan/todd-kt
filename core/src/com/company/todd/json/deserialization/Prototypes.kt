@@ -1,7 +1,5 @@
 package com.company.todd.json.deserialization
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.utils.JsonReader
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.util.PROTOTYPES_PATH
 import com.company.todd.util.files.crawlJsonListsWithComments

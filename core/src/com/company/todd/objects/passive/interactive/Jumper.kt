@@ -11,9 +11,10 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "jumper")
-class Jumper(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
-             @JsonFullSerializable private val pushPower: Float) :
-        HalfCollidedPlatform(game, drawable, bodyPattern) {
+class Jumper(
+    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
+    @JsonFullSerializable private val pushPower: Float, scale: Float
+) : HalfCollidedPlatform(game, drawable, bodyPattern, scale) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {
         super.processContact(other, contact, oldManifold)
         other.body.setYVelocity(pushPower)

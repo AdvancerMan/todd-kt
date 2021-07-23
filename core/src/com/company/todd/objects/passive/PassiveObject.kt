@@ -5,5 +5,5 @@ import com.company.todd.objects.base.BodyWrapper
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.asset.texture.MyDrawable
 
-abstract class PassiveObject(game: ToddGame, drawable: MyDrawable, body: BodyWrapper) :
-    InGameObject(game, drawable, body)
+abstract class PassiveObject(game: ToddGame, drawable: MyDrawable, body: BodyWrapper, scale: Float) :
+    InGameObject(game, drawable, body, scale)

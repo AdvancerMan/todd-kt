@@ -12,10 +12,11 @@ import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "cloudy")
-class CloudyPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
-                     @JsonFullSerializable private val sinceContactTillInactive: Float,
-                     sinceInactiveTillActive: Float) :
-        HalfCollidedPlatform(game, drawable, bodyPattern) {
+class CloudyPlatform(
+    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
+    @JsonFullSerializable private val sinceContactTillInactive: Float,
+    sinceInactiveTillActive: Float, scale: Float
+) : HalfCollidedPlatform(game, drawable, bodyPattern, scale) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1
 

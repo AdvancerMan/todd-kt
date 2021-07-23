@@ -18,7 +18,8 @@ class Spawner(
     @JsonFullSerializable private val igoPattern: JsonValue,
     @JsonFullSerializable private val maxAmount: Int,
     @JsonFullSerializable private val spawnPeriod: Float,
-) : PassiveObject(game, drawable, RealBodyWrapper(bodyPattern)) {
+    scale: Float
+) : PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     @JsonUpdateSerializable
     private var sinceSpawn = 0f
 

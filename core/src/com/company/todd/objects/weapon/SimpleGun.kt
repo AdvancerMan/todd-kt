@@ -19,15 +19,14 @@ open class SimpleGun(
             bulletBuilder.build(
                 game,
                 power,
-                getDrawablePosition(
-                    listOf(
-                        handWeaponStyle.handDrawable?.offset,
-                        handWeaponStyle.weaponDrawable?.offset
+                localToStageCoordinates(
+                    getDrawablePosition(
+                        listOf(handWeaponStyle.handDrawable, handWeaponStyle.weaponDrawable)
+                            .mapNotNull { it?.offset }
+                            .fold(bulletOffset.cpy()) { v1, v2 -> v1.add(v2) },
+                        0f  // TODO add width if x flipped
                     )
-                        .mapNotNull { it }
-                        .fold(bulletOffset.cpy()) { v1, v2 -> v1.add(v2) },
-                    0f  // TODO add width if x flipped
-                ).add(owner.x, owner.y),
+                ),
                 if (owner.isDirectedToRight) Vector2(1f, 0f) else Vector2(-1f, 0f),
                 owner
             )

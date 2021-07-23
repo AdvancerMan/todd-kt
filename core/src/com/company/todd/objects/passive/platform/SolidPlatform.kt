@@ -8,5 +8,5 @@ import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.SerializationType
 
 @SerializationType("igo", "solid")
-open class SolidPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern) :
-    PassiveObject(game, drawable, RealBodyWrapper(bodyPattern))
+open class SolidPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern, scale: Float) :
+    PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale)

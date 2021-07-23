@@ -35,8 +35,9 @@ open class Creature(
     @JsonSaveSerializable var thinker: Thinker,
     @JsonUpdateSerializable val healthBar: HealthBar,
     @JsonUpdateSerializable private var speed: Float,
-    @JsonUpdateSerializable private var jumpPower: Float
-) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern)) {
+    @JsonUpdateSerializable private var jumpPower: Float,
+    scale: Float
+) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
     protected var animationTypeNow = stayAnimation()

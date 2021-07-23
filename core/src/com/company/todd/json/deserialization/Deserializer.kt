@@ -55,24 +55,27 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
                         )
                 )
 
-fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
-                       constructors: Map<String, JsonType<out T>>,
-                       jsonTypeName: String = "type"): T {
-    val json = createJsonValue(jsonWithPrototype)
+fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
+                                   constructors: Map<String, JsonType<out T>>): T {
     if (!constructors.containsKey("")) {
-        checkContains(json, jsonTypeName, "object type, one of strings ${constructors.keys}") { checkJson ->
+        checkContains(json, "type", "object type, one of strings ${constructors.keys}") { checkJson ->
             checkJson.isString && constructors.containsKey(checkJson.asString())
         }
     }
 
-    val constructor = json[jsonTypeName]?.asString()?.let { jsonType ->
+    val constructor = json["type"]?.asString()?.let { jsonType ->
         constructors[jsonType]?.constructor
     } ?: constructors[""]!!.constructor
     return try {
         constructor(game, json)
     } catch (e: Exception) {
-        throw IllegalArgumentException("Could not parse json, json: $jsonWithPrototype", e)
+        throw IllegalArgumentException("Could not parse json, json: $json", e)
     }
+}
+
+fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
+                       constructors: Map<String, JsonType<out T>>): T {
+    return parseNonPrototypeJsonValue(game, createJsonValue(jsonWithPrototype), constructors)
 }
 
 fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {

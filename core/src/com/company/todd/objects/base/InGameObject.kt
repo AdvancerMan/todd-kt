@@ -28,7 +28,8 @@ private fun getNewID() = maxID++
 abstract class InGameObject(
     protected val game: ToddGame, drawable: MyDrawable,
     // TODO what if static body wrapper?
-    @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper
+    @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper,
+    scale: Float
 ) : Group(), Disposable, Sensor, TopGroundListener, ManuallyJsonSerializable {
     private val drawableActor: DrawableActor = drawable.toDrawableActor().apply {
         this.setPosition(0f, 0f)
@@ -58,6 +59,7 @@ abstract class InGameObject(
         body.putSensor(SensorName.TOP_GROUND_SENSOR, TopGroundSensor(this))
 
         setSize(drawable.size.x, drawable.size.y)
+        super.setScale(scale)
     }
 
     protected open fun doInit(gameScreen: GameScreen) {
@@ -70,7 +72,6 @@ abstract class InGameObject(
             setSize(aabb.width, aabb.height)
         }
 
-        setScale(1f)
         addActor(drawableActor)
     }
 
@@ -94,7 +95,7 @@ abstract class InGameObject(
         val aabb = body.getUnrotatedAABB()
         val centerOffset = drawable.offset.cpy()
             .add(width / 2, height / 2)
-            .sub(aabb.width / 2, aabb.height / 2)
+            .sub(aabb.width / 2 / scaleX, aabb.height / 2 / scaleY)
             .mirrorIf(!isDirectedToRight, 0f)
         body.getCenter().add(centerOffset).let { setPosition(it.x, it.y, Align.center) }
 
@@ -141,6 +142,23 @@ abstract class InGameObject(
         super.setPosition(x, y)
     }
 
+    @JsonFullSerializable("scale")
+    override fun getScaleX(): Float {
+        return super.getScaleX()
+    }
+
+    final override fun setScale(scaleXY: Float) {
+        throw UnsupportedOperationException("Scale for InGameObject is immutable")
+    }
+
+    final override fun setScaleX(scaleX: Float) {
+        setScale(scaleX)
+    }
+
+    final override fun setScaleY(scaleY: Float) {
+        setScale(scaleY)
+    }
+
     open fun takeDamage(amount: Float) {}
 
     override fun equals(other: Any?) =
@@ -176,6 +194,16 @@ abstract class InGameObject(
     override fun serializeSave(json: JsonValue) {
         // no operations
     }
+
+    companion object {
+        @ManualJsonConstructor
+        private fun getJsonDefaults(
+            @Suppress("UNUSED_PARAMETER") json: JsonValue,
+            parsed: MutableMap<String, Pair<Any?, Boolean>>
+        ) {
+            JsonDefaults.setDefault("scale", 1f, parsed)
+        }
+    }
 }
 
 fun Actor.getActorAABB() =
@@ -195,4 +223,12 @@ fun Actor.worldAABBFor(rectangle: Rectangle) =
         }
 
 fun MyDrawable.toDrawableActor() =
-    Pools.obtain(DrawableActor::class.java)!!.also { it.drawable = this }
+    Pools.obtain(DrawableActor::class.java)!!
+        .also {
+            it.drawable = this
+            it.setPosition(0f, 0f)
+            it.setOrigin(0f, 0f)
+            it.setSize(0f, 0f)
+            it.setScale(1f)
+            it.rotation = 0f
+        }

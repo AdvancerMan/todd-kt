@@ -60,6 +60,7 @@
     },
     {
       "type": "creature",
+      "scale": 1.1,
       "drawable": {
         "name": "stupidMeleeEnemy",
         "zIndex": 1,
@@ -140,7 +141,7 @@
           "power": 3,
           "cooldown": 1,
           "sinceAttackTillDamage": 0.3,
-          "bulletOffset": [10, 20],
+          "bulletOffset": [30, 20],
           "bulletBuilder": {
             "type": "simpleBuilder",
             "drawableName":  "rocket",
