@@ -59,6 +59,13 @@
       "teleportTo": [0, 100]
     },
     {
+      "prototype" : "Skeleton",
+      "bodyPattern": {
+        "worldPosition": [-300, 200],
+        "size": [24, 47]
+      }
+    },
+    {
       "type": "creature",
       "scale": 1.1,
       "drawable": {
