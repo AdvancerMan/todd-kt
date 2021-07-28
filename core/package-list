@@ -1,0 +1,61 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:bodyPattern////PointingToDeclaration/core/bodyPattern/index.html
+$dokka.location:bodyPattern/circle///PointingToDeclaration/core/bodyPattern/circle/index.html
+$dokka.location:bodyPattern/polygonWithTopGS///PointingToDeclaration/core/bodyPattern/polygon-with-top-g-s/index.html
+$dokka.location:bodyPattern/rectangleWithTopGS///PointingToDeclaration/core/bodyPattern/rectangle-with-top-g-s/index.html
+$dokka.location:bodyPattern/rectangleWithTopGSBottomGS///PointingToDeclaration/core/bodyPattern/rectangle-with-top-g-s-bottom-g-s/index.html
+$dokka.location:bulletBuilder////PointingToDeclaration/core/bulletBuilder/index.html
+$dokka.location:bulletBuilder/simpleBuilder///PointingToDeclaration/core/bulletBuilder/simple-builder/index.html
+$dokka.location:com.company.todd.asset.texture/DrawableParser/loadDrawable/#com.company.todd.launcher.ToddGame#kotlin.String#kotlin.Int#com.badlogic.gdx.math.Vector2#com.badlogic.gdx.math.Vector2/PointingToDeclaration/core/drawable/-default/-default.html
+$dokka.location:com.company.todd.box2d.bodyPattern/BodyPatterns/createCircleBP/#com.badlogic.gdx.physics.box2d.BodyDef.BodyType#com.badlogic.gdx.math.Vector2#kotlin.Float#kotlin.Float/PointingToDeclaration/core/bodyPattern/circle/circle.html
+$dokka.location:com.company.todd.box2d.bodyPattern/BodyPatterns/createPolygonBPWithTGS/#com.badlogic.gdx.physics.box2d.BodyDef.BodyType#com.badlogic.gdx.math.Vector2#kotlin.Array[com.badlogic.gdx.math.Vector2]#kotlin.Float/PointingToDeclaration/core/bodyPattern/polygon-with-top-g-s/polygon-with-top-g-s.html
+$dokka.location:com.company.todd.box2d.bodyPattern/BodyPatterns/createRectangleBPWithTGS/#com.badlogic.gdx.physics.box2d.BodyDef.BodyType#com.badlogic.gdx.math.Vector2#com.badlogic.gdx.math.Vector2#com.badlogic.gdx.math.Vector2#kotlin.Float/PointingToDeclaration/core/bodyPattern/rectangle-with-top-g-s/rectangle-with-top-g-s.html
+$dokka.location:com.company.todd.box2d.bodyPattern/BodyPatterns/createRectangleBPWithTGSBGS/#com.badlogic.gdx.physics.box2d.BodyDef.BodyType#com.badlogic.gdx.math.Vector2#com.badlogic.gdx.math.Vector2#com.badlogic.gdx.math.Vector2#kotlin.Float/PointingToDeclaration/core/bodyPattern/rectangle-with-top-g-s-bottom-g-s/rectangle-with-top-g-s-bottom-g-s.html
+$dokka.location:com.company.todd.gui/HealthBar/HealthBar/#kotlin.Float#com.company.todd.asset.texture.MyDrawable#com.company.todd.asset.texture.MyDrawable#kotlin.Int/PointingToDeclaration/core/healthBar/-default/-default.html
+$dokka.location:com.company.todd.objects.creature/Creature/Creature/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#com.company.todd.objects.weapon.Weapon?#com.company.todd.thinker.Thinker#com.company.todd.gui.HealthBar#kotlin.Float#kotlin.Float#kotlin.Float/PointingToDeclaration/core/igo/creature/creature.html
+$dokka.location:com.company.todd.objects.passive.interactive/Jumper/Jumper/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float#kotlin.Float/PointingToDeclaration/core/igo/jumper/jumper.html
+$dokka.location:com.company.todd.objects.passive.interactive/Portal/Portal/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#com.badlogic.gdx.math.Vector2#kotlin.Float#kotlin.Float/PointingToDeclaration/core/igo/portal/portal.html
+$dokka.location:com.company.todd.objects.passive.interactive/Trampoline/Trampoline/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float/PointingToDeclaration/core/igo/trampoline/trampoline.html
+$dokka.location:com.company.todd.objects.passive.interactive/Travolator/Travolator/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float#kotlin.Float/PointingToDeclaration/core/igo/travolator/travolator.html
+$dokka.location:com.company.todd.objects.passive.platform/CloudyPlatform/CloudyPlatform/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float#kotlin.Float#kotlin.Float/PointingToDeclaration/core/igo/cloudy/cloudy.html
+$dokka.location:com.company.todd.objects.passive.platform/HalfCollidedPlatform/HalfCollidedPlatform/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float/PointingToDeclaration/core/igo/half-collided/half-collided.html
+$dokka.location:com.company.todd.objects.passive.platform/SolidPlatform/SolidPlatform/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float/PointingToDeclaration/core/igo/solid/solid.html
+$dokka.location:com.company.todd.objects.passive/Spawner/Spawner/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#com.badlogic.gdx.utils.JsonValue#kotlin.Int#kotlin.Float#kotlin.Float/PointingToDeclaration/core/igo/spawner/spawner.html
+$dokka.location:com.company.todd.objects.weapon.bullet/Bullet.SimpleBuilder/SimpleBuilder/#kotlin.String#kotlin.Float#kotlin.Float#kotlin.Float/PointingToDeclaration/core/bulletBuilder/simple-builder/simple-builder.html
+$dokka.location:com.company.todd.objects.weapon.bullet/Bullet/Bullet/#com.company.todd.launcher.ToddGame#com.company.todd.asset.texture.MyDrawable#com.company.todd.box2d.bodyPattern.base.BodyPattern#kotlin.Float#com.badlogic.gdx.math.Vector2#kotlin.Float#com.company.todd.objects.base.InGameObject?#kotlin.Float/PointingToDeclaration/core/igo/simple-bullet/simple-bullet.html
+$dokka.location:com.company.todd.objects.weapon/HandWeapon.Style/Style/#com.company.todd.asset.texture.MyDrawable?#com.company.todd.asset.texture.MyDrawable?#com.badlogic.gdx.math.Vector2/PointingToDeclaration/core/handWeaponStyle/-default/-default.html
+$dokka.location:com.company.todd.objects.weapon/SimpleGun/SimpleGun/#com.company.todd.launcher.ToddGame#com.company.todd.objects.weapon.HandWeapon.Style#kotlin.Float#kotlin.Float#kotlin.Float#kotlin.Float#com.badlogic.gdx.math.Vector2#com.company.todd.objects.weapon.bullet.Bullet.Builder/PointingToDeclaration/core/weapon/simple-gun/simple-gun.html
+$dokka.location:com.company.todd.objects.weapon/SimpleMeleeWeapon/SimpleMeleeWeapon/#com.company.todd.objects.weapon.HandWeapon.Style#com.badlogic.gdx.math.Rectangle#kotlin.Float#kotlin.Float#kotlin.Float#kotlin.Float/PointingToDeclaration/core/weapon/simple-melee-weapon/simple-melee-weapon.html
+$dokka.location:com.company.todd.thinker/StupidMeleeThinker/StupidMeleeThinker/#kotlin.Float#kotlin.Float/PointingToDeclaration/core/thinker/stupid-melee-thinker/stupid-melee-thinker.html
+$dokka.location:drawable////PointingToDeclaration/core/drawable/index.html
+$dokka.location:drawable/Default///PointingToDeclaration/core/drawable/-default/index.html
+$dokka.location:handWeaponStyle////PointingToDeclaration/core/handWeaponStyle/index.html
+$dokka.location:handWeaponStyle/Default///PointingToDeclaration/core/handWeaponStyle/-default/index.html
+$dokka.location:healthBar////PointingToDeclaration/core/healthBar/index.html
+$dokka.location:healthBar/Default///PointingToDeclaration/core/healthBar/-default/index.html
+$dokka.location:igo////PointingToDeclaration/core/igo/index.html
+$dokka.location:igo/cloudy///PointingToDeclaration/core/igo/cloudy/index.html
+$dokka.location:igo/creature///PointingToDeclaration/core/igo/creature/index.html
+$dokka.location:igo/halfCollided///PointingToDeclaration/core/igo/half-collided/index.html
+$dokka.location:igo/jumper///PointingToDeclaration/core/igo/jumper/index.html
+$dokka.location:igo/portal///PointingToDeclaration/core/igo/portal/index.html
+$dokka.location:igo/simpleBullet///PointingToDeclaration/core/igo/simple-bullet/index.html
+$dokka.location:igo/solid///PointingToDeclaration/core/igo/solid/index.html
+$dokka.location:igo/spawner///PointingToDeclaration/core/igo/spawner/index.html
+$dokka.location:igo/trampoline///PointingToDeclaration/core/igo/trampoline/index.html
+$dokka.location:igo/travolator///PointingToDeclaration/core/igo/travolator/index.html
+$dokka.location:thinker////PointingToDeclaration/core/thinker/index.html
+$dokka.location:thinker/stupidMeleeThinker///PointingToDeclaration/core/thinker/stupid-melee-thinker/index.html
+$dokka.location:weapon////PointingToDeclaration/core/weapon/index.html
+$dokka.location:weapon/simpleGun///PointingToDeclaration/core/weapon/simple-gun/index.html
+$dokka.location:weapon/simpleMeleeWeapon///PointingToDeclaration/core/weapon/simple-melee-weapon/index.html
+bodyPattern
+bulletBuilder
+drawable
+handWeaponStyle
+healthBar
+igo
+thinker
+weapon
+
