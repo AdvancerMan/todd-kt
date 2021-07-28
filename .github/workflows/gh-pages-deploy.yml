@@ -34,7 +34,7 @@ jobs:
         run: ./gradlew :plugins:docs:publishToMavenLocal
         
       - name: Generate JSON docs
-        run: ./gradlew :dokkaHtml
+        run: ./gradlew :core:dokkaHtml
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
