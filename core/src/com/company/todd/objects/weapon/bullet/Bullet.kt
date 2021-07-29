@@ -5,12 +5,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
-import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.box2d.bodyPattern.BodyPatterns
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
-import com.company.todd.json.ManualJsonConstructor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 import com.company.todd.launcher.ToddGame
@@ -20,7 +18,7 @@ import com.company.todd.screen.game.GameScreen
 
 @SerializationType(InGameObject::class, "simpleBullet")
 open class Bullet(
-    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
+    game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable protected val power: Float,
     @JsonFullSerializable protected val velocity: Vector2,
     @JsonFullSerializable protected val ownerFriendlyPeriod: Float,

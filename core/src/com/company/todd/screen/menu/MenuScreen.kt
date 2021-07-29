@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.withMinSize
 import com.company.todd.json.deserialization.jsonConstructors
 import com.company.todd.json.deserialization.jsonSettings
@@ -17,8 +17,8 @@ open class MenuScreen(game: ToddGame) : MyScreen(game) {
         ?: throw IllegalArgumentException("settings.json should contain menu parameter")
 
     @Suppress("UNCHECKED_CAST")
-    private val drawableFromJson = jsonConstructors[MyDrawable::class]!![""]!!.constructor
-            as (ToddGame, JsonValue) -> MyDrawable
+    private val drawableFromJson = jsonConstructors[ToddDrawable::class]!![""]!!.constructor
+            as (ToddGame, JsonValue) -> ToddDrawable
 
     // TODO menu font
     private val font = BitmapFont()

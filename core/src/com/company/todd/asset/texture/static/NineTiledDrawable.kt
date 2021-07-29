@@ -3,14 +3,13 @@ package com.company.todd.asset.texture.static
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
 import com.company.todd.asset.texture.*
 import kotlin.math.max
 
 class NineTiledDrawable(
     private val info: NineTiledRegionInfo?, region: TextureRegion,
     lw: Int, rw: Int, uh: Int, dh: Int
-) : BaseMyDrawable() {
+) : BaseToddDrawable() {
     constructor(info: NineTiledRegionInfo, region: TextureRegion) :
             this(info, region, info.lw, info.rw, info.uh, info.dh)
 

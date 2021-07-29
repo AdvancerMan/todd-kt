@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.JsonValue
 import com.badlogic.gdx.utils.Pools
 import com.company.todd.launcher.ToddGame
 import com.company.todd.screen.game.GameScreen
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.WithZIndex
 import com.company.todd.box2d.bodyPattern.base.SensorName
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
@@ -26,7 +26,7 @@ private var maxID = 0
 private fun getNewID() = maxID++
 
 abstract class InGameObject(
-    protected val game: ToddGame, drawable: MyDrawable,
+    protected val game: ToddGame, drawable: ToddDrawable,
     // TODO what if static body wrapper?
     @JsonUpdateSerializable("bodyPattern") val body: BodyWrapper,
     scale: Float
@@ -36,7 +36,7 @@ abstract class InGameObject(
     }
 
     @JsonFullSerializable
-    val drawable: MyDrawable
+    val drawable: ToddDrawable
         get() = drawableActor.drawable!!
 
     @JsonUpdateSerializable
@@ -222,7 +222,7 @@ fun Actor.worldAABBFor(rectangle: Rectangle) =
                     .fold(this) { r, v -> r.merge(v) }
         }
 
-fun MyDrawable.toDrawableActor() =
+fun ToddDrawable.toDrawableActor() =
     Pools.obtain(DrawableActor::class.java)!!
         .also {
             it.drawable = this

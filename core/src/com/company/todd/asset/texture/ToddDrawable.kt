@@ -20,7 +20,7 @@ interface FlipTransformDrawable : TransformDrawable {
     )
 }
 
-interface MyDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex {
+interface ToddDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex {
     @JsonFullSerializable("name")
     var drawableName: String?
 
@@ -42,7 +42,7 @@ interface MyDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex {
     fun isAnimationFinished() = true
 }
 
-fun MyDrawable.withMinSize() = apply {
+fun ToddDrawable.withMinSize() = apply {
     minWidth = size.x
     minHeight = size.y
 }

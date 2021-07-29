@@ -10,12 +10,10 @@ import com.company.todd.asset.AssetManager
 import com.company.todd.asset.texture.animated.AnimatedDrawableManyAnimations
 import com.company.todd.asset.texture.animated.AnimatedDrawableOneAnimation
 import com.company.todd.asset.texture.static.CoveredTiledDrawable
-import com.company.todd.asset.texture.static.MyTextureRegionDrawable
+import com.company.todd.asset.texture.static.ToddTextureRegionDrawable
 import com.company.todd.asset.texture.static.NineTiledDrawable
 import com.company.todd.asset.texture.static.TransformTiledDrawable
 import com.company.todd.json.deserialization.loadTextureInfos
-import java.io.PrintWriter
-import java.io.StringWriter
 import kotlin.random.Random
 
 class TextureManager : AssetManager<Texture>(Texture::class.java) {
@@ -90,7 +88,7 @@ class TextureManager : AssetManager<Texture>(Texture::class.java) {
         }
     }
 
-    private fun loadDrawable(info: TextureInfo): MyDrawable =
+    private fun loadDrawable(info: TextureInfo): ToddDrawable =
             when (info) {
                 is TiledRegionInfo -> {
                     TransformTiledDrawable(info, load(info))
@@ -102,7 +100,7 @@ class TextureManager : AssetManager<Texture>(Texture::class.java) {
                     NineTiledDrawable(info, load(info))
                 }
                 is RegionInfo -> {
-                    MyTextureRegionDrawable(info, load(info))
+                    ToddTextureRegionDrawable(info, load(info))
                 }
                 is AnimationInfo -> {
                     AnimatedDrawableOneAnimation(info, load(info))
@@ -114,7 +112,7 @@ class TextureManager : AssetManager<Texture>(Texture::class.java) {
 
     fun loadDrawable(name: String) =
             infos[name]?.let { loadDrawable(it) }
-                    ?: MyTextureRegionDrawable(additionalInfo, additionalTexture)
+                    ?: ToddTextureRegionDrawable(additionalInfo, additionalTexture)
                             .also { error("Trying to load texture that doesn't exist in infos: $name") }
 
     override fun dispose() {

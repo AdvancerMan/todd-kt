@@ -12,7 +12,7 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.animated.AnimationType
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.animated.stayAnimation
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
@@ -30,7 +30,7 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 @SerializationType(InGameObject::class, "creature")
 open class Creature(
-    game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
+    game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,
     @JsonSaveSerializable var thinker: Thinker,
     @JsonUpdateSerializable val healthBar: HealthBar,

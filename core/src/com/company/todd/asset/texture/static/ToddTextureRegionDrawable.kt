@@ -2,16 +2,15 @@ package com.company.todd.asset.texture.static
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.company.todd.asset.texture.BaseMyDrawable
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.BaseToddDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.RegionInfo
 import com.company.todd.asset.texture.TextureManager
 
-class MyTextureRegionDrawable(
+class ToddTextureRegionDrawable(
     private val info: RegionInfo?,
     private val region: TextureRegion
-) : BaseMyDrawable(), MyDrawable {
+) : BaseToddDrawable(), ToddDrawable {
     init {
         setMinSize(region.regionWidth.toFloat(), region.regionHeight.toFloat())
     }

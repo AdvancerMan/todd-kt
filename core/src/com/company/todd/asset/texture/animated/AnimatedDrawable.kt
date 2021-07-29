@@ -2,14 +2,14 @@ package com.company.todd.asset.texture.animated
 
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.company.todd.asset.texture.BaseMyDrawable
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.BaseToddDrawable
+import com.company.todd.asset.texture.ToddDrawable
 
 enum class AnimationType {
     STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, ACTION
 }
 
-abstract class AnimatedDrawable(playingNow: Animation<MyDrawable>) : BaseMyDrawable() {
+abstract class AnimatedDrawable(playingNow: Animation<ToddDrawable>) : BaseToddDrawable() {
     protected var elapsed = 0f
     protected var frame = playingNow.getKeyFrame(0f)!!
     protected var playingNow = playingNow
@@ -46,7 +46,7 @@ abstract class AnimatedDrawable(playingNow: Animation<MyDrawable>) : BaseMyDrawa
     override fun getMinWidth() = frame.minWidth
     override fun getMinHeight() = frame.minHeight
 
-    open fun forEachFrame(f: (MyDrawable) -> Unit) {
+    open fun forEachFrame(f: (ToddDrawable) -> Unit) {
         playingNow.keyFrames.forEach(f)
     }
 

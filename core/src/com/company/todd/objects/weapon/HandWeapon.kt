@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Pools
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.screen.game.GameScreen
 import com.company.todd.asset.texture.DisposableByManager
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.animated.AnimationType
 import com.company.todd.json.*
@@ -119,8 +119,8 @@ abstract class HandWeapon(
 
     @SerializationType(Style::class)
     class Style(
-        @JsonFullSerializable val handDrawable: MyDrawable?,
-        @JsonFullSerializable val weaponDrawable: MyDrawable?,
+        @JsonFullSerializable val handDrawable: ToddDrawable?,
+        @JsonFullSerializable val weaponDrawable: ToddDrawable?,
         @JsonFullSerializable val origin: Vector2
     ) {
         companion object {

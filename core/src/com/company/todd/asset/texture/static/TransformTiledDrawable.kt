@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.TextureManager
 import com.company.todd.asset.texture.TiledRegionInfo
 import kotlin.math.ceil
 
-class TransformTiledDrawable(private val info: TiledRegionInfo?, region: TextureRegion) : TiledDrawable(region), MyDrawable {
+class TransformTiledDrawable(private val info: TiledRegionInfo?, region: TextureRegion) : TiledDrawable(region), ToddDrawable {
     override var drawableName: String? = null
     override var myZIndex: Int = 0
     override val size = Vector2()

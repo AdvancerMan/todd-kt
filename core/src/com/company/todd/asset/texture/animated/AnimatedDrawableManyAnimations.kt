@@ -3,18 +3,18 @@ package com.company.todd.asset.texture.animated
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.company.todd.asset.texture.AnimationPackInfo
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.TextureManager
 
 class AnimatedDrawableManyAnimations
 private constructor(private val animationPackInfo: AnimationPackInfo,
-                    private val animations: Map<AnimationType, Animation<MyDrawable>>,
-                    firstAnimation: Pair<AnimationType, Animation<MyDrawable>>) :
+                    private val animations: Map<AnimationType, Animation<ToddDrawable>>,
+                    firstAnimation: Pair<AnimationType, Animation<ToddDrawable>>) :
         AnimatedDrawable(firstAnimation.second) {
     private var type = firstAnimation.first
 
     constructor(animationPackInfo: AnimationPackInfo,
-                animations: Map<AnimationType, Animation<MyDrawable>>) :
+                animations: Map<AnimationType, Animation<ToddDrawable>>) :
             this(
                     animationPackInfo, animations,
                     animations[AnimationType.STAY]?.let { AnimationType.STAY to it }

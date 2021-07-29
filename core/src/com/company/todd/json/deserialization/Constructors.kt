@@ -2,7 +2,6 @@ package com.company.todd.json.deserialization
 
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
-import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.Reflection

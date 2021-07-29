@@ -13,8 +13,8 @@ import com.company.todd.json.serialization.toJsonValue
 @SerializationType(HealthBar::class)
 class HealthBar(
     maxHealth: Float,
-    @JsonFullSerializable private val backgroundDrawable: MyDrawable,
-    @JsonFullSerializable private val healthDrawable: MyDrawable,
+    @JsonFullSerializable private val backgroundDrawable: ToddDrawable,
+    @JsonFullSerializable private val healthDrawable: ToddDrawable,
     @JsonFullSerializable("zIndex") override val myZIndex: Int
 ) :
         ProgressBar(

@@ -1,6 +1,5 @@
 package com.company.todd.objects.passive.platform
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
@@ -8,7 +7,7 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.toMeters
 import com.company.todd.util.SPF
-import com.company.todd.asset.texture.MyDrawable
+import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.SerializationType
@@ -16,7 +15,7 @@ import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
 @SerializationType(InGameObject::class, "halfCollided")
-open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern, scale: Float) :
+open class HalfCollidedPlatform(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float) :
         SolidPlatform(game, drawable, bodyPattern, scale) {
     protected val groundFor = mutableMapOf<InGameObject, Int>()
 

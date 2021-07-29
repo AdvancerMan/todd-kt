@@ -3,15 +3,13 @@ package com.company.todd.asset.texture.static
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
-import com.company.todd.asset.texture.BaseMyDrawable
+import com.company.todd.asset.texture.BaseToddDrawable
 import com.company.todd.asset.texture.CoveredTiledRegionInfo
-import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.asset.texture.TextureManager
 import kotlin.math.min
 
 class CoveredTiledDrawable(private val info: CoveredTiledRegionInfo?,
-                           coverTile: TextureRegion, bodyTile: TextureRegion) : BaseMyDrawable() {
+                           coverTile: TextureRegion, bodyTile: TextureRegion) : BaseToddDrawable() {
     constructor(info: CoveredTiledRegionInfo?, region: TextureRegion, uh: Int) :
             this(
                     info,

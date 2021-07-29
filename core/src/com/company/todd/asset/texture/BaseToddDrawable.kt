@@ -3,7 +3,7 @@ package com.company.todd.asset.texture
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable
 
-abstract class BaseMyDrawable : BaseDrawable(), MyDrawable {
+abstract class BaseToddDrawable : BaseDrawable(), ToddDrawable {
     override var myZIndex = 0
     override var drawableName: String?
         get() = name
