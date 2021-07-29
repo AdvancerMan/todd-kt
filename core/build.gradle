@@ -86,13 +86,21 @@ static List<String> getClassParametersName(KClass<? extends Object> clazz) {
     }
 }
 
-static def checkSerializationBaseClass(
-        Class<?> serializationClass, Class<?> baseClass, String entityIdentifier
+static def doSerializationBaseClassAsserts(
+        Class<?> serializationClass, Annotation serializationTypeAnnotation, String entityIdentifier
 ) {
+    def baseClass = serializationTypeAnnotation.baseClass()
+    def type = serializationTypeAnnotation.type()
     if (!baseClass.isAssignableFrom(serializationClass)) {
         throw new IllegalArgumentException(
                 "Serialization base class ${baseClass.name} " +
                         "should be a superclass of ${serializationClass.name} " +
+                        "(for entity ${entityIdentifier})"
+        )
+    }
+    if (type == baseClass.simpleName) {
+        throw new IllegalArgumentException(
+                "Type $type and base class (${baseClass.name}) simple name should differ " +
                         "(for entity ${entityIdentifier})"
         )
     }
@@ -106,9 +114,9 @@ static def addSerializationTypeClasses(
     JsonValue serializationTypeClasses = new JsonValue(JsonValue.ValueType.object)
     reflections.getTypesAnnotatedWith(serializationTypeAnnotation)
             .forEach { serializationClass ->
-                checkSerializationBaseClass(
+                doSerializationBaseClassAsserts(
                         serializationClass,
-                        serializationClass.getAnnotation(serializationTypeAnnotation).baseClass(),
+                        serializationClass.getAnnotation(serializationTypeAnnotation),
                         serializationClass.name
                 )
 
@@ -165,9 +173,9 @@ static def addSerializationTypeFunctions(
             .forEach { entry ->
                 def classJson = new JsonValue(JsonValue.ValueType.object)
                 entry.value.forEach { method ->
-                    checkSerializationBaseClass(
+                    doSerializationBaseClassAsserts(
                             method.returnType,
-                            method.getAnnotation(serializationTypeAnnotation).baseClass(),
+                            method.getAnnotation(serializationTypeAnnotation),
                             method.declaringClass.name + "::" + method.name
                     )
 

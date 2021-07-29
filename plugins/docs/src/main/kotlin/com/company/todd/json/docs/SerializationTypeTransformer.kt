@@ -20,7 +20,7 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                     classes.value.map {
                         it.copy(
                             constructors = listOf(
-                                it.constructors[0].toJsonConstructor(map, it.name)
+                                it.constructors[0].toJsonConstructor(map.keys, it.name)
                             )
                         )
                     }
@@ -28,7 +28,7 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             }
             .map {
                 DPackage(
-                    dri = DRI(it.key),
+                    dri = DRI(it.key, it.key),
                     functions = listOf(),
                     properties = listOf(),
                     classlikes = it.value,
@@ -72,6 +72,10 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                             companion = null,
                             generics = listOf(),
                             supertypes = mapOf(),
+                            visibility = mapOf(),
+                            expectPresentInSet = null,
+                            modifier = mapOf(),
+                            isExpectActual = false,
                             extra = PropertyContainer.empty()
                         )
                     )
@@ -92,12 +96,12 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                                 generics = listOf(),
                                 supertypes = mapOf(),
                                 sources = f.sources,
-                                visibility = f.visibility,
+                                visibility = mapOf(),
                                 documentation = f.documentation,
-                                expectPresentInSet = f.expectPresentInSet,
-                                modifier = f.modifier,
+                                expectPresentInSet = null,
+                                modifier = mapOf(),
                                 sourceSets = f.sourceSets,
-                                isExpectActual = f.isExpectActual
+                                isExpectActual = false
                             )
                         }
                     }
@@ -119,17 +123,47 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                         (params["type"]?.let { (it as StringValue).value } ?: "Default")
             }
 
-    private fun DFunction.toJsonConstructor(
-        anotherTypes: Map<String, List<DClass>>,
-        type: String
-    ): DFunction {
-        return copy(
-            // TODO parameters
+    private fun DFunction.toJsonConstructor(anotherTypes: Set<String>, type: String): DFunction =
+        copy(
             name = type,
             isConstructor = true,
+            parameters = parameters
+                .filter { it.name != null }
+                .map { it.withBaseTypeDri(anotherTypes) }
+                .filter {
+                    it.type !is GenericTypeConstructor
+                            || (it.type as GenericTypeConstructor).dri.classNames != "ToddGame"
+                },
             extra = PropertyContainer.withAll(
                 PrimaryConstructorExtra
-            )
+            ),
         )
-    }
+
+    // TODO serialization primitives
+    private fun Bound.withBaseTypeDri(anotherTypes: Set<String>): Bound =
+        when (this) {
+            is TypeAliased -> inner.withBaseTypeDri(anotherTypes)
+            is Nullable -> copy(inner.withBaseTypeDri(anotherTypes))
+            is TypeParameter, is GenericTypeConstructor -> {
+                val dri = when(this) {
+                    is TypeParameter -> dri
+                    is GenericTypeConstructor -> dri
+                    else -> throw AssertionError("Never happens")
+                }.let { DRI(it.classNames, it.classNames) }
+
+                if (dri.classNames in anotherTypes) {
+                    when(this) {
+                        is TypeParameter -> copy(dri = dri)
+                        is GenericTypeConstructor -> copy(dri = dri)
+                        else -> throw AssertionError("Never happens")
+                    }
+                } else {
+                    this
+                }
+            }
+            else -> this
+        }
+
+    private fun DParameter.withBaseTypeDri(anotherTypes: Set<String>): DParameter =
+        copy(type = type.withBaseTypeDri(anotherTypes))
 }

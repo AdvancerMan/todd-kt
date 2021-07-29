@@ -106,6 +106,9 @@ project(":core") {
         dokkaSourceSets {
             configureEach {
                 includeNonPublic.set(true)
+                noStdlibLink.set(true)
+                noJdkLink.set(true)
+                noAndroidSdkLink.set(true)
             }
         }
     }
