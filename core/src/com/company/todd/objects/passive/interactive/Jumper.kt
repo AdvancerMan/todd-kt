@@ -10,7 +10,7 @@ import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
-@SerializationType("igo", "jumper")
+@SerializationType(InGameObject::class, "jumper")
 class Jumper(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val pushPower: Float, scale: Float

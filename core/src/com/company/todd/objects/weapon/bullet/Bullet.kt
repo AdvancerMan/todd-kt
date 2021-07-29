@@ -18,7 +18,7 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.screen.game.GameScreen
 
-@SerializationType("igo", "simpleBullet")
+@SerializationType(InGameObject::class, "simpleBullet")
 open class Bullet(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable protected val power: Float,
@@ -76,7 +76,7 @@ open class Bullet(
     }
 
     // TODO bullet serialization from json (not from builder)
-    @SerializationType("bulletBuilder", "simpleBuilder")
+    @SerializationType(Builder::class, "simpleBuilder")
     data class SimpleBuilder(
         @JsonFullSerializable private val drawableName: String,
         @JsonFullSerializable private val radius: Float,

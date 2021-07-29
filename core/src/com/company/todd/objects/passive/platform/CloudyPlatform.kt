@@ -11,7 +11,7 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
-@SerializationType("igo", "cloudy")
+@SerializationType(InGameObject::class, "cloudy")
 class CloudyPlatform(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val sinceContactTillInactive: Float,

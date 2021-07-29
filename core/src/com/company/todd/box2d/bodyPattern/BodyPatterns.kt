@@ -15,7 +15,7 @@ import com.company.todd.json.deserialization.vectorArray
 import com.company.todd.json.serialization.toJsonValue
 
 object BodyPatterns {
-    @SerializationType("bodyPattern", "polygonWithTopGS")
+    @SerializationType(BodyPattern::class, "polygonWithTopGS")
     fun createPolygonBPWithTGS(
         b2dType: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>, scale: Float
     ): BodyPattern {
@@ -40,7 +40,7 @@ object BodyPatterns {
         parseScale(json, parsed)
     }
 
-    @SerializationType("bodyPattern", "rectangleWithTopGS")
+    @SerializationType(BodyPattern::class, "rectangleWithTopGS")
     fun createRectangleBPWithTGS(
         b2dType: BodyDef.BodyType, worldPosition: Vector2,
         size: Vector2, localCenter: Vector2, scale: Float
@@ -66,7 +66,7 @@ object BodyPatterns {
         parseScale(json, parsed)
     }
 
-    @SerializationType("bodyPattern", "rectangleWithTopGSBottomGS")
+    @SerializationType(BodyPattern::class, "rectangleWithTopGSBottomGS")
     fun createRectangleBPWithTGSBGS(
         b2dType: BodyDef.BodyType, worldPosition: Vector2,
         size: Vector2, localCenter: Vector2, scale: Float
@@ -93,7 +93,7 @@ object BodyPatterns {
         parseScale(json, parsed)
     }
 
-    @SerializationType("bodyPattern", "circle")
+    @SerializationType(BodyPattern::class, "circle")
     fun createCircleBP(b2dType: BodyDef.BodyType, worldCenter: Vector2, radius: Float, scale: Float): BodyPattern =
         CircleBodyPattern(b2dType, worldCenter, radius * scale)
             .withSerializer {

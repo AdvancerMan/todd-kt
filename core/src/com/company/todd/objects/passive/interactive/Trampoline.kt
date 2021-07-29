@@ -10,7 +10,7 @@ import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.SerializationType
 
-@SerializationType("igo", "trampoline")
+@SerializationType(InGameObject::class, "trampoline")
 class Trampoline(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern, scale: Float) :
         HalfCollidedPlatform(game, drawable, bodyPattern, scale) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {

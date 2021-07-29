@@ -6,7 +6,7 @@ import com.company.todd.json.SerializationType
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.weapon.bullet.Bullet
 
-@SerializationType("weapon", "simpleGun")
+@SerializationType(Weapon::class, "simpleGun")
 open class SimpleGun(
     private val game: ToddGame,
     handWeaponStyle: Style, override val power: Float, cooldown: Float,

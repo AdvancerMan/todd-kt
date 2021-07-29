@@ -3,7 +3,6 @@ package com.company.todd.json.deserialization
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
 import com.company.todd.asset.texture.MyDrawable
-import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.Reflection
@@ -16,18 +15,15 @@ typealias ManualConstructor = (JsonValue, MutableMap<String, Pair<Any?, Boolean>
 
 private fun getFromJson(
     name: String, clazz: KClass<*>, json: JsonValue, game: ToddGame,
-    constructors: Map<String, Map<String, JsonType<*>>>
+    constructors: Map<KClass<*>, Map<String, JsonType<*>>>
 ): Pair<Any?, Boolean> {
     val jsonByName = json[name]
     return when {
         clazz == ToddGame::class -> game to true
         jsonByName == null -> null to false
-        // TODO drawable resource leak on exception
-        clazz == MyDrawable::class -> {
-            parseNonPrototypeJsonValue(game, jsonByName, constructors["drawable"]!!) to true
-        }
         clazz in jsonPrimitives.keys -> json[name, jsonPrimitives[clazz]!!, game] to true
-        name in constructors.keys -> parseNonPrototypeJsonValue(game, jsonByName, constructors[name]!!) to true
+        // TODO drawable resource leak on exception
+        clazz in constructors.keys -> parseNonPrototypeJsonValue(game, jsonByName, constructors[clazz]!!) to true
         else -> null to false
     }
 }
@@ -75,12 +71,12 @@ private fun getJsonType(
     }
 }
 
-val jsonConstructors: Map<String, Map<String, JsonType<*>>> by lazy {
+val jsonConstructors: Map<KClass<*>, Map<String, JsonType<*>>> by lazy {
     val manualConstructors = mutableMapOf<String, ManualConstructor>()
     Reflection.serializationTypeData
         .onEach { addManualConstructor(it, manualConstructors) }
         .filter { it.constructor != null }
-        .groupBy { it.serializationCategory!! }
+        .groupBy { it.baseClass!! }
         .mapValues { (_, constructors) ->
             constructors.associateBy { it.serializationType!! }
                 .mapValues { getJsonType(it.value, manualConstructors) }
@@ -98,6 +94,7 @@ object Constructors {
 
     init {
         @Suppress("UNCHECKED_CAST")
-        this.igoConstructors = jsonConstructors["igo"] as Map<String, JsonType<out InGameObject>>
+        this.igoConstructors = jsonConstructors[InGameObject::class]
+                as Map<String, JsonType<out InGameObject>>
     }
 }

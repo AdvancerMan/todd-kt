@@ -12,7 +12,7 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 
-@SerializationType("igo", "spawner")
+@SerializationType(InGameObject::class, "spawner")
 class Spawner(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val igoPattern: JsonValue,

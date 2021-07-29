@@ -17,7 +17,7 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
-@SerializationType("igo", "portal")
+@SerializationType(InGameObject::class, "portal")
 class Portal(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val teleportTo: Vector2,

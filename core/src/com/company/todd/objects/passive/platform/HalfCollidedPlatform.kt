@@ -15,7 +15,7 @@ import com.company.todd.json.SerializationType
 import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
-@SerializationType("igo", "halfCollided")
+@SerializationType(InGameObject::class, "halfCollided")
 open class HalfCollidedPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern, scale: Float) :
         SolidPlatform(game, drawable, bodyPattern, scale) {
     protected val groundFor = mutableMapOf<InGameObject, Int>()

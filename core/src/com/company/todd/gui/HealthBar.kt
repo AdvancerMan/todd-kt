@@ -10,7 +10,7 @@ import com.company.todd.json.deserialization.get
 import com.company.todd.json.serialization.toJsonValue
 
 // TODO make global z index
-@SerializationType("healthBar")
+@SerializationType(HealthBar::class)
 class HealthBar(
     maxHealth: Float,
     @JsonFullSerializable private val backgroundDrawable: MyDrawable,

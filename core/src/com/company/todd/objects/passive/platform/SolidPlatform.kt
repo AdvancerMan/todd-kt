@@ -6,7 +6,8 @@ import com.company.todd.objects.passive.PassiveObject
 import com.company.todd.asset.texture.MyDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.SerializationType
+import com.company.todd.objects.base.InGameObject
 
-@SerializationType("igo", "solid")
+@SerializationType(InGameObject::class, "solid")
 open class SolidPlatform(game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern, scale: Float) :
     PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale)

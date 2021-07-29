@@ -33,7 +33,7 @@ object Reflection {
                 ?.let { name -> loadClass(name).kotlin }
 
             SerializationTypeData(
-                serializationTypeAnnotation?.category,
+                serializationTypeAnnotation?.baseClass,
                 serializationTypeAnnotation?.type,
                 manualConstructorClass?.objectInstance,
                 manualConstructorClass?.let { nonNullClass ->
@@ -65,7 +65,7 @@ object Reflection {
                 it.isAccessible = true
                 val serializationTypeAnnotation = it.findAnnotation<SerializationType>()!!
                 SerializationTypeData(
-                    serializationTypeAnnotation.category, serializationTypeAnnotation.type,
+                    serializationTypeAnnotation.baseClass, serializationTypeAnnotation.type,
                     objectInstance, manualConstructors[it.name], it,
                     "${clazz.jvmName}::${it.name}", constructorParameters[it.name]!!, null
                 )
@@ -78,7 +78,7 @@ object Reflection {
     }
 
     data class SerializationTypeData(
-        val serializationCategory: String?,
+        val baseClass: KClass<*>?,
         val serializationType: String?,
         val manualConstructorInstance: Any?,
         val manualConstructor: KCallable<*>?,

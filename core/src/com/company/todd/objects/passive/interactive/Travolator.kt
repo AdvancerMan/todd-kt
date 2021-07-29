@@ -15,7 +15,7 @@ import kotlin.math.abs
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
-@SerializationType("igo", "travolator")
+@SerializationType(InGameObject::class, "travolator")
 class Travolator(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val pushPower: Float, scale: Float

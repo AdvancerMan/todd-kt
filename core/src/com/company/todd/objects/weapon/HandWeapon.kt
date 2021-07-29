@@ -117,7 +117,7 @@ abstract class HandWeapon(
         }
     }
 
-    @SerializationType("handWeaponStyle")
+    @SerializationType(Style::class)
     class Style(
         @JsonFullSerializable val handDrawable: MyDrawable?,
         @JsonFullSerializable val weaponDrawable: MyDrawable?,

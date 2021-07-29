@@ -8,7 +8,7 @@ import com.company.todd.json.SerializationType
 import com.company.todd.launcher.ToddGame
 
 object DrawableParser {
-    @SerializationType("drawable")
+    @SerializationType(MyDrawable::class)
     private fun loadDrawable(game: ToddGame, name: String, zIndex: Int, size: Vector2, offset: Vector2) =
         game.textureManager.loadDrawable(name).apply {
             drawableName = name

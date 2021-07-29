@@ -53,10 +53,10 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
     private fun getSerializationTypes(classlike: DClasslike) =
         when (classlike) {
             is DClass -> {
-                getSerializationData(classlike.extra)?.let { (category, type) ->
+                getSerializationData(classlike.extra)?.let { (baseClass, type) ->
                     listOf(
                         classlike.copy(
-                            dri = DRI(category, type),
+                            dri = DRI(baseClass, type),
                             name = type,
                             constructors = listOf(
                                 classlike.constructors.find {
@@ -80,9 +80,9 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             is DObject -> {
                 classlike.functions
                     .mapNotNull { f ->
-                        getSerializationData(f.extra)?.let { (category, type) ->
+                        getSerializationData(f.extra)?.let { (baseClass, type) ->
                             DClass(
-                                dri = DRI(category, type),
+                                dri = DRI(baseClass, type),
                                 name = type,
                                 constructors = listOf(f),
                                 functions = listOf(),
@@ -115,7 +115,7 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                 it.dri.classNames == "SerializationType"
             }
             ?.params?.let { params ->
-                (params["category"]!! as StringValue).value to
+                (params["baseClass"]!! as ClassValue).className to
                         (params["type"]?.let { (it as StringValue).value } ?: "Default")
             }
 

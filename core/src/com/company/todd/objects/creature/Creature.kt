@@ -28,7 +28,7 @@ import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
-@SerializationType("igo", "creature")
+@SerializationType(InGameObject::class, "creature")
 open class Creature(
     game: ToddGame, drawable: MyDrawable, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,

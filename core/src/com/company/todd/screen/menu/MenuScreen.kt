@@ -17,7 +17,7 @@ open class MenuScreen(game: ToddGame) : MyScreen(game) {
         ?: throw IllegalArgumentException("settings.json should contain menu parameter")
 
     @Suppress("UNCHECKED_CAST")
-    private val drawableFromJson = jsonConstructors["drawable"]!![""]!!.constructor
+    private val drawableFromJson = jsonConstructors[MyDrawable::class]!![""]!!.constructor
             as (ToddGame, JsonValue) -> MyDrawable
 
     // TODO menu font
