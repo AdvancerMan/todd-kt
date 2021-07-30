@@ -6,6 +6,7 @@ import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.util.Reflection
 import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.jvmName
@@ -14,7 +15,7 @@ typealias ManualConstructor = (JsonValue, MutableMap<String, Pair<Any?, Boolean>
 
 private fun getFromJson(
     name: String, clazz: KClass<*>, json: JsonValue, game: ToddGame,
-    constructors: Map<KClass<*>, Map<String, JsonType<*>>>
+    constructors: Map<KClass<*>, Map<String, JsonType<out Any?>>>
 ): Pair<Any?, Boolean> {
     val jsonByName = json[name]
     return when {
@@ -45,10 +46,16 @@ private fun getJsonType(
     data: Reflection.SerializationTypeData,
     manualConstructors: MutableMap<String, ManualConstructor>
 ): JsonType<*> {
-    val constructorTypes = data.constructor!!.parameters.map { it.type.jvmErasure }
-    val instanceParameter = data.constructor.instanceParameter?.type?.jvmErasure?.objectInstance
+    val instanceObject = data.constructor!!.instanceParameter?.type?.jvmErasure?.objectInstance
+    val instanceParameter = data.constructor.instanceParameter
+
+    val constructorTypes = data.constructor.parameters.map { it.type.jvmErasure }
+        .zip(data.constructor.parameters)
+        .let { if (instanceParameter == null) it else it.drop(1) }
     val parameters = data.parametersName!!
-        .zip(if (instanceParameter == null) constructorTypes else constructorTypes.drop(1))
+        .zip(constructorTypes)
+        .map { Triple(it.first, it.second.first, it.second.second) }
+
     return JsonType(data.constructorDescriptor) { game, json ->
         val parametersFromJson = parameters
             .associate {
@@ -57,15 +64,25 @@ private fun getJsonType(
             .toMutableMap()
         manualConstructors[data.constructorDescriptor]!!.invoke(json, parametersFromJson)
 
-        val notProvided = parametersFromJson.filter { !it.value.second }
-        if (notProvided.isNotEmpty()) {
-            throw IllegalArgumentException("Json is invalid, some parameters were not provided: ${notProvided.keys}")
+        val maybeParametersMap = parameters.associate {
+            it.third to (it.first to parametersFromJson[it.first]!!)
         }
-        val parametersArray = parameters.map { parametersFromJson[it.first]!!.first }.toTypedArray()
+
+        val notProvided = maybeParametersMap.filter { !it.key.isOptional && !it.value.second.second }
+        if (notProvided.isNotEmpty()) {
+            throw IllegalArgumentException(
+                "Json is invalid, some non-optional parameters " +
+                        "were not provided: ${notProvided.values.map { it.first }}"
+            )
+        }
+
+        val parametersMap = maybeParametersMap
+            .filter { it.value.second.second }
+            .mapValues { it.value.second.first }
         if (instanceParameter == null) {
-            data.constructor.call(*parametersArray)
+            data.constructor.callBy(parametersMap)
         } else {
-            data.constructor.call(instanceParameter, *parametersArray)
+            data.constructor.callBy(parametersMap + mapOf(instanceParameter to instanceObject))
         }
     }
 }
