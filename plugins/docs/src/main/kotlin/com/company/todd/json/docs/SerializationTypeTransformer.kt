@@ -2,6 +2,9 @@ package com.company.todd.json.docs
 
 import org.jetbrains.dokka.links.DRI
 import org.jetbrains.dokka.model.*
+import org.jetbrains.dokka.model.doc.Description
+import org.jetbrains.dokka.model.doc.DocumentationNode
+import org.jetbrains.dokka.model.doc.Text
 import org.jetbrains.dokka.model.properties.PropertyContainer
 import org.jetbrains.dokka.plugability.DokkaContext
 import org.jetbrains.dokka.transformers.documentation.DocumentableTransformer
@@ -41,7 +44,7 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             .let { original.copy(packages = it) }
     }
 
-    private fun classlikesDfs(roots: List<DClasslike>) : MutableList<DClasslike> {
+    private fun classlikesDfs(roots: List<DClasslike>): MutableList<DClasslike> {
         if (roots.isEmpty()) {
             return mutableListOf()
         }
@@ -132,6 +135,11 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                 },
             expectPresentInSet = null,
             visibility = mapOf(),
+            documentation = documentation.ifEmpty {
+                sourceSets.associateWith {
+                    DocumentationNode(listOf(Description(Text("No documentation :("))))
+                }
+            },
             type = Void,
             generics = listOf(),
             receiver = null,
@@ -148,14 +156,14 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             is TypeAliased -> inner.withBaseTypeDri(anotherTypes)
             is Nullable -> copy(inner.withBaseTypeDri(anotherTypes))
             is TypeParameter, is GenericTypeConstructor -> {
-                val dri = when(this) {
+                val dri = when (this) {
                     is TypeParameter -> dri
                     is GenericTypeConstructor -> dri
                     else -> throw AssertionError("Never happens")
                 }.let { DRI(it.classNames, it.classNames) }
 
                 if (dri.classNames in anotherTypes) {
-                    when(this) {
+                    when (this) {
                         is TypeParameter -> copy(dri = dri)
                         is GenericTypeConstructor -> copy(dri = dri)
                         else -> throw AssertionError("Never happens")

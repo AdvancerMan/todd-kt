@@ -118,21 +118,9 @@ abstract class HandWeapon(
     }
 
     @SerializationType(Style::class)
-    class Style(
-        @JsonFullSerializable val handDrawable: ToddDrawable?,
-        @JsonFullSerializable val weaponDrawable: ToddDrawable?,
-        @JsonFullSerializable val origin: Vector2
-    ) {
-        companion object {
-            @ManualJsonConstructor
-            private fun getJsonDefaults(
-                @Suppress("UNUSED_PARAMETER") json: JsonValue,
-                parsed: MutableMap<String, Pair<Any?, Boolean>>
-            ) {
-                JsonDefaults.setDefault("handDrawable", null, parsed)
-                JsonDefaults.setDefault("weaponDrawable", null, parsed)
-                JsonDefaults.setDefault("origin", Vector2(), parsed)
-            }
-        }
-    }
+    data class Style(
+        @JsonFullSerializable val handDrawable: ToddDrawable? = null,
+        @JsonFullSerializable val weaponDrawable: ToddDrawable? = null,
+        @JsonFullSerializable val origin: Vector2 = Vector2(0f, 0f)
+    )
 }

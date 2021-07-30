@@ -9,21 +9,17 @@ import com.company.todd.launcher.ToddGame
 
 object DrawableParser {
     @SerializationType(ToddDrawable::class)
-    private fun loadDrawable(game: ToddGame, name: String, zIndex: Int, size: Vector2, offset: Vector2) =
+    private fun loadDrawable(
+        game: ToddGame,
+        name: String,
+        zIndex: Int = 0,
+        size: Vector2 = Vector2(0f, 0f),
+        offset: Vector2 = Vector2(0f, 0f)
+    ) =
         game.textureManager.loadDrawable(name).apply {
             drawableName = name
             myZIndex = zIndex
             this.size.set(size)
             this.offset.set(offset)
         }
-
-    @ManualJsonConstructor("loadDrawable")
-    private fun drawableDefaults(
-        @Suppress("UNUSED_PARAMETER") json: JsonValue,
-        parsed: MutableMap<String, Pair<Any?, Boolean>>
-    ) {
-        JsonDefaults.setDefault("zIndex", 0, parsed)
-        JsonDefaults.setDefault("size", Vector2(), parsed)
-        JsonDefaults.setDefault("offset", Vector2(), parsed)
-    }
 }

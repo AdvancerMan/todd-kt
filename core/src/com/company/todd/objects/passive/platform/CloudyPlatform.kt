@@ -15,7 +15,7 @@ import com.company.todd.json.SerializationType
 class CloudyPlatform(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val sinceContactTillInactive: Float,
-    sinceInactiveTillActive: Float, scale: Float
+    sinceInactiveTillActive: Float, scale: Float = 1f
 ) : HalfCollidedPlatform(game, drawable, bodyPattern, scale) {
     private val sinceContactTillActive = sinceContactTillInactive + sinceInactiveTillActive
     private var sinceContact = sinceContactTillActive + 1

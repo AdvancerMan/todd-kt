@@ -9,5 +9,5 @@ import com.company.todd.json.SerializationType
 import com.company.todd.objects.base.InGameObject
 
 @SerializationType(InGameObject::class, "solid")
-open class SolidPlatform(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float) :
+open class SolidPlatform(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float = 1f) :
     PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale)

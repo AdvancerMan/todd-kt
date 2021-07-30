@@ -24,7 +24,7 @@ open class Bullet(
     @JsonFullSerializable protected val ownerFriendlyPeriod: Float,
     // TODO serialize igo???
     @JsonFullSerializable protected val owner: InGameObject?,
-    scale: Float
+    scale: Float = 1f
 ) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private var sinceCreation = 0f
 

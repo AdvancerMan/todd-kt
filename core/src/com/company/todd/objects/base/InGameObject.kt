@@ -194,16 +194,6 @@ abstract class InGameObject(
     override fun serializeSave(json: JsonValue) {
         // no operations
     }
-
-    companion object {
-        @ManualJsonConstructor
-        private fun getJsonDefaults(
-            @Suppress("UNUSED_PARAMETER") json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
-            JsonDefaults.setDefault("scale", 1f, parsed)
-        }
-    }
 }
 
 fun Actor.getActorAABB() =

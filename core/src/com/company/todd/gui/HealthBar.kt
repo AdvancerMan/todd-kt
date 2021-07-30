@@ -15,7 +15,7 @@ class HealthBar(
     maxHealth: Float,
     @JsonFullSerializable private val backgroundDrawable: ToddDrawable,
     @JsonFullSerializable private val healthDrawable: ToddDrawable,
-    @JsonFullSerializable("zIndex") override val myZIndex: Int
+    @JsonFullSerializable("zIndex") override val myZIndex: Int = 0
 ) :
         ProgressBar(
                 0f, maxHealth, STEP_SIZE, false,
@@ -68,13 +68,5 @@ class HealthBar(
     companion object {
         const val ANIMATE_DURATION = 0.1f
         const val STEP_SIZE = 0.1f
-
-        @ManualJsonConstructor
-        fun getJsonConstructorDefaults(
-            @Suppress("UNUSED_PARAMETER") json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
-            JsonDefaults.setDefault("zIndex", 0, parsed)
-        }
     }
 }

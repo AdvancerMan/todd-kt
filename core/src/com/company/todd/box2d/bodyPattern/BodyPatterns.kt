@@ -17,7 +17,10 @@ import com.company.todd.json.serialization.toJsonValue
 object BodyPatterns {
     @SerializationType(BodyPattern::class, "polygonWithTopGS")
     fun createPolygonBPWithTGS(
-        b2dType: BodyDef.BodyType, worldCenter: Vector2, localVertices: Array<Vector2>, scale: Float
+        b2dType: BodyDef.BodyType,
+        worldCenter: Vector2 = Vector2(0f, 0f),
+        localVertices: Array<Vector2>,
+        scale: Float = 1f
     ): BodyPattern {
         val scaledLocalVertices = localVertices.map { it.cpy().scl(scale) }.toTypedArray()
         return TopGroundSensorPolygonBodyPattern(b2dType, worldCenter, scaledLocalVertices)
@@ -32,8 +35,7 @@ object BodyPatterns {
     }
 
     @ManualJsonConstructor("createPolygonBPWithTGS")
-    private fun polygonBPWithTGSManualConstructor(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-        JsonDefaults.setDefault("worldBodyCenter", Vector2(), parsed)
+    private fun manualCreatePolygonBPWithTGS(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
         if (!parsed["localVertices"]!!.second) {
             parsed["localVertices"] = json["localVertices", vectorArray] to true
         }
@@ -42,8 +44,11 @@ object BodyPatterns {
 
     @SerializationType(BodyPattern::class, "rectangleWithTopGS")
     fun createRectangleBPWithTGS(
-        b2dType: BodyDef.BodyType, worldPosition: Vector2,
-        size: Vector2, localCenter: Vector2, scale: Float
+        b2dType: BodyDef.BodyType,
+        worldPosition: Vector2 = Vector2(0f, 0f),
+        size: Vector2,
+        localCenter: Vector2 = Vector2(0f, 0f),
+        scale: Float = 1f
     ): BodyPattern {
         val scaledSize = size.cpy().scl(scale)
         val scaledCenter = localCenter.cpy().scl(scale)
@@ -60,16 +65,17 @@ object BodyPatterns {
     }
 
     @ManualJsonConstructor("createRectangleBPWithTGS")
-    private fun rectangleBPWithTGSDefaults(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-        JsonDefaults.setDefault("worldPosition", Vector2(), parsed)
-        JsonDefaults.setDefault("localCenter", Vector2(), parsed)
+    private fun manualCreateRectangleBPWithTGS(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
         parseScale(json, parsed)
     }
 
     @SerializationType(BodyPattern::class, "rectangleWithTopGSBottomGS")
     fun createRectangleBPWithTGSBGS(
-        b2dType: BodyDef.BodyType, worldPosition: Vector2,
-        size: Vector2, localCenter: Vector2, scale: Float
+        b2dType: BodyDef.BodyType,
+        worldPosition: Vector2 = Vector2(0f, 0f),
+        size: Vector2,
+        localCenter: Vector2 = Vector2(0f, 0f),
+        scale: Float = 1f
     ): BodyPattern {
         val scaledSize = size.cpy().scl(scale)
         val scaledCenter = localCenter.cpy().scl(scale)
@@ -87,14 +93,17 @@ object BodyPatterns {
     }
 
     @ManualJsonConstructor("createRectangleBPWithTGSBGS")
-    private fun rectangleBPWithTGSBGSDefaults(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-        JsonDefaults.setDefault("worldPosition", Vector2(), parsed)
-        JsonDefaults.setDefault("localCenter", Vector2(), parsed)
+    private fun manualCreateRectangleBPWithTGSBGS(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
         parseScale(json, parsed)
     }
 
     @SerializationType(BodyPattern::class, "circle")
-    fun createCircleBP(b2dType: BodyDef.BodyType, worldCenter: Vector2, radius: Float, scale: Float): BodyPattern =
+    fun createCircleBP(
+        b2dType: BodyDef.BodyType,
+        worldCenter: Vector2 = Vector2(0f, 0f),
+        radius: Float,
+        scale: Float = 1f
+    ): BodyPattern =
         CircleBodyPattern(b2dType, worldCenter, radius * scale)
             .withSerializer {
                 it.addChild("type", "circle".toJsonValue())
@@ -105,8 +114,7 @@ object BodyPatterns {
             }
 
     @ManualJsonConstructor("createCircleBP")
-    private fun circleBPDefaults(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-        JsonDefaults.setDefault("worldCenter", Vector2(), parsed)
+    private fun manualCreateCircleBP(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
         parseScale(json, parsed)
     }
 

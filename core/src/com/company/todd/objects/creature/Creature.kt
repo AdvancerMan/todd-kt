@@ -36,7 +36,7 @@ open class Creature(
     @JsonUpdateSerializable val healthBar: HealthBar,
     @JsonUpdateSerializable private var speed: Float,
     @JsonUpdateSerializable private var jumpPower: Float,
-    scale: Float
+    scale: Float = 1f
 ) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private val preVelocity = Vector2()
     private var preferredAnimationType = AnimationType.STAY
@@ -189,6 +189,7 @@ open class Creature(
             @Suppress("UNUSED_PARAMETER") json: JsonValue,
             parsed: MutableMap<String, Pair<Any?, Boolean>>
         ) {
+            // TODO remove this default
             JsonDefaults.setDefault("thinker", ScheduledThinker(), parsed)
         }
     }

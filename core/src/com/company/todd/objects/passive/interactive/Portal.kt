@@ -20,7 +20,7 @@ class Portal(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val teleportTo: Vector2,
     @JsonFullSerializable private val teleportDelay: Float,
-    scale: Float
+    scale: Float = 1f
 ) : PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private val delayedObjects = Queue<Pair<InGameObject, Float>>()
     private var timeSinceCreation = 0f
