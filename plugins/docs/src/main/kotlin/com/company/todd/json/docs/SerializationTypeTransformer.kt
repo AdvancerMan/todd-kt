@@ -60,11 +60,11 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                             name = type,
                             constructors = listOf(
                                 classlike.constructors.find {
-                                    it.extra.allOfType<PrimaryConstructorExtra>()
-                                        .isNotEmpty()
-                                } ?: throw IllegalArgumentException(
-                                    "Serialization type class should have primary constructor"
-                                )
+                                    it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
+                                }?.copy(documentation = classlike.documentation)
+                                    ?: throw IllegalArgumentException(
+                                        "Serialization type class should have primary constructor"
+                                    )
                             ),
                             functions = listOf(),
                             properties = listOf(),
@@ -111,13 +111,9 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
 
     private fun getSerializationData(extra: PropertyContainer<*>) =
         extra.allOfType<Annotations>()
-            .flatMap { anns ->
-                anns.directAnnotations.values
-            }
+            .flatMap { anns -> anns.directAnnotations.values }
             .flatten()
-            .find {
-                it.dri.classNames == "SerializationType"
-            }
+            .find { it.dri.classNames == "SerializationType" }
             ?.params?.let { params ->
                 (params["baseClass"]!! as ClassValue).className to
                         (params["type"]?.let { (it as StringValue).value } ?: "Default")
@@ -134,9 +130,16 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                     it.type !is GenericTypeConstructor
                             || (it.type as GenericTypeConstructor).dri.classNames != "ToddGame"
                 },
+            expectPresentInSet = null,
+            visibility = mapOf(),
+            type = Void,
+            generics = listOf(),
+            receiver = null,
+            modifier = mapOf(),
+            isExpectActual = false,
             extra = PropertyContainer.withAll(
                 PrimaryConstructorExtra
-            ),
+            )
         )
 
     // TODO serialization primitives
