@@ -15,6 +15,17 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
+/**
+ * Portal that teleports objects to another location on collision
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param teleportTo Location where to teleport objects on collision
+ * @param teleportDelay Time period between collision and actual teleportation
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "portal")
 class Portal(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,

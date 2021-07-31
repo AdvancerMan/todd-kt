@@ -11,6 +11,18 @@ import com.company.todd.box2d.bodyPattern.sensor.Sensor
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
+/**
+ * Half collided platform that disappears for some time after collision
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param sinceContactTillInactive Time period between first contact
+ *                                 with some object and disappearing
+ * @param sinceInactiveTillActive Time period between disappearing and reappearing
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "cloudy")
 class CloudyPlatform(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,

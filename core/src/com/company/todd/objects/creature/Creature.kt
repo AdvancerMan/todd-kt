@@ -28,6 +28,20 @@ import com.company.todd.util.JUMP_COOLDOWN
 import com.company.todd.util.DAMAGE_TINT_TIME
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
+/**
+ * Basic creature that can run, jump and attack
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param weapon Weapon
+ * @param thinker AI for InGameObject
+ * @param healthBar Health bar
+ * @param speed Speed
+ * @param jumpPower Jump power
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "creature")
 open class Creature(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,

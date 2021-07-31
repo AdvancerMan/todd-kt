@@ -117,6 +117,14 @@ abstract class HandWeapon(
         }
     }
 
+    /**
+     * Actor description for HandWeapon
+     * @param handDrawable Drawable for hand. Z-index is relative to owner's actor,
+     *                     offset is used for drawable positioning relative to owner's position.
+     * @param weaponDrawable Drawable for weapon. Z-index is relative to owner's actor,
+     *                       offset is used for drawable positioning relative to hand's position.
+     * @param origin Coordinate system origin for rotation and scale
+     */
     @SerializationType(Style::class)
     data class Style(
         @JsonFullSerializable val handDrawable: ToddDrawable? = null,

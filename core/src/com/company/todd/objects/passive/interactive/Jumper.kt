@@ -10,6 +10,16 @@ import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.JsonFullSerializable
 import com.company.todd.json.SerializationType
 
+/**
+ * Half collided platform that sets y velocity to [pushPower] on collision
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param pushPower Y velocity that would be set to another object on collision
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "jumper")
 class Jumper(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,

@@ -6,18 +6,26 @@ import com.company.todd.json.SerializationType
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.weapon.bullet.Bullet
 
+/**
+ * Simple gun without modifications
+ *
+ *
+ * @param handWeaponStyle Style of the weapon
+ * @param power Amount of damage done by attack
+ * @param cooldown Minimum time period between attack end and next attack beginning
+ * @param safeAttackPeriod Time period after attack beginning till actual shot
+ * @param bulletOffset Bullet spawn position relative to unrotated, unflipped hand's position
+ * @param bulletBuilder Would be replaced by bullet json pattern in future releases
+ */
 @SerializationType(Weapon::class, "simpleGun")
 open class SimpleGun(
     private val game: ToddGame,
-    handWeaponStyle: Style, override val power: Float, cooldown: Float,
-    safeAttackPeriod: Float, dangerousAttackPeriod: Float,
+    handWeaponStyle: Style, override val power: Float,
+    cooldown: Float, safeAttackPeriod: Float,
     @JsonFullSerializable protected val bulletOffset: Vector2,
     @JsonFullSerializable protected val bulletBuilder: Bullet.Builder
-) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, dangerousAttackPeriod) {
+) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, safeAttackPeriod) {
     override fun doAttack() {
-        if (!doingFirstHit) {
-            return
-        }
         screen.addObject(
             bulletBuilder.build(
                 game,

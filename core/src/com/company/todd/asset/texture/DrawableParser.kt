@@ -8,6 +8,14 @@ import com.company.todd.json.SerializationType
 import com.company.todd.launcher.ToddGame
 
 object DrawableParser {
+    /**
+     * Texture region(s) wrapper
+     *
+     * @param name Texture info name from which drawable should be loaded
+     * @param zIndex Drawable zIndex, described by drawable owner
+     * @param size Drawable size, described by drawable owner
+     * @param offset Drawable offset, described by drawable owner
+     */
     @SerializationType(ToddDrawable::class)
     private fun loadDrawable(
         game: ToddGame,

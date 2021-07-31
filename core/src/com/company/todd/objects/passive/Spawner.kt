@@ -10,7 +10,20 @@ import com.company.todd.json.deserialization.parseInGameObject
 import com.company.todd.launcher.ToddGame
 import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
+import com.company.todd.objects.passive.platform.SolidPlatform
 
+/**
+ * Solid platform that can spawn another objects
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param igoPattern Json pattern of [InGameObject] to spawn
+ * @param maxAmount Maximal amount of non-dead creatures spawned by this spawner
+ * @param spawnPeriod Amount of time between spawns
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "spawner")
 class Spawner(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
@@ -18,7 +31,7 @@ class Spawner(
     @JsonFullSerializable private val maxAmount: Int,
     @JsonFullSerializable private val spawnPeriod: Float,
     scale: Float = 1f
-) : PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
+) : SolidPlatform(game, drawable, bodyPattern, scale) {
     @JsonUpdateSerializable
     private var sinceSpawn = 0f
 

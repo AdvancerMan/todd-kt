@@ -9,21 +9,21 @@ import com.company.todd.screen.game.GameScreen
 
 abstract class MeleeWeapon(
     handWeaponStyle: Style,
-    @JsonFullSerializable("attackXYWH") protected val attackAABB: Rectangle,
+    @JsonFullSerializable protected val attackXYWH: Rectangle,
     cooldown: Float, safeAttackPeriod: Float, dangerousAttackPeriod: Float
 ) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, dangerousAttackPeriod) {
     private val attacked = mutableSetOf<InGameObject>()
 
     override fun init(owner: InGameObject, screen: GameScreen) {
         super.init(owner, screen)
-        attackAABB.setPosition(attackAABB.x - x, attackAABB.y - y)
+        attackXYWH.setPosition(attackXYWH.x - x, attackXYWH.y - y)
     }
 
     override fun doAttack() {
         if (doingFirstHit) {
             attacked.clear()
         }
-        worldAABBFor(Rectangle(attackAABB)).let { aabb ->
+        worldAABBFor(Rectangle(attackXYWH)).let { aabb ->
             if (!owner.isDirectedToRight) {
                 aabb.setPosition(aabb.x - aabb.width - owner.body.getAABB().width, aabb.y)
             }

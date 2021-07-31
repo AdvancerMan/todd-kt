@@ -15,6 +15,16 @@ import kotlin.math.abs
 private val objectToTravolatorNegativeImpulse = mutableMapOf<InGameObject, Float>()
 private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float>()
 
+/**
+ * Half collided platform that applies impulse of [pushPower] power to another object on collision
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param pushPower Impulse power to apply on collision
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "travolator")
 class Travolator(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,

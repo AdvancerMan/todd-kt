@@ -5,6 +5,20 @@ import com.company.todd.json.SerializationType
 import com.company.todd.objects.creature.Creature
 import com.company.todd.screen.game.GameScreen
 
+/**
+ * Simple melee AI for enemies.
+ *
+ * ## Behaviour
+ *
+ * Runs in player's direction until x coordinate difference is more than [maxDistanceFromTarget].
+ *
+ * If player's y coordinate is more than owner's y coordinate then attempts to jump.
+ *
+ * Time between jumps will be at least [jumpCooldown].
+ *
+ * @param maxDistanceFromTarget Maximum distance when owner is not running anywhere
+ * @param jumpCooldown Minimum time between jumps
+ */
 @SerializationType(Thinker::class, "stupidMeleeThinker")
 class StupidMeleeThinker(
     @JsonSaveSerializable private val maxDistanceFromTarget: Float,

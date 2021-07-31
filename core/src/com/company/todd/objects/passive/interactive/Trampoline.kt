@@ -9,6 +9,15 @@ import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.box2d.bodyPattern.base.BodyPattern
 import com.company.todd.json.SerializationType
 
+/**
+ * Half collided platform that has maximum restitution
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "trampoline")
 class Trampoline(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float = 1f) :
         HalfCollidedPlatform(game, drawable, bodyPattern, scale) {

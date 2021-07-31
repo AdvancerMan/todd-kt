@@ -14,6 +14,15 @@ import com.company.todd.json.SerializationType
 import com.company.todd.util.HALF_COL_GROUND_VEL_SCL
 import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
 
+/**
+ * Solid platform that does not register collision if object bottom side is under platform top side
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "halfCollided")
 open class HalfCollidedPlatform(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float = 1f) :
         SolidPlatform(game, drawable, bodyPattern, scale) {

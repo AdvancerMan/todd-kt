@@ -10,6 +10,16 @@ import com.company.todd.json.deserialization.get
 import com.company.todd.json.serialization.toJsonValue
 
 // TODO make global z index
+/**
+ * Basic health bar for InGameObject.
+ * @param maxHealth Maximal health for the owner of health bar.
+ * @param backgroundDrawable Background drawable. Z-index is not used,
+ *                           size is used for health bar size, offset is not used.
+ * @param healthDrawable Foreground drawable. Z-index is not used,
+ *                       height is used for foreground height limited to health bar height,
+ *                       offset is not used.
+ * @param zIndex Z-index relative to owner's actor.
+ */
 @SerializationType(HealthBar::class)
 class HealthBar(
     maxHealth: Float,

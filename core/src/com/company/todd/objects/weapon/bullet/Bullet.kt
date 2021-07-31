@@ -16,6 +16,20 @@ import com.company.todd.objects.base.InGameObject
 import com.company.todd.objects.base.RealBodyWrapper
 import com.company.todd.screen.game.GameScreen
 
+/**
+ * Simple bullet
+ *
+ * @param drawable Base drawable for InGameObject.
+ *                 Z-index is relative to object's actor,
+ *                 offset is relative to unrotated, unflipped actor position
+ * @param bodyPattern Body description for InGameObject
+ * @param power Damage amount
+ * @param velocity Velocity which will be set to bullet's body
+ * @param ownerFriendlyPeriod Time period since creation
+ *                            till moment when bullet can collide with owner
+ * @param owner TODO Will be removed in future releases
+ * @param scale Actor's scale
+ */
 @SerializationType(InGameObject::class, "simpleBullet")
 open class Bullet(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
@@ -74,6 +88,9 @@ open class Bullet(
     }
 
     // TODO bullet serialization from json (not from builder)
+    /**
+     * Would be removed in future releases
+     */
     @SerializationType(Builder::class, "simpleBuilder")
     data class SimpleBuilder(
         @JsonFullSerializable private val drawableName: String,

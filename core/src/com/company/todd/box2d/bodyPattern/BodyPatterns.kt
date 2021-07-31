@@ -15,6 +15,17 @@ import com.company.todd.json.deserialization.vectorArray
 import com.company.todd.json.serialization.toJsonValue
 
 object BodyPatterns {
+    /**
+     * Polygon body pattern with top ground sensor
+     * @param b2dType Box2D body type
+     * @param worldCenter World position for origin of body coordinate system
+     * @param localVertices Body vertices in body coordinate system
+     *                      listed in counter-clockwise order.
+     *                      Polygon must be convex.
+     *                      Number or vertices must be in range 3..8
+     * @param scale Body scale relative to origin of body coordinate system.
+     *              If not present is taken from parent json.
+     */
     @SerializationType(BodyPattern::class, "polygonWithTopGS")
     fun createPolygonBPWithTGS(
         b2dType: BodyDef.BodyType,
@@ -42,6 +53,15 @@ object BodyPatterns {
         parseScale(json, parsed)
     }
 
+    /**
+     * Rectangle body pattern with top ground sensor
+     * @param b2dType Box2D body type
+     * @param worldPosition World position for lower left corner of the rectangle
+     * @param size Rectangle width and height
+     * @param localCenter Rectangle center relative to origin of body coordinate system
+     * @param scale Body scale relative to origin of body coordinate system.
+     *              If not present is taken from parent json.
+     */
     @SerializationType(BodyPattern::class, "rectangleWithTopGS")
     fun createRectangleBPWithTGS(
         b2dType: BodyDef.BodyType,
@@ -69,6 +89,15 @@ object BodyPatterns {
         parseScale(json, parsed)
     }
 
+    /**
+     * Rectangle body pattern with top ground and bottom ground sensors
+     * @param b2dType Box2D body type
+     * @param worldPosition World position for lower left corner of the rectangle
+     * @param size Rectangle width and height
+     * @param localCenter Rectangle center relative to origin of body coordinate system
+     * @param scale Body scale relative to origin of body coordinate system.
+     *              If not present is taken from parent json.
+     */
     @SerializationType(BodyPattern::class, "rectangleWithTopGSBottomGS")
     fun createRectangleBPWithTGSBGS(
         b2dType: BodyDef.BodyType,
@@ -97,6 +126,14 @@ object BodyPatterns {
         parseScale(json, parsed)
     }
 
+    /**
+     * Circle body pattern
+     * @param b2dType Box2D body type
+     * @param worldCenter World position for origin of body coordinate system
+     * @param radius Body radius
+     * @param scale Body scale relative to origin of body coordinate system.
+     *              If not present is taken from parent json.
+     */
     @SerializationType(BodyPattern::class, "circle")
     fun createCircleBP(
         b2dType: BodyDef.BodyType,
