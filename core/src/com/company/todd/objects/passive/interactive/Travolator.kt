@@ -25,7 +25,7 @@ private val objectToTravolatorPositiveImpulse = mutableMapOf<InGameObject, Float
  * @param pushPower Impulse power to apply on collision
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "travolator")
+@SerializationType(InGameObject::class, "Travolator")
 class Travolator(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val pushPower: Float, scale: Float = 1f

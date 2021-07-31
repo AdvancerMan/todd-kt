@@ -30,7 +30,7 @@ import com.company.todd.screen.game.GameScreen
  * @param owner TODO Will be removed in future releases
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "simpleBullet")
+@SerializationType(InGameObject::class, "SimpleBullet")
 open class Bullet(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable protected val power: Float,
@@ -91,7 +91,7 @@ open class Bullet(
     /**
      * Would be removed in future releases
      */
-    @SerializationType(Builder::class, "simpleBuilder")
+    @SerializationType(Builder::class, "SimpleBuilder")
     data class SimpleBuilder(
         @JsonFullSerializable private val drawableName: String,
         @JsonFullSerializable private val radius: Float,

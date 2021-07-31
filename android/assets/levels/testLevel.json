@@ -66,7 +66,7 @@
       }
     },
     {
-      "type": "creature",
+      "type": "Creature",
       "scale": 1.1,
       "drawable": {
         "name": "stupidMeleeEnemy",
@@ -75,7 +75,7 @@
         "offset": [0, 0]
       },
       "weapon": {
-        "type": "simpleMeleeWeapon",
+        "type": "SimpleMeleeWeapon",
         "handWeaponStyle": {
           "weaponDrawable": {
             "name": "simpleWeapon",
@@ -92,7 +92,7 @@
         "dangerousAttackPeriod": 0.4
       },
       "bodyPattern": {
-        "type": "rectangleWithTopGSBottomGS",
+        "type": "RectangleWithTopGSBottomGS",
         "b2dType": "dynamic",
         "worldPosition": [-100, 200],
         "size": [30, 91]
@@ -111,18 +111,18 @@
       "speed": 200,
       "jumpPower": 500,
       "thinker": {
-        "type": "stupidMeleeThinker",
+        "type": "StupidMeleeThinker",
         "jumpCooldown": 1.5,
         "maxDistanceFromTarget": 3
       }
     },
     {
-      "type": "spawner",
+      "type": "Spawner",
       "drawable": {
         "name": "stupidMeleeEnemy"
       },
       "bodyPattern": {
-        "type": "rectangleWithTopGSBottomGS",
+        "type": "RectangleWithTopGSBottomGS",
         "b2dType": "static",
         "worldPosition": [200, 200],
         "size": [50, 50]
@@ -130,13 +130,13 @@
       "maxAmount": 3,
       "spawnPeriod": 3,
       "igoPattern": {
-        "type": "creature",
+        "type": "Creature",
         "drawable": {
           "name": "stupidMeleeEnemy",
           "size": [30, 91]
         },
         "weapon": {
-          "type": "simpleGun",
+          "type": "SimpleGun",
           "handWeaponStyle": {
             "weaponDrawable": {
               "name": "simpleWeapon",
@@ -151,7 +151,7 @@
           "safeAttackPeriod": 0.3,
           "bulletOffset": [30, 20],
           "bulletBuilder": {
-            "type": "simpleBuilder",
+            "type": "SimpleBuilder",
             "drawableName":  "rocket",
             "radius": 5,
             "speed": 10000,
@@ -159,7 +159,7 @@
           }
         },
         "bodyPattern": {
-          "type": "rectangleWithTopGSBottomGS",
+          "type": "RectangleWithTopGSBottomGS",
           "b2dType": "dynamic",
           "worldPosition": [200, 250],
           "size": [30, 91]
@@ -178,7 +178,7 @@
         "speed": 200,
         "jumpPower": 500,
         "thinker": {
-          "type": "stupidMeleeThinker",
+          "type": "StupidMeleeThinker",
           "jumpCooldown": 1.5,
           "maxDistanceFromTarget": 3
         }

@@ -20,7 +20,7 @@ import com.company.todd.json.SerializationType
  * @param pushPower Y velocity that would be set to another object on collision
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "jumper")
+@SerializationType(InGameObject::class, "Jumper")
 class Jumper(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val pushPower: Float, scale: Float = 1f

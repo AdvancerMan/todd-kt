@@ -55,13 +55,13 @@
     }
   },
   "tmp_player": {
-    "type": "creature",
+    "type": "Creature",
     "drawable": {
       "name": "player",
       "size": [60, 110]
     },
     "weapon": {
-      "type": "simpleMeleeWeapon",
+      "type": "SimpleMeleeWeapon",
       "handWeaponStyle": {
         "weaponDrawable": {
           "name": "simpleWeapon",
@@ -75,7 +75,7 @@
       "safeAttackPeriod": 0.3
     },
     "bodyPattern": {
-      "type": "rectangleWithTopGSBottomGS",
+      "type": "RectangleWithTopGSBottomGS",
       "b2dType": "dynamic",
       "size": [30, 91]
     },

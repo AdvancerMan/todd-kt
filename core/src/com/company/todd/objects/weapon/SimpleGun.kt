@@ -17,7 +17,7 @@ import com.company.todd.objects.weapon.bullet.Bullet
  * @param bulletOffset Bullet spawn position relative to unrotated, unflipped hand's position
  * @param bulletBuilder Would be replaced by bullet json pattern in future releases
  */
-@SerializationType(Weapon::class, "simpleGun")
+@SerializationType(Weapon::class, "SimpleGun")
 open class SimpleGun(
     private val game: ToddGame,
     handWeaponStyle: Style, override val power: Float,

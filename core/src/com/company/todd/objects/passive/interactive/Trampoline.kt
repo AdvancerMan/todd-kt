@@ -18,7 +18,7 @@ import com.company.todd.json.SerializationType
  * @param bodyPattern Body description for InGameObject
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "trampoline")
+@SerializationType(InGameObject::class, "Trampoline")
 class Trampoline(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float = 1f) :
         HalfCollidedPlatform(game, drawable, bodyPattern, scale) {
     override fun processContact(other: InGameObject, contact: Contact, oldManifold: Manifold) {

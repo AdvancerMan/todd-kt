@@ -16,7 +16,7 @@ import com.company.todd.objects.base.InGameObject
  * @param safeAttackPeriod Time period after attack beginning, when no damage is done
  * @param dangerousAttackPeriod Time period after safe period, when damage is done
  */
-@SerializationType(Weapon::class, "simpleMeleeWeapon")
+@SerializationType(Weapon::class, "SimpleMeleeWeapon")
 class SimpleMeleeWeapon(
     handWeaponStyle: Style, attackXYWH: Rectangle, override var power: Float,
     cooldown: Float, safeAttackPeriod: Float, dangerousAttackPeriod: Float

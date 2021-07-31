@@ -42,7 +42,7 @@ import com.company.todd.util.Y_VEL_JUMP_THRESHOLD
  * @param jumpPower Jump power
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "creature")
+@SerializationType(InGameObject::class, "Creature")
 open class Creature(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonUpdateSerializable protected var weapon: Weapon?,

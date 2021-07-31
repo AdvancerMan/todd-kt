@@ -23,7 +23,7 @@ import com.company.todd.json.SerializationType
  * @param sinceInactiveTillActive Time period between disappearing and reappearing
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "cloudy")
+@SerializationType(InGameObject::class, "Cloudy")
 class CloudyPlatform(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val sinceContactTillInactive: Float,

@@ -1,85 +1,81 @@
 {
   "protoName": "arenaSolid",
-  "type": "solid",
+  "type": "Solid",
   "drawable": {
     "name": "arenaSolid"
   },
   "bodyPattern": {
-    "type": "rectangleWithTopGS",
+    "type": "RectangleWithTopGS",
     "b2dType": "static"
   }
 }
 
 {
   "protoName": "arenaPortal",
-  "type": "portal",
+  "type": "Portal",
   "drawable": {
     "name": "arenaPortal"
   },
   "bodyPattern": {
-    "type": "circle",
+    "type": "Circle",
     "b2dType": "static"
   },
   "teleportDelay": 0.1
 }
 
 {
-      "protoName": "Skeleton",
-      "type": "creature",
-      "scale": 2,
-      "drawable": {
-        "name": "Skeleton",
-        "zIndex": 0,
-        "size": [24, 47],
-        "offset": [0, 0]
+  "protoName": "Skeleton",
+  "type": "Creature",
+  "scale": 2,
+  "drawable": {
+    "name": "Skeleton",
+    "zIndex": 0,
+    "size": [24, 47],
+    "offset": [0, 0]
+  },
+  "weapon": {
+    "type": "SimpleMeleeWeapon",
+    "handWeaponStyle": {
+      "weaponDrawable": {
+        "name": "skeletonSpear",
+        "zIndex": 1,
+        "size": [57, 37],
+        "offset": [-10, -2]
       },
-      "weapon": {
-        "type": "simpleMeleeWeapon",
-        "handWeaponStyle": {
-          "weaponDrawable": {
-            "name": "skeletonSpear",
-            "zIndex": 1,
-            "size": [57, 37],
-            "offset": [-10, -2]
-          },
-          "handDrawable": {
-            "name": "skeletonBack",
-            "zIndex": -1,
-            "size": [34, 28],
-            "offset": [-13, 2]
-          },
-          "origin": [0, 0]
-        },
-        "attackXYWH": [26, 16, 32, 2],
-        "power": 3,
-        "cooldown": 1,
-        "safeAttackPeriod": 0.095,
-        "dangerousAttackPeriod": 0.3
+      "handDrawable": {
+        "name": "skeletonBack",
+        "zIndex": -1,
+        "size": [34, 28],
+        "offset": [-13, 2]
       },
-      "bodyPattern": {
-        "type": "rectangleWithTopGSBottomGS",
-        "b2dType": "dynamic"
-      },
-      "bodyPattern": {
-        "type": "rectangleWithTopGSBottomGS",
-        "b2dType": "dynamic"
-      },
-      "healthBar": {
-        "maxHealth": 100,
-        "backgroundDrawable": {
-          "name": "healthBarBackground",
-          "size": [140, 10]
-        },
-        "healthDrawable": {
-          "name": "healthBarHealth",
-          "size": [0, 10]
-        }
-      },
-      "speed": 200,
-      "jumpPower": 500,
-      "thinker": {
-        "type": "stupidMeleeThinker",
-        "jumpCooldown": 1.5,
-        "maxDistanceFromTarget": 3
-      }
+      "origin": [0, 0]
+    },
+    "attackXYWH": [26, 16, 32, 2],
+    "power": 3,
+    "cooldown": 1,
+    "safeAttackPeriod": 0.095,
+    "dangerousAttackPeriod": 0.3
+  },
+  "bodyPattern": {
+    "type": "RectangleWithTopGSBottomGS",
+    "b2dType": "dynamic"
+  },
+  "healthBar": {
+    "maxHealth": 100,
+    "backgroundDrawable": {
+      "name": "healthBarBackground",
+      "size": [140, 10]
+    },
+    "healthDrawable": {
+      "name": "healthBarHealth",
+      "size": [0, 10]
     }
+  },
+  "speed": 200,
+  "jumpPower": 500,
+  "thinker": {
+    "type": "StupidMeleeThinker",
+    "jumpCooldown": 1.5,
+    "maxDistanceFromTarget": 3
+  }
+}
