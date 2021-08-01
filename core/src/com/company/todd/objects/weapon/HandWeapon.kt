@@ -57,11 +57,9 @@ abstract class HandWeapon(
         ownerOffset.mirrorIf(!owner.isDirectedToRight, owner.width / 2, -drawableWidth)
 
     override fun postUpdate(delta: Float) {
-        val handPos = handDrawableActor?.drawable?.offset ?: Vector2()
-        val weaponPos = weaponDrawableActor?.let {
-            it.drawable!!.offset.cpy().add(handPos)
-        }
-        listOf(handPos to handDrawableActor,  weaponPos to weaponDrawableActor)
+        val handPos = handDrawableActor?.let { it.drawable!!.offset.cpy() } ?: Vector2()
+        val weaponPos = weaponDrawableActor?.let { it.drawable!!.offset.cpy().add(handPos) }
+        listOf(handPos to handDrawableActor, weaponPos to weaponDrawableActor)
             .filter { it.second != null }
             .forEach { (pos, actor) ->
                 val size = actor!!.drawable!!.size
