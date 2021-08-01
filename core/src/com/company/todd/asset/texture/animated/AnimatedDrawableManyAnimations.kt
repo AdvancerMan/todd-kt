@@ -6,6 +6,23 @@ import com.company.todd.asset.texture.AnimationPackInfo
 import com.company.todd.asset.texture.ToddDrawable
 import com.company.todd.asset.texture.TextureManager
 
+private val reportedBadTypes = mutableSetOf<String>()
+
+private fun AnimatedDrawableManyAnimations.reportBadType(type: AnimationType, packInfo: AnimationPackInfo) {
+    val packDescriptor = packInfo.animations.map {
+        it.second.frameInfo.path + it.second.bounds
+            .map { r -> listOf(r.x, r.y, r.width, r.height).map(Float::toInt) }
+    }.toString()
+    if (!reportedBadTypes.add(packDescriptor)) {
+        return
+    }
+
+    Gdx.app.error(
+        "AnimatedSprite",
+        "Trying to get non-existing animation $type for pack $drawableName: $packDescriptor"
+    )
+}
+
 class AnimatedDrawableManyAnimations
 private constructor(private val animationPackInfo: AnimationPackInfo,
                     private val animations: Map<AnimationType, Animation<ToddDrawable>>,
@@ -27,16 +44,7 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
             animations[type]?.let {
                 playingNow = it
                 this.type = type
-            } ?: Gdx.app.error(
-                    "AnimatedSprite",
-                    "Trying to get non-existing animation $type for "
-                            + animationPackInfo.animations
-                            .map {
-                                it.second.frameInfo.path + it.second.bounds
-                                        .take(4)
-                                        .map { r -> listOf(r.x, r.y, r.width, r.height).map(Float::toInt) }
-                            }
-            )
+            } ?: reportBadType(type, animationPackInfo)
         }
     }
 
