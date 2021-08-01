@@ -54,10 +54,21 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                     listOf(
                         classlike.constructors.find {
                             it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
-                        }?.copy(
-                            dri = DRI(baseClass, type),
-                            documentation = classlike.documentation
-                        ) ?: throw IllegalArgumentException(
+                        }?.let { function ->
+                            function.copy(
+                                dri = DRI(baseClass, type),
+                                documentation = classlike.documentation,
+                                parameters = function.parameters.map { parameter ->
+                                    classlike.properties
+                                        .find { parameter.name == it.name }
+                                        ?.let { property ->
+                                            getJsonPropertyName(property.extra)
+                                                ?.let { parameter.copy(name = it) }
+                                        }
+                                        ?: parameter
+                                }
+                            )
+                        } ?: throw IllegalArgumentException(
                             "Serialization type class should have primary constructor"
                         )
                     )
@@ -74,15 +85,24 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             else -> listOf()
         }
 
-    private fun getSerializationData(extra: PropertyContainer<*>) =
+    private fun anyAnnotationFrom(extra: PropertyContainer<*>, annotationNames: List<String>) =
         extra.allOfType<Annotations>()
             .flatMap { anns -> anns.directAnnotations.values }
             .flatten()
-            .find { it.dri.classNames == "SerializationType" }
+            .find { it.dri.classNames in annotationNames }
+
+    private fun getSerializationData(extra: PropertyContainer<*>) =
+        anyAnnotationFrom(extra, listOf("SerializationType"))
             ?.params?.let { params ->
                 (params["baseClass"]!! as ClassValue).className to
                         (params["type"]?.let { (it as StringValue).value } ?: "Default")
             }
+
+    private fun getJsonPropertyName(extra: PropertyContainer<*>) =
+        anyAnnotationFrom(
+            extra,
+            listOf("JsonUpdateSerializable", "JsonFullSerializable", "JsonSaveSerializable")
+        )?.params?.let { (it["name"] as? StringValue)?.value }
 
     private fun DFunction.toJsonConstructor(anotherTypes: Set<String>): DFunction =
         copy(
