@@ -98,10 +98,10 @@ static def doSerializationBaseClassAsserts(
                         "(for entity ${entityIdentifier})"
         )
     }
-    if (type == baseClass.simpleName) {
+    if (type == "${baseClass.simpleName}.Default") {
         throw new IllegalArgumentException(
-                "Type $type and base class (${baseClass.name}) simple name should differ " +
-                        "(for entity ${entityIdentifier})"
+                "Type $type is named improperly. Names like <baseClass>.Default are reserved, " +
+                        "use \"\" type instead (for entity ${entityIdentifier})"
         )
     }
 }

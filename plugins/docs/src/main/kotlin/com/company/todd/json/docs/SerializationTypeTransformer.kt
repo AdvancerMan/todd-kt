@@ -94,8 +94,10 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
     private fun getSerializationData(extra: PropertyContainer<*>) =
         anyAnnotationFrom(extra, listOf("SerializationType"))
             ?.params?.let { params ->
-                (params["baseClass"]!! as ClassValue).className to
-                        (params["type"]?.let { (it as StringValue).value } ?: "Default")
+                val baseClass = (params["baseClass"]!! as ClassValue).className
+                val type = params["type"]?.let { (it as StringValue).value }
+                    ?: "$baseClass.Default"
+                baseClass to type
             }
 
     private fun getJsonPropertyName(extra: PropertyContainer<*>) =
