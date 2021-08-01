@@ -20,21 +20,15 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             .groupBy { it.dri.packageName!! }
             .let { map ->
                 map.mapValues { classes ->
-                    classes.value.map {
-                        it.copy(
-                            constructors = listOf(
-                                it.constructors[0].toJsonConstructor(map.keys, it.name)
-                            )
-                        )
-                    }
+                    classes.value.map { it.toJsonConstructor(map.keys) }
                 }
             }
             .map {
                 DPackage(
                     dri = DRI(it.key, it.key),
-                    functions = listOf(),
+                    functions = it.value,
                     properties = listOf(),
-                    classlikes = it.value,
+                    classlikes = listOf(),
                     typealiases = listOf(),
                     documentation = mapOf(),
                     expectPresentInSet = null,
@@ -58,28 +52,13 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             is DClass -> {
                 getSerializationData(classlike.extra)?.let { (baseClass, type) ->
                     listOf(
-                        classlike.copy(
+                        classlike.constructors.find {
+                            it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
+                        }?.copy(
                             dri = DRI(baseClass, type),
-                            name = type,
-                            constructors = listOf(
-                                classlike.constructors.find {
-                                    it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
-                                }?.copy(documentation = classlike.documentation)
-                                    ?: throw IllegalArgumentException(
-                                        "Serialization type class should have primary constructor"
-                                    )
-                            ),
-                            functions = listOf(),
-                            properties = listOf(),
-                            classlikes = listOf(),
-                            companion = null,
-                            generics = listOf(),
-                            supertypes = mapOf(),
-                            visibility = mapOf(),
-                            expectPresentInSet = null,
-                            modifier = mapOf(),
-                            isExpectActual = false,
-                            extra = PropertyContainer.empty()
+                            documentation = classlike.documentation
+                        ) ?: throw IllegalArgumentException(
+                            "Serialization type class should have primary constructor"
                         )
                     )
                 } ?: listOf()
@@ -88,24 +67,7 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                 classlike.functions
                     .mapNotNull { f ->
                         getSerializationData(f.extra)?.let { (baseClass, type) ->
-                            DClass(
-                                dri = DRI(baseClass, type),
-                                name = type,
-                                constructors = listOf(f),
-                                functions = listOf(),
-                                properties = listOf(),
-                                classlikes = listOf(),
-                                companion = null,
-                                generics = listOf(),
-                                supertypes = mapOf(),
-                                sources = f.sources,
-                                visibility = mapOf(),
-                                documentation = f.documentation,
-                                expectPresentInSet = null,
-                                modifier = mapOf(),
-                                sourceSets = f.sourceSets,
-                                isExpectActual = false
-                            )
+                            f.copy(dri = DRI(baseClass, type))
                         }
                     }
             }
@@ -122,9 +84,9 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
                         (params["type"]?.let { (it as StringValue).value } ?: "Default")
             }
 
-    private fun DFunction.toJsonConstructor(anotherTypes: Set<String>, type: String): DFunction =
+    private fun DFunction.toJsonConstructor(anotherTypes: Set<String>): DFunction =
         copy(
-            name = type,
+            name = dri.classNames!!,
             isConstructor = true,
             parameters = parameters
                 .filter { it.name != null }
