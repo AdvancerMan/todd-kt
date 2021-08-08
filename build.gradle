@@ -99,7 +99,7 @@ project(":core") {
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-        dokkaPlugin "com.company.todd:todd-json-dokka-plugin:1.0"
+        dokkaPlugin "io.github.advancerman.todd:todd-json-dokka-plugin:1.0"
     }
 
     dokkaHtml {

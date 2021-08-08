@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.company.todd" >
+    package="io.github.advancerman.todd" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/GdxTheme" >
         <activity
-            android:name="com.company.todd.AndroidLauncher"
+            android:name="io.github.advancerman.todd.AndroidLauncher"
             android:label="@string/app_name" 
             android:screenOrientation="userLandscape"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout">

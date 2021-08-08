@@ -24,7 +24,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            groupId = "com.company.todd"
+            groupId = "io.github.advancerman.todd"
             artifactId = "todd-json-dokka-plugin"
             version = "1.0"
             artifact javadocJar

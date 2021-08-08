@@ -195,9 +195,9 @@ static def addSerializationTypeFunctions(
 
 static def addMetaInf(ClassLoader classLoader, Reflections reflections, JsonValue json) {
     Class<? extends Annotation> serializationTypeAnnotation =
-            classLoader.loadClass("com.company.todd.json.SerializationType") as Class<? extends Annotation>
+            classLoader.loadClass("io.github.advancerman.todd.json.SerializationType") as Class<? extends Annotation>
     Class<? extends Annotation> manualConstructorAnnotation =
-            classLoader.loadClass("com.company.todd.json.ManualJsonConstructor") as Class<? extends Annotation>
+            classLoader.loadClass("io.github.advancerman.todd.json.ManualJsonConstructor") as Class<? extends Annotation>
     addSerializationTypeClasses(reflections, json, serializationTypeAnnotation, manualConstructorAnnotation)
     addSerializationTypeFunctions(reflections, json, serializationTypeAnnotation)
 }
@@ -214,7 +214,7 @@ task configureReflection {
         ClassLoader classLoader = new URLClassLoader(urls)
 
         Reflections reflections = new Reflections(
-                "com.company.todd",
+                "io.github.advancerman.todd",
                 urls, classLoader,
                 new SubTypesScanner(false),
                 new TypeAnnotationsScanner(),
