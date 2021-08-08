@@ -32,7 +32,7 @@ class Spawner(
     scale: Float = 1f
 ) : SolidPlatform(game, drawable, bodyPattern, scale) {
     @JsonUpdateSerializable
-    private var sinceSpawn = 0f
+    private var sinceSpawn = spawnPeriod
 
     @JsonUpdateSerializable
     private var spawned = mutableListOf<InGameObject>()

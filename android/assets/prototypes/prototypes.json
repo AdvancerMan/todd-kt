@@ -51,7 +51,7 @@
       "origin": [0, 0]
     },
     "attackXYWH": [26, 16, 32, 2],
-    "power": 3,
+    "power": 8,
     "cooldown": 1,
     "safeAttackPeriod": 0.095,
     "dangerousAttackPeriod": 0.3
@@ -78,4 +78,68 @@
     "jumpCooldown": 1.5,
     "maxDistanceFromTarget": 3
   }
+}
+
+{
+  "protoName": "Alexander",
+  "type": "Creature",
+  "drawable": {
+    "name": "stupidMeleeEnemy",
+    "size": [30, 91]
+  },
+  "weapon": {
+    "type": "SimpleMeleeWeapon",
+    "handWeaponStyle": {
+      "weaponDrawable": {
+        "name": "simpleWeapon",
+        "zIndex": 0,
+        "size": [61, 59],
+        "offset": [0, 25]
+      },
+      "origin": [0, 0]
+    },
+    "attackXYWH": [30, 1, 20, 89],
+    "power": 5,
+    "cooldown": 1.5,
+    "safeAttackPeriod": 0.3,
+    "dangerousAttackPeriod": 0.4
+  },
+  "bodyPattern": {
+    "type": "RectangleWithTopGSBottomGS",
+    "b2dType": "dynamic",
+    "size": [30, 91]
+  },
+  "healthBar": {
+    "maxHealth": 100,
+    "backgroundDrawable": {
+      "name": "healthBarBackground",
+      "size": [140, 10]
+    },
+    "healthDrawable": {
+      "name": "healthBarHealth",
+      "size": [0, 10]
+    }
+  },
+  "speed": 200,
+  "jumpPower": 500,
+  "thinker": {
+    "type": "StupidMeleeThinker",
+    "jumpCooldown": 1.5,
+    "maxDistanceFromTarget": 3
+  }
+}
+
+{
+  "protoName": "AlexanderSpawner",
+  "type": "Spawner",
+  "drawable": {
+    "name": "stupidMeleeEnemy"
+  },
+  "bodyPattern": {
+    "type": "RectangleWithTopGSBottomGS",
+    "b2dType": "static",
+    "size": [50, 50]
+  },
+  "maxAmount": 1,
+  "spawnPeriod": 20
 }
