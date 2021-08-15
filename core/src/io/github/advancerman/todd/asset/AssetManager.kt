@@ -2,6 +2,7 @@ package io.github.advancerman.todd.asset
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.badlogic.gdx.utils.Queue
 import io.github.advancerman.todd.util.SAVING_ASSET_DELAY
 
@@ -51,15 +52,26 @@ abstract class AssetManager<T: Disposable, S : Any?>(logTagClass: Class<*>): Dis
     }
 
     fun load(settings: S): T {
-        val asset = assets[settings] ?: Asset(loadAsset(settings)).also {
-            assets[settings] = it
-            debug("Loading asset: $settings")
-        }
+        val asset = assets[settings]
+            ?: try {
+                debug("Loading asset: $settings")
+                Asset(loadAsset(settings))
+            } catch (e: GdxRuntimeException) {
+                kotlin.runCatching { NoDisposeAsset(getDefaultAsset()) }
+                    .onSuccess { error("Could not load asset: $settings", e) }
+                    .getOrElse { throw it.apply { addSuppressed(e) } }
+            }.also {
+                assets[settings] = it
+            }
         asset.refCount++
         return asset.asset
     }
 
     protected abstract fun loadAsset(settings: S): T
+
+    protected open fun getDefaultAsset(): T {
+        throw UnsupportedOperationException("Found no default asset")
+    }
 
     protected fun unload(settings: S, amount: Int) {
         unloadingQueue.addLast(
@@ -72,11 +84,17 @@ abstract class AssetManager<T: Disposable, S : Any?>(logTagClass: Class<*>): Dis
     }
 
     override fun dispose() =
-            assets.forEach { it.value.asset.dispose() }
+        assets.forEach { it.value.asset.dispose() }
 
-    private data class Asset<T: Disposable>(val asset: T, var refCount: Int = 0): Disposable {
+    private open class Asset<T: Disposable>(val asset: T, var refCount: Int = 0) :
+        Disposable {
         override fun dispose() =
-                asset.dispose()
+            asset.dispose()
+    }
+
+    private class NoDisposeAsset<T: Disposable>(asset: T, refCount: Int = 0) :
+        Asset<T>(asset, refCount) {
+        override fun dispose() {}
     }
 
     private data class UnloadRequest<S : Any?>(

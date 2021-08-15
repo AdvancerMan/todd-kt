@@ -7,6 +7,10 @@ import io.github.advancerman.todd.asset.AssetManager
 import io.github.advancerman.todd.util.FONTS_PATH
 
 class FontManager : AssetManager<BitmapFont, FontSettings>(BitmapFont::class.java) {
+    private val defaultFont by lazy {
+        BitmapFont()
+    }
+
     private val generatorManager =
         object : AssetManager<FreeTypeFontGenerator, String>(BitmapFont::class.java) {
             override fun loadAsset(settings: String): FreeTypeFontGenerator {
@@ -19,6 +23,9 @@ class FontManager : AssetManager<BitmapFont, FontSettings>(BitmapFont::class.jav
             .generateFont(settings.toFreetypeFontParameter())
             .also { generatorManager.unload(settings.path) }
     }
+
+    override fun getDefaultAsset() =
+        defaultFont
 
     override fun dispose() {
         generatorManager.dispose()

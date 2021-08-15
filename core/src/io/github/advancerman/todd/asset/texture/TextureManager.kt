@@ -17,9 +17,11 @@ import io.github.advancerman.todd.json.deserialization.loadTextureInfos
 import kotlin.random.Random
 
 class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
-    private val additionalTexture = TextureRegion(createAdditionalTexture())
-    private val additionalInfo = RegionInfo("__additionalInfo", 0, 0, 10, 10)
     private val infos = loadTextureInfos()
+    private val additionalInfo = RegionInfo("__additionalInfo", 0, 0, 10, 10)
+    private val additionalTexture by lazy {
+        TextureRegion(createAdditionalTexture())
+    }
 
     private fun createAdditionalTexture() =
             Texture(
@@ -41,12 +43,10 @@ class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
             )
 
     override fun loadAsset(settings: String) =
-            try {
-                Texture(settings)
-            } catch (e: GdxRuntimeException) {
-                error("Error while loading $settings texture: ", e)
-                createAdditionalTexture()
-            }
+        Texture(settings)
+
+    override fun getDefaultAsset(): Texture =
+        additionalTexture.texture
 
     private fun load(info: AnimationPackInfo) =
             info.animations.associate { it.first to load(it.second) }
