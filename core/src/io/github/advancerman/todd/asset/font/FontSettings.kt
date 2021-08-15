@@ -14,7 +14,7 @@ data class FontSettings(
     val characters: String,
     val flip: Boolean,
 ) {
-    fun toFreetypeFontParameter(): FreeTypeFontGenerator.FreeTypeFontParameter {
+    fun toFreeTypeFontParameter(): FreeTypeFontGenerator.FreeTypeFontParameter {
         return FreeTypeFontGenerator.FreeTypeFontParameter().also {
             it.size = size
             it.mono = mono
