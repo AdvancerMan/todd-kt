@@ -99,17 +99,9 @@ val jsonConstructors: Map<KClass<*>, Map<String, JsonType<*>>> by lazy {
 }
 
 object Constructors {
-    val igoConstructors: Map<String, JsonType<out InGameObject>>
-
     val b2dTypes = mapOf(
         "dynamic" to BodyDef.BodyType.DynamicBody,
         "kinematic" to BodyDef.BodyType.KinematicBody,
         "static" to BodyDef.BodyType.StaticBody
     )
-
-    init {
-        @Suppress("UNCHECKED_CAST")
-        this.igoConstructors = jsonConstructors[InGameObject::class]
-                as Map<String, JsonType<out InGameObject>>
-    }
 }

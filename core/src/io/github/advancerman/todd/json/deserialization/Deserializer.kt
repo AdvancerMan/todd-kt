@@ -71,13 +71,21 @@ fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
     }
 }
 
+// TODO use JsonValue.construct instead
 fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
                        constructors: Map<String, JsonType<out T>>): T {
     return parseNonPrototypeJsonValue(game, createJsonValue(jsonWithPrototype), constructors)
 }
 
+inline fun <reified T> JsonValue.construct(game: ToddGame? = null): T {
+    @Suppress("UNCHECKED_CAST")
+    val constructors = jsonConstructors[T::class] as? Map<String, JsonType<out T>>
+        ?: throw IllegalArgumentException("Invalid base type ${T::class.simpleName} for json constructor")
+    return parseJsonValue(game, this, constructors)
+}
+
 fun parseInGameObject(jsonWithPrototype: JsonValue): (ToddGame) -> InGameObject = {
-    parseJsonValue(it, jsonWithPrototype, Constructors.igoConstructors)
+    jsonWithPrototype.construct(it)
 }
 
 internal val jsonPrimitives = mapOf<KClass<*>, JsonType<*>>(
