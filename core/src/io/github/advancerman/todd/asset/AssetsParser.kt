@@ -38,8 +38,8 @@ object AssetsParser {
      * @param size Size in pixels
      * @param mono If true, font smoothing is disabled.
      * @param color Foreground color
-     * @param borderWidth Border width in pixels, 0 to disable
-     * @param borderColor Border color; only used if borderWidth > 0
+     * @param borderWidth Border width in pixels, `0` to disable
+     * @param borderColor Border color; only used if borderWidth `> 0`
      * @param borderStraight True for straight (mitered), false for rounded borders
      * @param characters The characters the font should contain.
      *                   "Missing character" is always included.
