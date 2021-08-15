@@ -6,8 +6,8 @@
       "backgroundDrawableName": "moveSliderBackground",
       "knobDrawableName": "moveSliderKnob",
       "position": [30, 30],
-      "size": [140, 20],
-      "knobSize": [20, 20],
+      "size": [160, 28],
+      "knobSize": [25, 28],
       "activationFraction": 0.2
     },
     "touchpad": {
