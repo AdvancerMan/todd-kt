@@ -1,5 +1,7 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:BitmapFont/BitmapFont.Default///PointingToDeclaration/core/BitmapFont/-bitmap-font.-default.html
+$dokka.location:BitmapFont/BitmapFont///PointingToDeclaration/core/BitmapFont/index.html
 $dokka.location:BodyPattern/BodyPattern///PointingToDeclaration/core/BodyPattern/index.html
 $dokka.location:BodyPattern/Circle///PointingToDeclaration/core/BodyPattern/-circle.html
 $dokka.location:BodyPattern/PolygonWithTopGS///PointingToDeclaration/core/BodyPattern/-polygon-with-top-g-s.html
@@ -7,6 +9,8 @@ $dokka.location:BodyPattern/RectangleWithTopGS///PointingToDeclaration/core/Bod
 $dokka.location:BodyPattern/RectangleWithTopGSBottomGS///PointingToDeclaration/core/BodyPattern/-rectangle-with-top-g-s-bottom-g-s.html
 $dokka.location:Bullet.Builder/Bullet.Builder///PointingToDeclaration/core/Bullet.Builder/index.html
 $dokka.location:Bullet.Builder/SimpleBuilder///PointingToDeclaration/core/Bullet.Builder/-simple-builder.html
+$dokka.location:Color/Color.Default///PointingToDeclaration/core/Color/-color.-default.html
+$dokka.location:Color/Color///PointingToDeclaration/core/Color/index.html
 $dokka.location:HandWeapon.Style/HandWeapon.Style.Default///PointingToDeclaration/core/HandWeapon.Style/-hand-weapon.-style.-default.html
 $dokka.location:HandWeapon.Style/HandWeapon.Style///PointingToDeclaration/core/HandWeapon.Style/index.html
 $dokka.location:HealthBar/HealthBar.Default///PointingToDeclaration/core/HealthBar/-health-bar.-default.html
@@ -29,8 +33,10 @@ $dokka.location:ToddDrawable/ToddDrawable///PointingToDeclaration/core/ToddDraw
 $dokka.location:Weapon/SimpleGun///PointingToDeclaration/core/Weapon/-simple-gun.html
 $dokka.location:Weapon/SimpleMeleeWeapon///PointingToDeclaration/core/Weapon/-simple-melee-weapon.html
 $dokka.location:Weapon/Weapon///PointingToDeclaration/core/Weapon/index.html
+BitmapFont
 BodyPattern
 Bullet.Builder
+Color
 HandWeapon.Style
 HealthBar
 InGameObject
