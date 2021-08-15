@@ -9,6 +9,7 @@ const val SCREEN_HEIGHT = 450
 const val LEVELS_PATH = "levels/"
 const val TEXTURES_PATH = "pics/"
 const val PROTOTYPES_PATH = "prototypes/"
+const val FONTS_PATH = "fonts/"
 const val SETTINGS_PATH = "settings.json"
 
 const val DEFAULT_DENSITY = 1f

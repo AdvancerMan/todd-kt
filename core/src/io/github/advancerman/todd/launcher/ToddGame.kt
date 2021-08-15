@@ -3,6 +3,7 @@ package io.github.advancerman.todd.launcher
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Disposable
+import io.github.advancerman.todd.asset.font.FontManager
 import io.github.advancerman.todd.screen.game.DebugScreen
 import io.github.advancerman.todd.asset.texture.TextureManager
 import io.github.advancerman.todd.screen.ScreenManager
@@ -17,6 +18,7 @@ class ToddGame: ApplicationListener {
     lateinit var logger: MyApplicationLogger private set
     lateinit var screenManager: ScreenManager private set
     lateinit var textureManager: TextureManager private set
+    lateinit var fontManager: FontManager private set
 
     override fun create() {
         logger = FileLogger("todd.log", Gdx.app.applicationLogger)
@@ -24,6 +26,7 @@ class ToddGame: ApplicationListener {
         Thread.currentThread().withExceptionHandler(logger)
 
         textureManager = TextureManager()
+        fontManager = FontManager()
         screenManager = ScreenManager(MainMenuScreen(this))
     }
 
@@ -32,6 +35,7 @@ class ToddGame: ApplicationListener {
         screenManager.render(delta)
         screenManager.update()
         textureManager.update(delta)
+        fontManager.update(delta)
     }
 
     override fun resize(width: Int, height: Int) {

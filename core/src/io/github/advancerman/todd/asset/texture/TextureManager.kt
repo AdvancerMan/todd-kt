@@ -16,7 +16,7 @@ import io.github.advancerman.todd.asset.texture.static.TransformTiledDrawable
 import io.github.advancerman.todd.json.deserialization.loadTextureInfos
 import kotlin.random.Random
 
-class TextureManager : AssetManager<Texture>(Texture::class.java) {
+class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
     private val additionalTexture = TextureRegion(createAdditionalTexture())
     private val additionalInfo = RegionInfo("__additionalInfo", 0, 0, 10, 10)
     private val infos = loadTextureInfos()
@@ -40,11 +40,11 @@ class TextureManager : AssetManager<Texture>(Texture::class.java) {
                             }
             )
 
-    override fun loadAsset(fileName: String) =
+    override fun loadAsset(settings: String) =
             try {
-                Texture(fileName)
+                Texture(settings)
             } catch (e: GdxRuntimeException) {
-                error("Error while loading $fileName texture: ", e)
+                error("Error while loading $settings texture: ", e)
                 createAdditionalTexture()
             }
 
