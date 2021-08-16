@@ -47,9 +47,9 @@
       "path": "todd.ttf",
       "mono": true,
       "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1
+        "r": 255,
+        "g": 255,
+        "b": 255
       }
     },
     "button": {
