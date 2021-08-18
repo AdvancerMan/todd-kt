@@ -1,5 +1,6 @@
 package io.github.advancerman.todd.objects.base
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.JsonValue
@@ -20,10 +21,9 @@ class DrawableActor : Actor(), ManuallyJsonSerializable, WithZIndex {
         get() = drawable!!.myZIndex
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        val batchColor = batch.color.cpy()
-        batch.color = batch.color.mul(color).apply { a *= parentAlpha }
-        drawable?.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, flipX, flipY)
-        batch.color = batchColor
+        batch.withColor(parentAlpha, color) {
+            drawable?.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation, flipX, flipY)
+        }
     }
 
     override fun serializeUpdates(json: JsonValue) {
@@ -43,4 +43,11 @@ class DrawableActor : Actor(), ManuallyJsonSerializable, WithZIndex {
         json.removeAll { true }
         drawable?.toJsonSave()?.forEach { json.addChild(it) }
     }
+}
+
+inline fun Batch.withColor(parentAlpha: Float, color: Color, block: (Batch) -> Unit) {
+    val batchColor = this.color.cpy()
+    this.color = this.color.mul(color).apply { a *= parentAlpha }
+    block(this)
+    this.color = batchColor
 }

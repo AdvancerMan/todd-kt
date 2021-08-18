@@ -94,10 +94,11 @@
         "name": "healthBarBackground",
         "size": [140, 10]
       },
-      "healthDrawable": {
+      "foregroundDrawable": {
         "name": "healthBarHealth",
         "size": [0, 10]
-      }
+      },
+      "animateDuration": 0.1
     },
     "speed": 300,
     "jumpPower": 500

@@ -98,7 +98,7 @@ open class Creature(
     override fun doInit(gameScreen: GameScreen) {
         super.doInit(gameScreen)
         healthBar.let {
-            it.setPosition(width / 2, height + HEALTH_BAR_OFFSET, Align.bottom or Align.center)
+            it.setOwnerTopCenter(width / 2, height)
             addActor(it)
         }
         weapon?.let {
