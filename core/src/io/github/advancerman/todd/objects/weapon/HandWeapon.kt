@@ -46,8 +46,8 @@ abstract class HandWeapon(
 
         listOf(handWeaponStyle.handDrawable, handWeaponStyle.weaponDrawable).forEach { drawable ->
             drawable?.apply {
-                if (getPlayingType() == AnimationType.ACTION && isAnimationFinished()) {
-                    setPlayingType(AnimationType.STAY)
+                if (getPlayingType() == "ACTION" && isAnimationFinished()) {
+                    setPlayingType("STAY")
                 }
             }
         }
@@ -84,8 +84,8 @@ abstract class HandWeapon(
         if (canAttack()) {
             sinceAttack = 0f
             doingFirstHit = true
-            handWeaponStyle.handDrawable?.setPlayingType(AnimationType.ACTION, true)
-            handWeaponStyle.weaponDrawable?.setPlayingType(AnimationType.ACTION, true)
+            handWeaponStyle.handDrawable?.setPlayingType("ACTION", true)
+            handWeaponStyle.weaponDrawable?.setPlayingType("ACTION", true)
         }
     }
 

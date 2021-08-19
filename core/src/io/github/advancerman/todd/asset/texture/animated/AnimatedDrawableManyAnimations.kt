@@ -34,7 +34,7 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
                 animations: Map<AnimationType, Animation<ToddDrawable>>) :
             this(
                     animationPackInfo, animations,
-                    animations[AnimationType.STAY]?.let { AnimationType.STAY to it }
+                    animations["STAY"]?.let { "STAY" to it }
                             ?: animations.entries.firstOrNull()?.let { it.key to it.value }
                             ?: throw IllegalArgumentException("Animation packs without animations aren't allowed")
             )

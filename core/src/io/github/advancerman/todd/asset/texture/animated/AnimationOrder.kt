@@ -19,25 +19,25 @@ private class AnimationOrderImpl(override val type: AnimationType) : AnimationOr
 }
 
 private object AnimationOrders {
-    val stay = AnimationOrderImpl(AnimationType.STAY)
-    val run = AnimationOrderImpl(AnimationType.RUN)
-    val jump = AnimationOrderImpl(AnimationType.JUMP)
-    val preFall = AnimationOrderImpl(AnimationType.PRE_FALL)
-    val fall = AnimationOrderImpl(AnimationType.FALL)
-    val fallAfterGround = AnimationOrderImpl(AnimationType.FALL_AFTER_GROUND)
+    val stay = AnimationOrderImpl("STAY")
+    val run = AnimationOrderImpl("RUN")
+    val jump = AnimationOrderImpl("JUMP")
+    val preFall = AnimationOrderImpl("PRE_FALL")
+    val fall = AnimationOrderImpl("FALL")
+    val fallAfterGround = AnimationOrderImpl("FALL_AFTER_GROUND")
 
     init {
         listOf(stay, run).forEach {
-            it.then(jump) { _, t -> t == AnimationType.JUMP }
+            it.then(jump) { _, t -> t == "JUMP" }
             it.then(fallAfterGround) { o, _ -> !o.isOnGround }
-            it.then(run) { _, t -> t == AnimationType.RUN }
+            it.then(run) { _, t -> t == "RUN" }
         }
 
         run.then(stay) { _, _ -> true }
 
         listOf(jump, preFall, fall, fallAfterGround).forEach {
-            it.then(jump) { _, t -> t == AnimationType.JUMP }
-            it.then(run) { o, t -> o.isOnGround && t == AnimationType.RUN }
+            it.then(jump) { _, t -> t == "JUMP" }
+            it.then(run) { o, t -> o.isOnGround && t == "RUN" }
             it.then(stay) { o, _ -> o.isOnGround }
         }
 

@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import io.github.advancerman.todd.asset.texture.BaseToddDrawable
 import io.github.advancerman.todd.asset.texture.ToddDrawable
 
-enum class AnimationType {
-    STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, ACTION
-}
+typealias AnimationType = String
 
 abstract class AnimatedDrawable(playingNow: Animation<ToddDrawable>) : BaseToddDrawable() {
     protected var elapsed = 0f

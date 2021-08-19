@@ -4,14 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
 import io.github.advancerman.todd.asset.texture.*
-import io.github.advancerman.todd.asset.texture.animated.AnimationType
 import io.github.advancerman.todd.util.TEXTURES_PATH
 import io.github.advancerman.todd.util.files.crawlJsonListsWithComments
 import io.github.advancerman.todd.util.files.toOsDependentPath
 
-private val animationPackInfo = JsonType("non-empty map, keys are ${AnimationType.values().contentToString()}, " +
+private val animationPackInfo = JsonType("non-empty map, keys are animation types, " +
         "values are infos of \"anim\" type") { _, json ->
-    AnimationPackInfo(json.map { AnimationType.valueOf(it.name) to parseAnimInfo(it) })
+    AnimationPackInfo(json.map { it.name to parseAnimInfo(it) })
 }
 
 private val textureInfoConstructors = mapOf(

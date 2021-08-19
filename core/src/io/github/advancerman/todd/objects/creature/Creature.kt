@@ -53,7 +53,7 @@ open class Creature(
     scale: Float = 1f
 ) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private val preVelocity = Vector2()
-    private var preferredAnimationType = AnimationType.STAY
+    private var preferredAnimationType: AnimationType = "STAY"
     protected var animationTypeNow = stayAnimation()
     @JsonUpdateSerializable
     private var sinceJump = JUMP_COOLDOWN + 1
@@ -116,7 +116,7 @@ open class Creature(
         sinceJump += delta
         sinceDamage += delta
 
-        preferredAnimationType = AnimationType.STAY
+        preferredAnimationType = "STAY"
         preVelocity.setZero()
         isOnGround = grounds.isNotEmpty()
         think(delta)
@@ -145,7 +145,7 @@ open class Creature(
     fun jump() {
         if (isOnGround) {
             sinceJump = 0f
-            preferredAnimationType = AnimationType.JUMP
+            preferredAnimationType = "JUMP"
             preVelocity.y = jumpPower
         }
         screen.listenAction(ThinkerAction.JUMP, this)
@@ -156,8 +156,8 @@ open class Creature(
     }
 
     fun run(toRight: Boolean) {
-        if (drawable.getPlayingType() != AnimationType.JUMP) {
-            preferredAnimationType = AnimationType.RUN
+        if (drawable.getPlayingType() != "JUMP") {
+            preferredAnimationType = "RUN"
         }
         preVelocity.x += if (toRight) speed else -speed
 
