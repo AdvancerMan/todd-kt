@@ -67,7 +67,8 @@
     "type": "Creature",
     "drawable": {
       "name": "player",
-      "size": [60, 110]
+      "size": [61, 59],
+      "offset": [-11, 0]
     },
     "weapon": {
       "type": "SimpleMeleeWeapon",
@@ -75,18 +76,19 @@
         "weaponDrawable": {
           "name": "simpleWeapon",
           "size": [61, 59],
-          "offset": [0, 30]
+          "offset": [0, 0]
         }
       },
-      "attackXYWH": [30, 1, 20, 89],
+      "attackXYWH": [20, 4, 40, 40],
       "power": 25,
       "cooldown": 1,
-      "safeAttackPeriod": 0.3
+      "safeAttackPeriod": 0.3,
+      "dangerousAttackPeriod": 0.4
     },
     "bodyPattern": {
       "type": "RectangleWithTopGSBottomGS",
       "b2dType": "dynamic",
-      "size": [30, 91]
+      "size": [14, 48]
     },
     "healthBar": {
       "maxHealth": 100,
@@ -101,6 +103,7 @@
       "animateDuration": 0.1
     },
     "speed": 300,
-    "jumpPower": 500
+    "jumpPower": 500,
+    "scale": 2
   }
 }
