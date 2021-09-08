@@ -56,8 +56,9 @@ jobs:
           JAR_NAME=$(ls | grep \.jar | head -n1)
           cd ../../../
           mv "desktop/build/libs/$JAR_NAME" .
-          mv "$JAR_NAME" todd.jar
-          
+          mkdir workflow-build
+          mv "$JAR_NAME" workflow-build/todd-build-$GITHUB_RUN_NUMBER.jar
+
       - name: Install jq
         run: sudo apt-get install jq
       - name: Download assets from Yandex disk
@@ -70,17 +71,28 @@ jobs:
         run: |
           unzip assets.zip
           cp -r android/assets .
-          cp todd.jar assets
+          cp workflow-build/* assets
           cd assets
-          zip -r ../todd-with-assets.zip *
+          zip -r "../workflow-build/todd-with-assets-build-$GITHUB_RUN_NUMBER.zip" *
           cd ..
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Upload latest version to the release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "v1-alpha"
           prerelease: true
           title: "Development Desktop Build"
-          files: |
-            todd.jar
-            todd-with-assets.zip
+          files: workflow-build/*
+
+      - name: Upload todd to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: todd
+          path: workflow-build/todd-build-*.jar
+
+      - name: Upload todd-with-assets to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: todd-with-assets
+          path: assets
