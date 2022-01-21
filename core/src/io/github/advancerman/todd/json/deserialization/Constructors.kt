@@ -31,6 +31,8 @@ private fun getFromJson(
             else -> null to false
         }
     } catch (e: DeserializationException) {
+        // TODO this log spams too much on animation frames without xywh, do something with it
+        // Gdx.app.error("Constructors", "Could not parse $clazz", e)
         null to false
     }
 }

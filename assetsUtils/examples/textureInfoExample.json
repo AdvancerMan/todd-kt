@@ -1,70 +1,67 @@
 // parameters:
 // name --- unique info id, game gets info finding it by name
-// type --- reg (texture region), anim (animation), anims (animations)
+// type --- drawable type: <empty> (texture region),
+//                         TiledRegionInfo,
+//                         NineTiledRegionInfo,
+//                         CoveredTiledRegionInfo,
+//                         AnimationInfo (animation),
+//                         AnimationPackInfo (animations)
 
-// reg:
+// texture region (default type):
 // path --- path to picture with file extension
 // xywh --- bounding rectangle for texture region (x, y, width, height)
-// regType --- region type (@see RegionInfoTypes): REGION, TILED, NINE_TILED, COVERED_TILED
-//             default is REGION
 
 {
-  "type": "reg",
   "name": "testReg",
   "path": "very/long/path/testPic.png",
   "xywh": [10, 20, 10, 10]
 }
 
-// regType = TILED
+// type = TiledRegionInfo
 // no additional parameters
 
 {
-  "type": "reg",
+  "type": "TiledRegionInfo",
   "name": "testTiled",
   "path": "tiled.png",
-  "xywh": [10, 20, 10, 10],
-  "regType": "TILED"
+  "xywh": [10, 20, 10, 10]
 }
 
-// regType = COVERED_TILED
+// type = CoveredTiledRegionInfo
 // uh --- height of upper side
 
 {
-  "type": "reg",
+  "type": "CoveredTiledRegionInfo",
   "name": "testCoveredTiled",
   "path": "coveredTiled.png",
   "xywh": [10, 20, 10, 10],
-  "regType": "COVERED_TILED",
   "uh": 3
 }
 
-// regType = NINE_TILED
+// type = NineTiledRegionInfo
 // lrud --- array of length 4, width (or height) of left side, right side, upper side, lower (d for down) side
 
 {
-  "type": "reg",
+  "type": "NineTiledRegionInfo",
   "name": "testNineTiled",
   "path": "nineTiled.png",
   "xywh": [10, 20, 10, 10],
-  "regType": "NINE_TILED",
   "lrud": [3, 3, 3, 3]
 }
 
-// anim:
-// path --- path to picture with file extension (one path is used for all frames)
+// AnimationInfo:
+// frameInfo --- frame info without xywh
 // frameDuration --- duration of each frame in ms
 // bounds --- list of "xywh"
 // mode --- play mode: NORMAL, REVERSED, LOOP, LOOP_REVERSED, LOOP_PINGPONG, LOOP_RANDOM
 // no mode ---> default mode ---> NORMAL
 
-// optional:
-// regType --- region type for frames can be changed by changing `regType` parameter of anim
-//             and adding required parameters for regType
-
 {
-  "type": "anim",
+  "type": "AnimationInfo",
   "name": "testAnim1",
-  "path": "testAnim.png",
+  "frameInfo": {
+    "path": "testAnim.png"
+  },
   "frameDuration": 100,
   "mode": "LOOP_PINGPONG",
   "bounds": [
@@ -76,9 +73,11 @@
 }
 
 {
-  "type": "anim",
+  "type": "AnimationInfo",
   "name": "testAnimRegTypeNineTiled",
-  "path": "testAnimRegTypeNineTiled.png",
+  "frameInfo": {
+    "path": "testAnimRegTypeNineTiled.png"
+  },
   "frameDuration": 100,
   "mode": "LOOP_PINGPONG",
   "bounds": [
@@ -94,9 +93,11 @@
 // also allowed:
 
 {
-  "type": "anim",
+  "type": "AnimationInfo",
   "name": "testAnim2",
-  "path": "testAnim.png",
+  "frameInfo": {
+    "path": "testAnim.png"
+  },
   "frameDuration": 100,
   "mode": "LOOP_PINGPONG",
   "xywh": [0, 0, 20, 20],
@@ -104,16 +105,18 @@
   "c": 2  // columns
 }
 
-// anims:
-// (parameter) anims --- map: animation type TO anim without name and type (look at the example)
-// animation types: STAY, RUN, JUMP, PRE_FALL, FALL, FALL_AFTER_GROUND, ACTION
+// AnimationPackInfo:
+// (parameter) animations --- map:
+// "animation type": "animation without name and type" (look at the example)
 
 {
-  "type": "anims",
+  "type": "AnimationPackInfo",
   "name": "testAnims",
-  "anims": {
+  "animations": {
     "RUN": {
-      "path": "testAnim.png",
+      "frameInfo": {
+        "path": "testAnim.png"
+      },
       "frameDuration": 100,
       "mode": "LOOP",
       "xywh": [0, 0, 20, 10],
@@ -121,7 +124,9 @@
       "c": 2
     },
     "JUMP": {
-      "path": "testAnim.png",
+      "frameInfo": {
+        "path": "testAnim.png"
+      },
       "frameDuration": 100,
       "xywh": [0, 10, 20, 10],
       "r": 1,

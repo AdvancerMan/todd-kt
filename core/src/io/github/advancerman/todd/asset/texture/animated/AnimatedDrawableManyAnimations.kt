@@ -9,9 +9,11 @@ import io.github.advancerman.todd.asset.texture.TextureManager
 private val reportedBadTypes = mutableSetOf<String>()
 
 private fun AnimatedDrawableManyAnimations.reportBadType(type: AnimationType, packInfo: AnimationPackInfo) {
-    val packDescriptor = packInfo.animations.map {
-        it.second.frameInfo.path + it.second.bounds
-            .map { r -> listOf(r.x, r.y, r.width, r.height).map(Float::toInt) }
+    val packDescriptor = packInfo.animations.map { (_, animationInfo) ->
+        animationInfo.frameInfo.path +
+                animationInfo.bounds.map { r ->
+                    listOf(r.x, r.y, r.width, r.height).map(Float::toInt)
+                }
     }.toString()
     if (!reportedBadTypes.add(packDescriptor)) {
         return

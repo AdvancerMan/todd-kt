@@ -13,6 +13,7 @@ import io.github.advancerman.todd.asset.texture.static.ToddTextureRegionDrawable
 import io.github.advancerman.todd.asset.texture.static.NineTiledDrawable
 import io.github.advancerman.todd.asset.texture.static.TransformTiledDrawable
 import io.github.advancerman.todd.json.deserialization.loadTextureInfos
+import io.github.advancerman.todd.util.TEXTURES_PATH
 import kotlin.random.Random
 
 class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
@@ -42,13 +43,13 @@ class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
             )
 
     override fun loadAsset(settings: String) =
-        Texture(settings)
+        Texture("$TEXTURES_PATH$settings")
 
     override fun getDefaultAsset(): Texture =
         additionalTexture.texture
 
     private fun load(info: AnimationPackInfo) =
-            info.animations.associate { it.first to load(it.second) }
+        info.animations.mapValues { (_, info) -> load(info) }
 
     private fun load(info: AnimationInfo) =
             Animation(
@@ -72,7 +73,7 @@ class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
             }
 
     fun unload(info: AnimationPackInfo) {
-        info.animations.forEach { unload(it.second) }
+        info.animations.values.forEach(::unload)
     }
 
     fun unload(info: AnimationInfo) {
@@ -87,7 +88,7 @@ class TextureManager : AssetManager<Texture, String>(Texture::class.java) {
         }
     }
 
-    private fun loadDrawable(info: TextureInfo): ToddDrawable =
+    private fun loadDrawable(info: DrawableInfo): ToddDrawable =
             when (info) {
                 is TiledRegionInfo -> {
                     TransformTiledDrawable(info, load(info))

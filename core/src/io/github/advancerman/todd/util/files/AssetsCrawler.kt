@@ -40,6 +40,12 @@ fun crawlJsonListsWithComments(unixInternalPath: String): List<JsonValue> {
                 fileNameToJson.second
                         .removeComments()
                         .trim()
-                        .let { jsonReader.parse(if (it[0] == '[') it else "[$it]") }
+                        .let {
+                            if (it.isEmpty()) {
+                                listOf()
+                            } else {
+                                jsonReader.parse(if (it[0] == '[') it else "[$it]")
+                            }
+                        }
             }
 }
