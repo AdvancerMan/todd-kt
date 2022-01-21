@@ -23,7 +23,7 @@ import io.github.advancerman.todd.objects.passive.platform.SolidPlatform
  * @param spawnPeriod Amount of time between spawns
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "Spawner")
+@SerializationType([InGameObject::class], "Spawner")
 class Spawner(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val igoPattern: JsonValue,

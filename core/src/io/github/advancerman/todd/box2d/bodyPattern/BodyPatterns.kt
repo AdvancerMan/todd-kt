@@ -25,7 +25,7 @@ object BodyPatterns {
      * @param scale Body scale relative to origin of body coordinate system.
      *              If not present is taken from parent json.
      */
-    @SerializationType(BodyPattern::class, "PolygonWithTopGS")
+    @SerializationType([BodyPattern::class], "PolygonWithTopGS")
     fun createPolygonBPWithTGS(
         b2dType: BodyDef.BodyType,
         worldCenter: Vector2 = Vector2(0f, 0f),
@@ -61,7 +61,7 @@ object BodyPatterns {
      * @param scale Body scale relative to origin of body coordinate system.
      *              If not present is taken from parent json.
      */
-    @SerializationType(BodyPattern::class, "RectangleWithTopGS")
+    @SerializationType([BodyPattern::class], "RectangleWithTopGS")
     fun createRectangleBPWithTGS(
         b2dType: BodyDef.BodyType,
         worldPosition: Vector2 = Vector2(0f, 0f),
@@ -97,7 +97,7 @@ object BodyPatterns {
      * @param scale Body scale relative to origin of body coordinate system.
      *              If not present is taken from parent json.
      */
-    @SerializationType(BodyPattern::class, "RectangleWithTopGSBottomGS")
+    @SerializationType([BodyPattern::class], "RectangleWithTopGSBottomGS")
     fun createRectangleBPWithTGSBGS(
         b2dType: BodyDef.BodyType,
         worldPosition: Vector2 = Vector2(0f, 0f),
@@ -133,7 +133,7 @@ object BodyPatterns {
      * @param scale Body scale relative to origin of body coordinate system.
      *              If not present is taken from parent json.
      */
-    @SerializationType(BodyPattern::class, "Circle")
+    @SerializationType([BodyPattern::class], "Circle")
     fun createCircleBP(
         b2dType: BodyDef.BodyType,
         worldCenter: Vector2 = Vector2(0f, 0f),

@@ -19,7 +19,7 @@ import io.github.advancerman.todd.screen.game.GameScreen
  * @param maxDistanceFromTarget Maximum distance when owner is not running anywhere
  * @param jumpCooldown Minimum time between jumps
  */
-@SerializationType(Thinker::class, "StupidMeleeThinker")
+@SerializationType([Thinker::class], "StupidMeleeThinker")
 class StupidMeleeThinker(
     @JsonSaveSerializable private val maxDistanceFromTarget: Float,
     @JsonSaveSerializable private val jumpCooldown: Float

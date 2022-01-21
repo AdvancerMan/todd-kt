@@ -23,7 +23,7 @@ import io.github.advancerman.todd.util.Y_VEL_JUMP_THRESHOLD
  * @param bodyPattern Body description for InGameObject
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "HalfCollided")
+@SerializationType([InGameObject::class], "HalfCollided")
 open class HalfCollidedPlatform(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float = 1f) :
         SolidPlatform(game, drawable, bodyPattern, scale) {
     protected val groundFor = mutableMapOf<InGameObject, Int>()

@@ -50,34 +50,32 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
     private fun getSerializationTypes(classlike: DClasslike) =
         when (classlike) {
             is DClass -> {
-                getSerializationData(classlike.extra)?.let { (baseClass, type) ->
-                    listOf(
-                        classlike.constructors.find {
-                            it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
-                        }?.let { function ->
-                            function.copy(
-                                dri = DRI(baseClass, type),
-                                documentation = classlike.documentation,
-                                parameters = function.parameters.map { parameter ->
-                                    classlike.properties
-                                        .find { parameter.name == it.name }
-                                        ?.let { property ->
-                                            getJsonPropertyName(property.extra)
-                                                ?.let { parameter.copy(name = it) }
-                                        }
-                                        ?: parameter
-                                }
-                            )
-                        } ?: throw IllegalArgumentException(
-                            "Serialization type class should have primary constructor"
+                getSerializationData(classlike.extra).map { (baseClass, type) ->
+                    classlike.constructors.find {
+                        it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
+                    }?.let { function ->
+                        function.copy(
+                            dri = DRI(baseClass, type),
+                            documentation = classlike.documentation,
+                            parameters = function.parameters.map { parameter ->
+                                classlike.properties
+                                    .find { parameter.name == it.name }
+                                    ?.let { property ->
+                                        getJsonPropertyName(property.extra)
+                                            ?.let { parameter.copy(name = it) }
+                                    }
+                                    ?: parameter
+                            }
                         )
+                    } ?: throw IllegalArgumentException(
+                        "Serialization type class should have primary constructor"
                     )
-                } ?: listOf()
+                }
             }
             is DObject -> {
                 classlike.functions
-                    .mapNotNull { f ->
-                        getSerializationData(f.extra)?.let { (baseClass, type) ->
+                    .flatMap { f ->
+                        getSerializationData(f.extra).map { (baseClass, type) ->
                             f.copy(dri = DRI(baseClass, type))
                         }
                     }
@@ -93,12 +91,19 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
 
     private fun getSerializationData(extra: PropertyContainer<*>) =
         anyAnnotationFrom(extra, listOf("SerializationType"))
-            ?.params?.let { params ->
-                val baseClass = (params["baseClass"]!! as ClassValue).className
+            ?.params
+            ?.let { params ->
+                val baseClasses = (params["baseClasses"]!! as ArrayValue).value
+                    .map { (it as ClassValue).className }
+                if (baseClasses.isEmpty()) {
+                    throw IllegalArgumentException(
+                        "SerializationType annotation must have at least 1 base class"
+                    )
+                }
                 val type = params["type"]?.let { (it as StringValue).value }
-                    ?: "$baseClass.Default"
-                baseClass to type
+                baseClasses.map { it to (type ?: "$it.Default") }
             }
+            ?: listOf()
 
     private fun getJsonPropertyName(extra: PropertyContainer<*>) =
         anyAnnotationFrom(
@@ -134,27 +139,31 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
             )
         )
 
+    private fun Projection.withBaseTypeDri(anotherTypes: Set<String>): Projection {
+        return when (this) {
+            is Bound -> withBaseTypeDri(anotherTypes)
+            Star -> this
+            is Covariance<*> -> copy(inner.withBaseTypeDri(anotherTypes))
+            is Contravariance<*> -> copy(inner.withBaseTypeDri(anotherTypes))
+            is Invariance<*> -> copy(inner.withBaseTypeDri(anotherTypes))
+        }
+    }
+
     // TODO serialization primitives
     private fun Bound.withBaseTypeDri(anotherTypes: Set<String>): Bound =
         when (this) {
             is TypeAliased -> inner.withBaseTypeDri(anotherTypes)
             is Nullable -> copy(inner.withBaseTypeDri(anotherTypes))
-            is TypeParameter, is GenericTypeConstructor -> {
-                val dri = when (this) {
-                    is TypeParameter -> dri
-                    is GenericTypeConstructor -> dri
-                    else -> throw AssertionError("Never happens")
-                }.let { DRI(it.classNames, it.classNames) }
+            is TypeParameter -> this
+            is GenericTypeConstructor -> {
+                val dri = DRI(dri.classNames, dri.classNames)
 
-                if (dri.classNames in anotherTypes) {
-                    when (this) {
-                        is TypeParameter -> copy(dri = dri)
-                        is GenericTypeConstructor -> copy(dri = dri)
-                        else -> throw AssertionError("Never happens")
+                copy(
+                    dri = if (dri.classNames in anotherTypes) dri else this.dri,
+                    projections = projections.map { projection ->
+                        projection.withBaseTypeDri(anotherTypes)
                     }
-                } else {
-                    this
-                }
+                )
             }
             else -> this
         }

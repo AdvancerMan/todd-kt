@@ -17,6 +17,6 @@ import io.github.advancerman.todd.objects.base.InGameObject
  * @param bodyPattern Body description for InGameObject
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "Solid")
+@SerializationType([InGameObject::class], "Solid")
 open class SolidPlatform(game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern, scale: Float = 1f) :
     PassiveObject(game, drawable, RealBodyWrapper(bodyPattern), scale)

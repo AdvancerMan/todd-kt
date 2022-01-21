@@ -8,7 +8,7 @@ object UtilsParser {
     /**
      * Color in rgba components. Valid range for parameters is `0..255`.
      */
-    @SerializationType(Color::class)
+    @SerializationType([Color::class])
     fun createColor(r: Int, g: Int, b: Int, a: Int = 255): Color {
         var values = listOf(r, g, b, a)
         if (values.any { it !in 0..255 }) {

@@ -21,7 +21,7 @@ import kotlin.math.min
  *                           `offset` is used for foreground positioning relative to health bar position.
  * @param animateDuration Duration in seconds of displayed value movement animation
  */
-@SerializationType(HealthBar::class)
+@SerializationType([HealthBar::class])
 class HealthBar(
     @JsonUpdateSerializable var maxHealth: Float,
     @JsonFullSerializable private val backgroundDrawable: ToddDrawable,

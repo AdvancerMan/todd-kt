@@ -123,7 +123,7 @@ abstract class HandWeapon(
      *                       offset is used for drawable positioning relative to hand's position.
      * @param origin Coordinate system origin for rotation and scale
      */
-    @SerializationType(Style::class)
+    @SerializationType([Style::class])
     data class Style(
         @JsonFullSerializable val handDrawable: ToddDrawable? = null,
         @JsonFullSerializable val weaponDrawable: ToddDrawable? = null,

@@ -18,7 +18,7 @@ object AssetsParser {
      * @param size Drawable size, described by drawable owner
      * @param offset Drawable offset, described by drawable owner
      */
-    @SerializationType(ToddDrawable::class)
+    @SerializationType([ToddDrawable::class])
     private fun loadDrawable(
         game: ToddGame,
         name: String,
@@ -45,7 +45,7 @@ object AssetsParser {
      *                   "Missing character" is always included.
      * @param flip Whether to flip the font vertically
      */
-    @SerializationType(BitmapFont::class)
+    @SerializationType([BitmapFont::class])
     fun loadFont(
         game: ToddGame,
         path: String,

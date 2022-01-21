@@ -91,11 +91,12 @@ val jsonConstructors: Map<KClass<*>, Map<String, JsonType<*>>> by lazy {
     Reflection.serializationTypeData
         .onEach { addManualConstructor(it, manualConstructors) }
         .filter { it.constructor != null }
-        .groupBy { it.baseClass!! }
-        .mapValues { (_, constructors) ->
-            constructors.associateBy { it.serializationType!! }
-                .mapValues { getJsonType(it.value, manualConstructors) }
+        .flatMap { data ->
+            val jsonType = getJsonType(data, manualConstructors)
+            data.baseClasses!!.map { it to (data.serializationType!! to jsonType) }
         }
+        .groupBy { it.first }
+        .mapValues { (_, constructors) -> constructors.associate { it.second } }
 }
 
 object Constructors {

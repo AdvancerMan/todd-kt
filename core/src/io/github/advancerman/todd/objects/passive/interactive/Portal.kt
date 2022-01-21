@@ -26,7 +26,7 @@ import io.github.advancerman.todd.json.SerializationType
  * @param teleportDelay Time period between collision and actual teleportation
  * @param scale Actor's scale
  */
-@SerializationType(InGameObject::class, "Portal")
+@SerializationType([InGameObject::class], "Portal")
 class Portal(
     game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
     @JsonFullSerializable private val teleportTo: Vector2,
