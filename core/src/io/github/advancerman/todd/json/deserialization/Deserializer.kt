@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
 import io.github.advancerman.todd.json.JsonUpdateSerializable
 import io.github.advancerman.todd.json.ManuallyJsonSerializable
+import io.github.advancerman.todd.json.deserialization.exception.DeserializationException
 import io.github.advancerman.todd.json.serialization.getJsonName
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.base.InGameObject
@@ -20,11 +21,17 @@ import kotlin.reflect.jvm.jvmErasure
 
 fun getJsonErrorMessage(json: JsonValue, message: String) = "$message, json: $json"
 
-inline fun checkContains(json: JsonValue, key: String, shouldBe: String, checker: (JsonValue) -> Boolean) {
-    val value = json[key]
-            ?: throw IllegalArgumentException(getJsonErrorMessage(json, "Json should contain $key"))
+inline fun checkContains(
+    json: JsonValue,
+    key: String,
+    shouldBe: String,
+    checker: (JsonValue) -> Boolean = { true }
+) {
+    val value = json[key] ?: throw DeserializationException(
+        getJsonErrorMessage(json, "Json should contain $key")
+    )
 
-    require(checker(value)) { "$key should be $shouldBe, json: $json" }
+    require(checker(value)) { getJsonErrorMessage(json, "$key should be $shouldBe") }
 }
 
 fun checkName(json: JsonValue, set: Set<String>) {
@@ -44,7 +51,7 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
         }
                 ?: default
                 ?: defaultOther?.let { otherName -> this[otherName]?.let { type.constructor(game, it) } }
-                ?: throw IllegalArgumentException(
+                ?: throw DeserializationException(
                         getJsonErrorMessage(
                                 this,
                                 "Json must contain $name" +
@@ -63,11 +70,12 @@ fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
 
     val constructor = json["type"]?.asString()?.let { jsonType ->
         constructors[jsonType]?.constructor
+            ?: throw DeserializationException("Invalid type '$jsonType' for json: $json")
     } ?: constructors[""]!!.constructor
     return try {
         constructor(game, json)
     } catch (e: Exception) {
-        throw IllegalArgumentException("Could not parse json, json: $json", e)
+        throw DeserializationException("Could not parse json, json: $json", e)
     }
 }
 
@@ -80,7 +88,7 @@ fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
 inline fun <reified T> JsonValue.construct(game: ToddGame? = null): T {
     @Suppress("UNCHECKED_CAST")
     val constructors = jsonConstructors[T::class] as? Map<String, JsonType<out T>>
-        ?: throw IllegalArgumentException("Invalid base type ${T::class.simpleName} for json constructor")
+        ?: throw DeserializationException("Invalid base type ${T::class.simpleName} for json constructor")
     return parseJsonValue(game, this, constructors)
 }
 

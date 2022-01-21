@@ -2,6 +2,7 @@ package io.github.advancerman.todd.json.deserialization
 
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
+import io.github.advancerman.todd.json.deserialization.exception.DeserializationException
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.base.InGameObject
 import io.github.advancerman.todd.util.Reflection
@@ -13,17 +14,24 @@ import kotlin.reflect.jvm.jvmName
 typealias ManualConstructor = (JsonValue, MutableMap<String, Pair<Any?, Boolean>>) -> Unit
 
 private fun getFromJson(
-    name: String, clazz: KClass<*>, json: JsonValue, game: ToddGame,
+    name: String,
+    clazz: KClass<*>,
+    json: JsonValue,
+    game: ToddGame?,
     constructors: Map<KClass<*>, Map<String, JsonType<out Any?>>>
 ): Pair<Any?, Boolean> {
     val jsonByName = json[name]
-    return when {
-        clazz == ToddGame::class -> game to true
-        jsonByName == null -> null to false
-        clazz in jsonPrimitives.keys -> json[name, jsonPrimitives[clazz]!!, game] to true
-        // TODO drawable resource leak on exception
-        clazz in constructors.keys -> parseNonPrototypeJsonValue(game, jsonByName, constructors[clazz]!!) to true
-        else -> null to false
+    return try {
+        when {
+            clazz == ToddGame::class -> game!! to true
+            jsonByName == null -> null to false
+            clazz in jsonPrimitives.keys -> json[name, jsonPrimitives[clazz]!!, game] to true
+            // TODO drawable resource leak on exception
+            clazz in constructors.keys -> parseNonPrototypeJsonValue(game, jsonByName, constructors[clazz]!!) to true
+            else -> null to false
+        }
+    } catch (e: DeserializationException) {
+        null to false
     }
 }
 
@@ -58,7 +66,7 @@ private fun getJsonType(
     return JsonType(data.constructorDescriptor) { game, json ->
         val parametersFromJson = parameters
             .associate {
-                it.first to getFromJson(it.first, it.second, json, game!!, jsonConstructors)
+                it.first to getFromJson(it.first, it.second, json, game, jsonConstructors)
             }
             .toMutableMap()
         manualConstructors[data.constructorDescriptor]!!.invoke(json, parametersFromJson)
@@ -69,7 +77,7 @@ private fun getJsonType(
 
         val notProvided = maybeParametersMap.filter { !it.key.isOptional && !it.value.second.second }
         if (notProvided.isNotEmpty()) {
-            throw IllegalArgumentException(
+            throw DeserializationException(
                 "Json is invalid, some non-optional parameters " +
                         "were not provided: ${notProvided.values.map { it.first }}"
             )
