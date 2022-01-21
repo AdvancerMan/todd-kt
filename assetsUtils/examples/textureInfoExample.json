@@ -76,7 +76,9 @@
   "type": "AnimationInfo",
   "name": "testAnimRegTypeNineTiled",
   "frameInfo": {
-    "path": "testAnimRegTypeNineTiled.png"
+    "type": "NineTiledRegionInfo",
+    "path": "testAnimRegTypeNineTiled.png",
+    "lrud": [3, 3, 3, 3]
   },
   "frameDuration": 100,
   "mode": "LOOP_PINGPONG",
@@ -85,9 +87,7 @@
     [0, 10, 10, 10],
     [10, 0, 10, 10],
     [10, 10, 10, 10]
-  ],
-  "regType": "NINE_TILED",
-  "lrud": [3, 3, 3, 3]
+  ]
 }
 
 // also allowed:

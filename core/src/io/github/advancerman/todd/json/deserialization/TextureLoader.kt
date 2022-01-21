@@ -94,6 +94,11 @@ object TextureLoader {
                     ?.let(Animation.PlayMode::valueOf)
                     ?: Animation.PlayMode.NORMAL
                 ) to true
+
+        parsed["frameDuration"]
+            ?.first
+            ?.let { it as? Float }
+            ?.also { parsed["frameDuration"] = it / 1000 to true }
     }
 
     fun constructAnimationPackInfo(
