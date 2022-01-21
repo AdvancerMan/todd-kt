@@ -1,5 +1,7 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:AnimationInfo/AnimationInfo.Default///PointingToDeclaration/core/AnimationInfo/-animation-info.-default.html
+$dokka.location:AnimationInfo/AnimationInfo///PointingToDeclaration/core/AnimationInfo/index.html
 $dokka.location:BitmapFont/BitmapFont.Default///PointingToDeclaration/core/BitmapFont/-bitmap-font.-default.html
 $dokka.location:BitmapFont/BitmapFont///PointingToDeclaration/core/BitmapFont/index.html
 $dokka.location:BodyPattern/BodyPattern///PointingToDeclaration/core/BodyPattern/index.html
@@ -11,6 +13,13 @@ $dokka.location:Bullet.Builder/Bullet.Builder///PointingToDeclaration/core/Bull
 $dokka.location:Bullet.Builder/SimpleBuilder///PointingToDeclaration/core/Bullet.Builder/-simple-builder.html
 $dokka.location:Color/Color.Default///PointingToDeclaration/core/Color/-color.-default.html
 $dokka.location:Color/Color///PointingToDeclaration/core/Color/index.html
+$dokka.location:DrawableInfo/AnimationInfo///PointingToDeclaration/core/DrawableInfo/-animation-info.html
+$dokka.location:DrawableInfo/AnimationPackInfo///PointingToDeclaration/core/DrawableInfo/-animation-pack-info.html
+$dokka.location:DrawableInfo/CoveredTiledRegionInfo///PointingToDeclaration/core/DrawableInfo/-covered-tiled-region-info.html
+$dokka.location:DrawableInfo/DrawableInfo.Default///PointingToDeclaration/core/DrawableInfo/-drawable-info.-default.html
+$dokka.location:DrawableInfo/DrawableInfo///PointingToDeclaration/core/DrawableInfo/index.html
+$dokka.location:DrawableInfo/NineTiledRegionInfo///PointingToDeclaration/core/DrawableInfo/-nine-tiled-region-info.html
+$dokka.location:DrawableInfo/TiledRegionInfo///PointingToDeclaration/core/DrawableInfo/-tiled-region-info.html
 $dokka.location:HandWeapon.Style/HandWeapon.Style.Default///PointingToDeclaration/core/HandWeapon.Style/-hand-weapon.-style.-default.html
 $dokka.location:HandWeapon.Style/HandWeapon.Style///PointingToDeclaration/core/HandWeapon.Style/index.html
 $dokka.location:HealthBar/HealthBar.Default///PointingToDeclaration/core/HealthBar/-health-bar.-default.html
@@ -26,6 +35,11 @@ $dokka.location:InGameObject/Solid///PointingToDeclaration/core/InGameObject/-s
 $dokka.location:InGameObject/Spawner///PointingToDeclaration/core/InGameObject/-spawner.html
 $dokka.location:InGameObject/Trampoline///PointingToDeclaration/core/InGameObject/-trampoline.html
 $dokka.location:InGameObject/Travolator///PointingToDeclaration/core/InGameObject/-travolator.html
+$dokka.location:RegionInfo/CoveredTiledRegionInfo///PointingToDeclaration/core/RegionInfo/-covered-tiled-region-info.html
+$dokka.location:RegionInfo/NineTiledRegionInfo///PointingToDeclaration/core/RegionInfo/-nine-tiled-region-info.html
+$dokka.location:RegionInfo/RegionInfo.Default///PointingToDeclaration/core/RegionInfo/-region-info.-default.html
+$dokka.location:RegionInfo/RegionInfo///PointingToDeclaration/core/RegionInfo/index.html
+$dokka.location:RegionInfo/TiledRegionInfo///PointingToDeclaration/core/RegionInfo/-tiled-region-info.html
 $dokka.location:Thinker/StupidMeleeThinker///PointingToDeclaration/core/Thinker/-stupid-melee-thinker.html
 $dokka.location:Thinker/Thinker///PointingToDeclaration/core/Thinker/index.html
 $dokka.location:ToddDrawable/ToddDrawable.Default///PointingToDeclaration/core/ToddDrawable/-todd-drawable.-default.html
@@ -33,13 +47,16 @@ $dokka.location:ToddDrawable/ToddDrawable///PointingToDeclaration/core/ToddDraw
 $dokka.location:Weapon/SimpleGun///PointingToDeclaration/core/Weapon/-simple-gun.html
 $dokka.location:Weapon/SimpleMeleeWeapon///PointingToDeclaration/core/Weapon/-simple-melee-weapon.html
 $dokka.location:Weapon/Weapon///PointingToDeclaration/core/Weapon/index.html
+AnimationInfo
 BitmapFont
 BodyPattern
 Bullet.Builder
 Color
+DrawableInfo
 HandWeapon.Style
 HealthBar
 InGameObject
+RegionInfo
 Thinker
 ToddDrawable
 Weapon
