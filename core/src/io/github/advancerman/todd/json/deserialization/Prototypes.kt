@@ -23,13 +23,44 @@ fun JsonValue.cpy(): JsonValue {
     return result
 }
 
+private fun createPrototypeValue(
+    name: String,
+    linkedJson: JsonValue,
+    rawPrototypes: Map<String, JsonValue>,
+    visited: MutableSet<String>,
+    result: MutableMap<String, JsonValue>
+): JsonValue = result.getOrPut(name) {
+    val json = rawPrototypes[name]?.cpy()
+        ?: throw DeserializationException(linkedJson, "Unknown prototype $name")
+    if (!visited.add(name)) {
+        throw DeserializationException(
+            linkedJson,
+            "Cyclic dependency detected for prototype '$name'"
+        )
+    }
+    objectShortcutsDfs(json)
+    prototypesDfs(json) { name, currentLinkedJson ->
+        createPrototypeValue(name, currentLinkedJson, rawPrototypes, visited, result)
+    }
+    json
+}
+
 val prototypes by lazy {
-    crawlJsonListsWithComments(PROTOTYPES_PATH)
+    val rawPrototypes = crawlJsonListsWithComments(PROTOTYPES_PATH)
         .associateBy {
             it["protoName"]?.asString()
-                ?: throw DeserializationException(it, "Prototype should contain parameter \"protoName\"")
+                ?: throw DeserializationException(
+                    it,
+                    "Prototype should contain parameter \"protoName\""
+                )
         }
         .onEach { it.value.remove("protoName") }
+    val result = mutableMapOf<String, JsonValue>()
+    val visited = mutableSetOf<String>()
+    rawPrototypes.forEach { (name, linkedJson) ->
+        createPrototypeValue(name, linkedJson, rawPrototypes, visited, result)
+    }
+    result
 }
 
 private fun insertPrototype(json: JsonValue, prototype: JsonValue) {
@@ -51,18 +82,17 @@ private fun insertPrototype(json: JsonValue, prototype: JsonValue) {
     }
 }
 
-private fun prototypesDfs(json: JsonValue) {
+private fun prototypesDfs(json: JsonValue, getPrototype: (String, JsonValue) -> JsonValue) {
     if (!json.isObject) {
         return
     }
-    json.forEach { prototypesDfs(it) }
+    json.forEach { prototypesDfs(it, getPrototype) }
     json.remove("prototype")?.let {
         if (!it.isString) {
             json.addChild("prototype", it)
             throw DeserializationException(json, "Prototype name should be a string")
         }
-        val prototype = prototypes[it.asString()]
-            ?: throw DeserializationException(json, "Unknown prototype ${it.asString()}")
+        val prototype = getPrototype(it.asString(), json)
         insertPrototype(json, prototype)
     }
 }
@@ -109,9 +139,11 @@ private fun objectShortcutsDfs(json: JsonValue) {
         }
 }
 
-fun createJsonValue(jsonWithPrototype: JsonValue): JsonValue {
-    val result = jsonWithPrototype.cpy()
+fun compileJsonValue(json: JsonValue): JsonValue {
+    val result = json.cpy()
     objectShortcutsDfs(result)
-    prototypesDfs(result)
+    prototypesDfs(result) { name, linkedJson ->
+        prototypes[name] ?: throw DeserializationException(linkedJson, "Unknown prototype $name")
+    }
     return result
 }

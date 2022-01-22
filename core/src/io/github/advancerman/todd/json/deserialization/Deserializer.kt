@@ -59,8 +59,8 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
                             ": ${type.typeName}"
                 )
 
-fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
-                                   constructors: Map<String, JsonType<out T>>): T {
+fun <T> parseCompiledJsonValue(game: ToddGame?, json: JsonValue,
+                               constructors: Map<String, JsonType<out T>>): T {
     if (!constructors.containsKey("")) {
         checkContains(json, "type", "object type, one of strings ${constructors.keys}") { checkJson ->
             checkJson.isString && constructors.containsKey(checkJson.asString())
@@ -81,7 +81,7 @@ fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
 // TODO use JsonValue.construct instead
 fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
                        constructors: Map<String, JsonType<out T>>): T {
-    return parseNonPrototypeJsonValue(game, createJsonValue(jsonWithPrototype), constructors)
+    return parseCompiledJsonValue(game, compileJsonValue(jsonWithPrototype), constructors)
 }
 
 inline fun <reified T> JsonValue.construct(game: ToddGame? = null): T {

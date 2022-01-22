@@ -4,7 +4,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.utils.JsonValue
 import io.github.advancerman.todd.json.deserialization.exception.DeserializationException
 import io.github.advancerman.todd.launcher.ToddGame
-import io.github.advancerman.todd.objects.base.InGameObject
 import io.github.advancerman.todd.util.Reflection
 import kotlin.reflect.KClass
 import kotlin.reflect.full.*
@@ -27,7 +26,7 @@ private fun getFromJson(
             jsonByName == null -> null to false
             clazz in jsonPrimitives.keys -> json[name, jsonPrimitives[clazz]!!, game] to true
             // TODO drawable resource leak on exception
-            clazz in constructors.keys -> parseNonPrototypeJsonValue(game, jsonByName, constructors[clazz]!!) to true
+            clazz in constructors.keys -> parseCompiledJsonValue(game, jsonByName, constructors[clazz]!!) to true
             else -> null to false
         }
     } catch (e: DeserializationException) {
