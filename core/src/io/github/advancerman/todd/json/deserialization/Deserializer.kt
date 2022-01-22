@@ -31,7 +31,11 @@ inline fun checkContains(
         getJsonErrorMessage(json, "Json should contain $key")
     )
 
-    require(checker(value)) { getJsonErrorMessage(json, "$key should be $shouldBe") }
+    if (!checker(value)) {
+        throw DeserializationException(
+            getJsonErrorMessage(json, "$key should be $shouldBe")
+        )
+    }
 }
 
 fun checkName(json: JsonValue, set: Set<String>) {

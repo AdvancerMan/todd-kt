@@ -59,9 +59,7 @@
 {
   "type": "AnimationInfo",
   "name": "testAnim1",
-  "frameInfo": {
-    "path": "testAnim.png"
-  },
+  "frameInfo.path": "testAnim.png",
   "frameDuration": 100,
   "mode": "LOOP_PINGPONG",
   "bounds": [
@@ -95,9 +93,7 @@
 {
   "type": "AnimationInfo",
   "name": "testAnim2",
-  "frameInfo": {
-    "path": "testAnim.png"
-  },
+  "frameInfo.path": "testAnim.png",
   "frameDuration": 100,
   "mode": "LOOP_PINGPONG",
   "xywh": [0, 0, 20, 20],
@@ -114,9 +110,7 @@
   "name": "testAnims",
   "animations": {
     "RUN": {
-      "frameInfo": {
-        "path": "testAnim.png"
-      },
+      "frameInfo.path": "testAnim.png",
       "frameDuration": 100,
       "mode": "LOOP",
       "xywh": [0, 0, 20, 10],
@@ -124,9 +118,7 @@
       "c": 2
     },
     "JUMP": {
-      "frameInfo": {
-        "path": "testAnim.png"
-      },
+      "frameInfo.path": "testAnim.png",
       "frameDuration": 100,
       "xywh": [0, 10, 20, 10],
       "r": 1,

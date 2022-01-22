@@ -22,6 +22,7 @@
       "im object": "hello",
       "arrays aren't strongly typed": 42
     }
+    "im.a.shortcut": "shortcut", // expanded to "im": { "a": { "shortcut": "shortcut" } }
     "and"
     "commas"
     "aren't"
