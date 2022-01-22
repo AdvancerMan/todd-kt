@@ -102,19 +102,6 @@ abstract class HandWeapon(
         }
     }
 
-    companion object {
-        @ManualJsonConstructor
-        private fun getJsonDefaults(
-            @Suppress("UNUSED_PARAMETER") json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
-            val safeAttackPeriod = parsed["safeAttackPeriod"]
-            if (safeAttackPeriod != null && safeAttackPeriod.second) {
-                JsonDefaults.setDefault("dangerousAttackPeriod", safeAttackPeriod.first, parsed)
-            }
-        }
-    }
-
     /**
      * Actor description for HandWeapon
      * @param handDrawable Drawable for hand. Z-index is relative to owner's actor,

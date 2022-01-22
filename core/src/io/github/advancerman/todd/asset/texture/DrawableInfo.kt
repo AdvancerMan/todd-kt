@@ -24,10 +24,7 @@ open class RegionInfo(
 
     companion object {
         @ManualJsonConstructor
-        private fun manualConstructor(
-            json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
+        private fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
             TextureLoader.constructRegionInfo(json, parsed)
         }
     }
@@ -62,10 +59,7 @@ class NineTiledRegionInfo(
 
     companion object {
         @ManualJsonConstructor
-        private fun manualConstructor(
-            json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
+        private fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
             TextureLoader.constructNineTiledRegionInfo(json, parsed)
         }
     }
@@ -93,10 +87,7 @@ data class AnimationInfo(
 ) : DrawableInfo() {
     companion object {
         @ManualJsonConstructor
-        fun manualConstructor(
-            json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
+        fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
             TextureLoader.constructAnimationInfo(json, parsed)
         }
     }
@@ -113,10 +104,7 @@ object AnimationInfoParser {
     ) = AnimationInfo(frameInfo, frameDuration, mode, bounds)
 
     @ManualJsonConstructor("createAnimationInfo")
-    private fun manualConstructor(
-        json: JsonValue,
-        parsed: MutableMap<String, Pair<Any?, Boolean>>
-    ) {
+    private fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
         AnimationInfo.manualConstructor(json, parsed)
     }
 }
@@ -125,10 +113,7 @@ object AnimationInfoParser {
 data class AnimationPackInfo(val animations: Map<AnimationType, AnimationInfo>) : DrawableInfo() {
     companion object {
         @ManualJsonConstructor
-        private fun manualConstructor(
-            json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
-        ) {
+        private fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
             TextureLoader.constructAnimationPackInfo(json, parsed)
         }
     }

@@ -45,10 +45,8 @@ object BodyPatterns {
     }
 
     @ManualJsonConstructor("createPolygonBPWithTGS")
-    private fun manualCreatePolygonBPWithTGS(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-        if (!parsed["localVertices"]!!.second) {
-            parsed["localVertices"] = json["localVertices", vectorArray] to true
-        }
+    private fun manualCreatePolygonBPWithTGS(json: JsonValue, parsed: MutableMap<String, Any?>) {
+        parsed.getOrPut("localVertices") { json["localVertices", vectorArray] }
         parseScale(json, parsed)
     }
 
@@ -84,7 +82,7 @@ object BodyPatterns {
     }
 
     @ManualJsonConstructor("createRectangleBPWithTGS")
-    private fun manualCreateRectangleBPWithTGS(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+    private fun manualCreateRectangleBPWithTGS(json: JsonValue, parsed: MutableMap<String, Any?>) {
         parseScale(json, parsed)
     }
 
@@ -121,7 +119,7 @@ object BodyPatterns {
     }
 
     @ManualJsonConstructor("createRectangleBPWithTGSBGS")
-    private fun manualCreateRectangleBPWithTGSBGS(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+    private fun manualCreateRectangleBPWithTGSBGS(json: JsonValue, parsed: MutableMap<String, Any?>) {
         parseScale(json, parsed)
     }
 
@@ -150,13 +148,11 @@ object BodyPatterns {
             }
 
     @ManualJsonConstructor("createCircleBP")
-    private fun manualCreateCircleBP(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
+    private fun manualCreateCircleBP(json: JsonValue, parsed: MutableMap<String, Any?>) {
         parseScale(json, parsed)
     }
 
-    private fun parseScale(json: JsonValue, parsed: MutableMap<String, Pair<Any?, Boolean>>) {
-        if (parsed["scale"]?.second != true) {
-            parsed["scale"] = (json.parent?.get("scale")?.asFloat() ?: 1f) to true
-        }
+    private fun parseScale(json: JsonValue, parsed: MutableMap<String, Any?>) {
+        parsed.getOrPut("scale") { json.parent?.get("scale")?.asFloat() ?: 1f }
     }
 }

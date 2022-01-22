@@ -201,10 +201,10 @@ open class Creature(
         @ManualJsonConstructor
         private fun getJsonDefaults(
             @Suppress("UNUSED_PARAMETER") json: JsonValue,
-            parsed: MutableMap<String, Pair<Any?, Boolean>>
+            parsed: MutableMap<String, Any?>
         ) {
             // TODO remove this default
-            JsonDefaults.setDefault("thinker", ScheduledThinker(), parsed)
+            parsed.getOrPut("thinker") { ScheduledThinker() }
         }
     }
 }

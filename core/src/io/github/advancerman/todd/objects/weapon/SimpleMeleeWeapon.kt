@@ -18,8 +18,12 @@ import io.github.advancerman.todd.objects.base.InGameObject
  */
 @SerializationType([Weapon::class], "SimpleMeleeWeapon")
 class SimpleMeleeWeapon(
-    handWeaponStyle: Style, attackXYWH: Rectangle, override var power: Float,
-    cooldown: Float, safeAttackPeriod: Float, dangerousAttackPeriod: Float
+    handWeaponStyle: Style,
+    attackXYWH: Rectangle,
+    override var power: Float,
+    cooldown: Float,
+    safeAttackPeriod: Float,
+    dangerousAttackPeriod: Float = safeAttackPeriod
 ) : MeleeWeapon(handWeaponStyle, attackXYWH, cooldown, safeAttackPeriod, dangerousAttackPeriod) {
     override fun shouldAttack(fixture: Fixture) =
         fixture.body.userData as InGameObject != owner

@@ -10,7 +10,7 @@ import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.jvmName
 
-typealias ManualConstructor = (JsonValue, MutableMap<String, Pair<Any?, Boolean>>) -> Unit
+typealias ManualConstructor = (JsonValue, MutableMap<String, Any?>) -> Unit
 
 private fun getFromJson(
     name: String,
@@ -66,28 +66,28 @@ private fun getJsonType(
 
     return JsonType(data.constructorDescriptor) { game, json ->
         val parametersFromJson = parameters
-            .associate {
-                it.first to getFromJson(it.first, it.second, json, game, jsonConstructors)
+            .map { (name, clazz, _) ->
+                name to getFromJson(name, clazz, json, game, jsonConstructors)
             }
+            .filter { it.second.second }
+            .associate { it.first to it.second.first }
             .toMutableMap()
         manualConstructors[data.constructorDescriptor]!!.invoke(json, parametersFromJson)
 
-        val maybeParametersMap = parameters.associate {
-            it.third to (it.first to parametersFromJson[it.first]!!)
+        val notProvided = parameters.filter { (name, _, parameter) ->
+            !parameter.isOptional && name !in parametersFromJson.keys
         }
-
-        val notProvided = maybeParametersMap.filter { !it.key.isOptional && !it.value.second.second }
         if (notProvided.isNotEmpty()) {
             throw DeserializationException(
                 json,
                 "Json is invalid, some non-optional parameters " +
-                        "were not provided: ${notProvided.values.map { it.first }}"
+                        "were not provided: ${notProvided.map { it.first }}"
             )
         }
 
-        val parametersMap = maybeParametersMap
-            .filter { it.value.second.second }
-            .mapValues { it.value.second.first }
+        val parametersMap = parameters
+            .mapNotNull { (name, _, parameter) -> parametersFromJson[name]?.let { parameter to it } }
+            .associate { it }
         if (instanceParameter == null) {
             data.constructor.callBy(parametersMap)
         } else {
