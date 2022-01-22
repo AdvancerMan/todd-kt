@@ -17,9 +17,7 @@ fun JsonValue.cpy(): JsonValue {
             forEach { result.addChild(it.cpy()) }
             result
         }
-        else -> throw DeserializationException(getJsonErrorMessage(
-            this, "Unknown json type ${type()}"
-        ))
+        else -> throw DeserializationException(this, "Unknown json type ${type()}")
     }
     result.name = name
     return result
@@ -29,21 +27,18 @@ val prototypes by lazy {
     crawlJsonListsWithComments(PROTOTYPES_PATH)
         .associateBy {
             it["protoName"]?.asString()
-                ?: throw DeserializationException(getJsonErrorMessage(it, "Prototype should contain parameter \"protoName\""))
+                ?: throw DeserializationException(it, "Prototype should contain parameter \"protoName\"")
         }
         .onEach { it.value.remove("protoName") }
 }
 
 private fun insertPrototype(json: JsonValue, prototype: JsonValue) {
     if (!prototype.isObject) {
-        throw DeserializationException(
-            "Prototype should be an object. " +
-                    "Json: $json. Prototype: $prototype."
-        )
+        throw DeserializationException(json, "Prototype should be an object, prototype: $prototype")
     } else if (!json.isObject) {
         throw DeserializationException(
-            "Could not insert prototype to not object-like json. " +
-                    "Json: $json. Prototype: $prototype."
+            json,
+            "Could not insert prototype to non-object json, prototype: $prototype"
         )
     }
 
@@ -63,10 +58,11 @@ private fun prototypesDfs(json: JsonValue) {
     json.forEach { prototypesDfs(it) }
     json.remove("prototype")?.let {
         if (!it.isString) {
-            throw DeserializationException("Prototype name should be a string: $it")
+            json.addChild("prototype", it)
+            throw DeserializationException(json, "Prototype name should be a string")
         }
         val prototype = prototypes[it.asString()]
-            ?: throw DeserializationException("Unknown prototype ${it.asString()}. Json: $json")
+            ?: throw DeserializationException(json, "Unknown prototype ${it.asString()}")
         insertPrototype(json, prototype)
     }
 }
@@ -78,11 +74,11 @@ private fun insertShortcut(
     initialName: String
 ) {
     if (json.type() != JsonValue.ValueType.`object`) {
-        throw DeserializationException(getJsonErrorMessage(
+        throw DeserializationException(
             json,
             "Shortcut \n$shortcut\n can not be inserted " +
                     "in a non-object json value (initial name: $initialName)"
-        ))
+        )
     }
     if (names.size == 1) {
         json.removeAll { it.name == names[0] }

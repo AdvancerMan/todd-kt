@@ -80,6 +80,7 @@ private fun getJsonType(
         val notProvided = maybeParametersMap.filter { !it.key.isOptional && !it.value.second.second }
         if (notProvided.isNotEmpty()) {
             throw DeserializationException(
+                json,
                 "Json is invalid, some non-optional parameters " +
                         "were not provided: ${notProvided.values.map { it.first }}"
             )

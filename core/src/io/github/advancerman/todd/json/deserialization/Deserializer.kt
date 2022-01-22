@@ -27,14 +27,11 @@ inline fun checkContains(
     shouldBe: String,
     checker: (JsonValue) -> Boolean = { true }
 ) {
-    val value = json[key] ?: throw DeserializationException(
-        getJsonErrorMessage(json, "Json should contain $key")
-    )
+    val value = json[key]
+        ?: throw DeserializationException(json, "Json should contain $key ($shouldBe)")
 
     if (!checker(value)) {
-        throw DeserializationException(
-            getJsonErrorMessage(json, "$key should be $shouldBe")
-        )
+        throw DeserializationException(json, "$key should be $shouldBe")
     }
 }
 
@@ -56,12 +53,10 @@ operator fun <T> JsonValue.get(name: String, type: JsonType<T>, game: ToddGame? 
                 ?: default
                 ?: defaultOther?.let { otherName -> this[otherName]?.let { type.constructor(game, it) } }
                 ?: throw DeserializationException(
-                        getJsonErrorMessage(
-                                this,
-                                "Json must contain $name" +
-                                        (defaultOther?.let { " (or $it as default)" } ?: "") +
-                                        ": ${type.typeName}"
-                        )
+                    this,
+                    "Json must contain $name" +
+                            (defaultOther?.let { " (or $it as default)" } ?: "") +
+                            ": ${type.typeName}"
                 )
 
 fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
@@ -74,12 +69,12 @@ fun <T> parseNonPrototypeJsonValue(game: ToddGame?, json: JsonValue,
 
     val constructor = json["type"]?.asString()?.let { jsonType ->
         constructors[jsonType]?.constructor
-            ?: throw DeserializationException("Invalid type '$jsonType' for json: $json")
+            ?: throw DeserializationException(json, "Invalid type '$jsonType'")
     } ?: constructors[""]!!.constructor
     return try {
         constructor(game, json)
     } catch (e: Exception) {
-        throw DeserializationException("Could not parse json, json: $json", e)
+        throw DeserializationException(json, "Could not parse json", e)
     }
 }
 
@@ -92,7 +87,10 @@ fun <T> parseJsonValue(game: ToddGame?, jsonWithPrototype: JsonValue,
 inline fun <reified T> JsonValue.construct(game: ToddGame? = null): T {
     @Suppress("UNCHECKED_CAST")
     val constructors = jsonConstructors[T::class] as? Map<String, JsonType<out T>>
-        ?: throw DeserializationException("Invalid base type ${T::class.simpleName} for json constructor")
+        ?: throw DeserializationException(
+            this,
+            "Invalid base type ${T::class.simpleName} for json constructor"
+        )
     return parseJsonValue(game, this, constructors)
 }
 
