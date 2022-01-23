@@ -67,14 +67,14 @@ fun <T> parseCompiledJsonValue(game: ToddGame?, json: JsonValue,
         }
     }
 
-    val constructor = json["type"]?.asString()?.let { jsonType ->
-        constructors[jsonType]?.constructor
+    val jsonType = json["type"]?.asString()?.let { jsonType ->
+        constructors[jsonType]
             ?: throw DeserializationException(json, "Invalid type '$jsonType'")
-    } ?: constructors[""]!!.constructor
+    } ?: constructors[""]!!
     return try {
-        constructor(game, json)
+        jsonType.constructor(game, json)
     } catch (e: Exception) {
-        throw DeserializationException(json, "Could not parse json", e)
+        throw DeserializationException(json, "Could not parse ${jsonType.typeName} from json", e)
     }
 }
 

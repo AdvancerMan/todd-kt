@@ -64,7 +64,7 @@ private fun getJsonType(
         .zip(constructorTypes)
         .map { Triple(it.first, it.second.first, it.second.second) }
 
-    return JsonType(data.constructorDescriptor) { game, json ->
+    return JsonType(data.serializationType!!) { game, json ->
         val parametersFromJson = parameters
             .map { (name, clazz, _) ->
                 name to getFromJson(name, clazz, json, game, jsonConstructors)
