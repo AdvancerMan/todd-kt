@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.json.deserialization.loadLevels
 import io.github.advancerman.todd.objects.base.pixInMeter
 import io.github.advancerman.todd.objects.passive.Level
+import io.github.advancerman.todd.screen.MyScreen
 import io.github.advancerman.todd.thinker.MovingInputType
 
 class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name == "testLevel" }): GameScreen(game, level) {
@@ -16,6 +18,8 @@ class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name ==
     private var pressedPlay = true
     private var debugDraw = true
     private val font = BitmapFont()
+    private var freeCameraEnabled = false
+    private val cameraCenter = Vector2()
 
     override fun render(delta: Float) {
         super.render(delta)
@@ -28,7 +32,26 @@ class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name ==
         }
     }
 
+    private fun updateFreeCamera() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            freeCameraEnabled = !freeCameraEnabled
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.I)) {
+            cameraCenter.add(0f, 1f * FREE_CAMERA_SPEED)
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.K)) {
+            cameraCenter.add(0f, -1f * FREE_CAMERA_SPEED)
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.J)) {
+            cameraCenter.add(-1f * FREE_CAMERA_SPEED, 0f)
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.L)) {
+            cameraCenter.add(1f * FREE_CAMERA_SPEED, 0f)
+        }
+    }
+
     override fun update(delta: Float) {
+        updateFreeCamera()
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             playerThinker.setMovingActor(MovingInputType.SLIDER)
         }
@@ -46,6 +69,17 @@ class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name ==
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             debugDraw = !debugDraw
+        }
+    }
+
+    override fun postUpdate(delta: Float) {
+        super.postUpdate(delta)
+        if (!freeCameraEnabled) {
+            cameraCenter.set(player.body.getCenter())
+        } else {
+            stage.camera.up.set(Vector2(0f, 1f), 0f)
+            centerCameraAt(cameraCenter)
+            screenActors.updateParameters()
         }
     }
 
@@ -69,5 +103,9 @@ class DebugScreen(game: ToddGame, level: Level? = loadLevels().find { it.name ==
         super.dispose()
         debugRenderer.dispose()
         font.dispose()
+    }
+
+    companion object {
+        private const val FREE_CAMERA_SPEED = 20f
     }
 }
