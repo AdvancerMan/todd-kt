@@ -1,0 +1,97 @@
+name: Development Build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  pre-release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Add Android SDK home to local.properties
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build and generate .jar with Gradle
+        run: ./gradlew :desktop:dist
+      - name: Rename generated .jar
+        run: |
+          cd desktop/build/libs
+          JAR_NAME=$(ls | grep \.jar | head -n1)
+          cd ../../../
+          mv "desktop/build/libs/$JAR_NAME" .
+          mkdir workflow-build
+          mv "$JAR_NAME" "workflow-build/todd-desktop-build-$GITHUB_RUN_NUMBER.jar"
+
+      - name: Install jq
+        run: sudo apt-get install jq
+      - name: Download assets from Yandex disk
+        run: |
+          wget -O /dev/stdout https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=https://disk.yandex.ru/d/aDPC8GOW5l2ZXQ | jq -r '.["href"]' > .url
+          wget -i .url -O assets.zip
+          rm .url
+
+      - name: Unzip assets into application folder
+        run: |
+          cd android
+          mv ../assets.zip .
+          unzip -n assets.zip
+          rm assets.zip
+
+      - name: Generate .apk with Gradle
+        run: ./gradlew :android:assembleDebug
+      - name: Rename generated .apk
+        run: |
+          cd android/build/outputs/apk/debug
+          APK_NAME=$(ls | grep \.apk | head -n1)
+          mv "$APK_NAME" ../../../../../
+          cd ../../../../../
+          mv "$APK_NAME" "workflow-build/todd-android-build-$GITHUB_RUN_NUMBER.apk"
+
+      - name: Put assets and .jar into one .zip
+        run: |
+          JAR_NAME="todd-desktop-build-$GITHUB_RUN_NUMBER.jar"
+          cp "workflow-build/$JAR_NAME" android/assets
+          cd android/assets
+          zip -r "../../workflow-build/todd-desktop-with-assets-build-$GITHUB_RUN_NUMBER.zip" *
+          rm "$JAR_NAME"
+
+      - name: Upload latest version to the release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "v1-alpha"
+          prerelease: true
+          title: "Development Build"
+          files: workflow-build/*
+
+      - name: Upload desktop build to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: todd
+          path: workflow-build/todd-desktop-build-*.jar
+
+      - name: Upload desktop build with assets to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: todd-with-assets
+          path: workflow-build/todd-desktop-with-assets-build-*.zip
+
+      - name: Upload Android build to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: todd-apk
+          path: workflow-build/todd-android-build-*.apk

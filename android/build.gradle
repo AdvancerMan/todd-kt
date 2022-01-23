@@ -1,13 +1,7 @@
-def keystorePropertiesFile = rootProject.file("local.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     signingConfigs {
         debug {
-            storeFile file(keystoreProperties['debugKeystore.storeFile'])
-            storePassword keystoreProperties['debugKeystore.storePassword']
-            keyPassword keystoreProperties['debugKeystore.keyPassword']
+            storeFile file("${rootProject.projectDir}/android/keystores/debug.keystore")
         }
     }
     buildToolsVersion "30.0.3"
