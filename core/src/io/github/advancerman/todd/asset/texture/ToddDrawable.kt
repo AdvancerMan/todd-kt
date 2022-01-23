@@ -36,9 +36,8 @@ interface ToddDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex 
     fun update(delta: Float) {}
 
     // for animations
-    fun hasAnimationType(type: AnimationType) = false
-    fun setPlayingType(type: AnimationType, forceReset: Boolean = false) {}
-    fun getPlayingType(): AnimationType = "STAY"
+    fun reportEvent(eventName: String) {}
+    fun getPlayingType(): AnimationType = "stay"
     fun isAnimationFinished() = true
 }
 

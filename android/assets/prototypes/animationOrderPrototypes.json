@@ -1,0 +1,123 @@
+[
+  {
+    "protoName": "creatureAnimation",
+    "initialAnimation": "STAY",
+    "animationsOrder": {
+      "STAY": [
+        {
+          "nextAnimationType": "JUMP",
+          "on": ["jump"]
+        },
+        {
+          "nextAnimationType": "FALL_AFTER_GROUND",
+          "on": ["fall"]
+        },
+        {
+          "nextAnimationType": "RUN",
+          "on": ["run"]
+        }
+      ],
+      "RUN": [
+        {
+          "nextAnimationType": "JUMP",
+          "on": ["jump"]
+        },
+        {
+          "nextAnimationType": "FALL_AFTER_GROUND",
+          "on": ["fall"]
+        },
+        {
+          "nextAnimationType": "RUN",
+          "on": ["run"],
+          "resetTime": false
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["always"]
+        }
+      ],
+      "JUMP": [
+        {
+          "nextAnimationType": "JUMP",
+          "on": ["jump"]
+        },
+        {
+          "nextAnimationType": "RUN",
+          "on": ["onGround", "run"]
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["onGround"]
+        },
+        {
+          "nextAnimationType": "PRE_FALL",
+          "on": ["fall"]
+        }
+      ],
+      "PRE_FALL": [
+        {
+          "nextAnimationType": "JUMP",
+          "on": ["jump"]
+        },
+        {
+          "nextAnimationType": "RUN",
+          "on": ["onGround", "run"]
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["onGround"]
+        },
+        {
+          "nextAnimationType": "FALL",
+          "on": ["animationFinished"]
+        }
+      ],
+      "FALL": [
+        {
+          "nextAnimationType": "JUMP",
+          "on": ["jump"]
+        },
+        {
+          "nextAnimationType": "RUN",
+          "on": ["onGround", "run"]
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["onGround"]
+        }
+      ],
+      "FALL_AFTER_GROUND": [
+        {
+          "nextAnimationType": "JUMP",
+          "on": ["jump"]
+        },
+        {
+          "nextAnimationType": "RUN",
+          "on": ["onGround", "run"]
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["onGround"]
+        }
+      ]
+    }
+  },
+  {
+    "protoName": "handWeaponAnimation",
+    "initialAnimation": "STAY",
+    "animationsOrder": {
+      "STAY": [
+        {
+          "nextAnimationType": "ACTION",
+          "on": ["action"]
+        }
+      ],
+      "ACTION": [
+        {
+          "nextAnimationType": "STAY",
+          "on": ["animationFinished"]
+        }
+      ]
+    }
+  }
+]

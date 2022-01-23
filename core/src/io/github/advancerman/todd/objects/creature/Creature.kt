@@ -4,16 +4,13 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
-import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.JsonValue
 import io.github.advancerman.todd.gui.HealthBar
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.base.InGameObject
 import io.github.advancerman.todd.objects.base.RealBodyWrapper
 import io.github.advancerman.todd.screen.game.GameScreen
-import io.github.advancerman.todd.asset.texture.animated.AnimationType
 import io.github.advancerman.todd.asset.texture.ToddDrawable
-import io.github.advancerman.todd.asset.texture.animated.stayAnimation
 import io.github.advancerman.todd.box2d.bodyPattern.base.BodyPattern
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.Sensor
 import io.github.advancerman.todd.box2d.bodyPattern.base.SensorName
@@ -23,7 +20,6 @@ import io.github.advancerman.todd.objects.weapon.Weapon
 import io.github.advancerman.todd.thinker.Thinker
 import io.github.advancerman.todd.thinker.operated.ScheduledThinker
 import io.github.advancerman.todd.thinker.operated.ThinkerAction
-import io.github.advancerman.todd.util.HEALTH_BAR_OFFSET
 import io.github.advancerman.todd.util.JUMP_COOLDOWN
 import io.github.advancerman.todd.util.DAMAGE_TINT_TIME
 import io.github.advancerman.todd.util.Y_VEL_JUMP_THRESHOLD
@@ -53,8 +49,6 @@ open class Creature(
     scale: Float = 1f
 ) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     private val preVelocity = Vector2()
-    private var preferredAnimationType: AnimationType = "STAY"
-    protected var animationTypeNow = stayAnimation()
     @JsonUpdateSerializable
     private var sinceJump = JUMP_COOLDOWN + 1
     @JsonUpdateSerializable
@@ -116,7 +110,6 @@ open class Creature(
         sinceJump += delta
         sinceDamage += delta
 
-        preferredAnimationType = "STAY"
         preVelocity.setZero()
         isOnGround = grounds.isNotEmpty()
         think(delta)
@@ -137,15 +130,18 @@ open class Creature(
 
     override fun postAct(delta: Float) {
         super.postAct(delta)
-        animationTypeNow = animationTypeNow.next(this, preferredAnimationType)
-        drawable.setPlayingType(animationTypeNow.type)
+        if (isOnGround) {
+            drawable.reportEvent(ON_GROUND_EVENT)
+        } else if (body.getVelocity().y <= 0) {
+            drawable.reportEvent(FALL_EVENT)
+        }
         weapon?.postUpdate(delta)
     }
 
     fun jump() {
         if (isOnGround) {
             sinceJump = 0f
-            preferredAnimationType = "JUMP"
+            drawable.reportEvent(JUMP_EVENT)
             preVelocity.y = jumpPower
         }
         screen.listenAction(ThinkerAction.JUMP, this)
@@ -156,9 +152,7 @@ open class Creature(
     }
 
     fun run(toRight: Boolean) {
-        if (drawable.getPlayingType() != "JUMP") {
-            preferredAnimationType = "RUN"
-        }
+        drawable.reportEvent(RUN_EVENT)
         preVelocity.x += if (toRight) speed else -speed
 
         if (toRight) {
@@ -198,6 +192,11 @@ open class Creature(
     }
 
     companion object {
+        private const val RUN_EVENT = "run"
+        private const val JUMP_EVENT = "jump"
+        private const val ON_GROUND_EVENT = "onGround"
+        private const val FALL_EVENT = "fall"
+
         @ManualJsonConstructor
         private fun getJsonDefaults(
             @Suppress("UNUSED_PARAMETER") json: JsonValue,

@@ -25,7 +25,7 @@ inline fun checkContains(
     json: JsonValue,
     key: String,
     shouldBe: String,
-    checker: (JsonValue) -> Boolean = { true }
+    checker: (JsonValue) -> Boolean
 ) {
     val value = json[key]
         ?: throw DeserializationException(json, "Json should contain $key ($shouldBe)")

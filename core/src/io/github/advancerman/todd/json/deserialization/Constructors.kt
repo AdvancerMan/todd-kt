@@ -86,7 +86,14 @@ private fun getJsonType(
         }
 
         val parametersMap = parameters
-            .mapNotNull { (name, _, parameter) -> parametersFromJson[name]?.let { parameter to it } }
+            .mapNotNull { (name, _, parameter) ->
+                if (name in parametersFromJson) {
+                    // parametersFromJson[name] can be null
+                    parameter to parametersFromJson[name]
+                } else {
+                    null
+                }
+            }
             .associate { it }
         if (instanceParameter == null) {
             data.constructor.callBy(parametersMap)

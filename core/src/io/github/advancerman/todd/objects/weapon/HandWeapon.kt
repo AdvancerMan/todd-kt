@@ -43,14 +43,6 @@ abstract class HandWeapon(
             doAttack()
             doingFirstHit = false
         }
-
-        listOf(handWeaponStyle.handDrawable, handWeaponStyle.weaponDrawable).forEach { drawable ->
-            drawable?.apply {
-                if (getPlayingType() == "ACTION" && isAnimationFinished()) {
-                    setPlayingType("STAY")
-                }
-            }
-        }
     }
 
     protected fun getDrawablePosition(ownerOffset: Vector2, drawableWidth: Float) =
@@ -84,8 +76,8 @@ abstract class HandWeapon(
         if (canAttack()) {
             sinceAttack = 0f
             doingFirstHit = true
-            handWeaponStyle.handDrawable?.setPlayingType("ACTION", true)
-            handWeaponStyle.weaponDrawable?.setPlayingType("ACTION", true)
+            handWeaponStyle.handDrawable?.reportEvent(ACTION_EVENT)
+            handWeaponStyle.weaponDrawable?.reportEvent(ACTION_EVENT)
         }
     }
 
@@ -116,4 +108,8 @@ abstract class HandWeapon(
         @JsonFullSerializable val weaponDrawable: ToddDrawable? = null,
         @JsonFullSerializable val origin: Vector2 = Vector2(0f, 0f)
     )
+
+    companion object {
+        private const val ACTION_EVENT = "action"
+    }
 }

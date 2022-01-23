@@ -108,6 +108,7 @@
 {
   "type": "AnimationPackInfo",
   "name": "testAnims",
+  "initialAnimation": "RUN",
   "animations": {
     "RUN": {
       "frameInfo.path": "testAnim.png",
@@ -124,5 +125,23 @@
       "r": 1,
       "c": 2
     }
+  },
+  "animationsOrder": {
+    "RUN": [
+      {
+        "nextAnimationType": "JUMP",
+        "on": ["jump"]
+      },
+      {
+        "nextAnimationType": "RUN",
+        "on": ["run"]
+      }
+    ],
+    "JUMP": [
+      {
+        "nextAnimationType": "RUN",
+        "on": ["onGround", "animationFinished"]
+      }
+    ]
   }
 }

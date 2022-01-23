@@ -3,6 +3,7 @@ package io.github.advancerman.todd.asset.texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.JsonValue
+import io.github.advancerman.todd.asset.texture.animated.AnimationOrder
 import io.github.advancerman.todd.asset.texture.animated.AnimationType
 import io.github.advancerman.todd.json.ManualJsonConstructor
 import io.github.advancerman.todd.json.SerializationType
@@ -82,7 +83,7 @@ class CoveredTiledRegionInfo(
 data class AnimationInfo(
     val frameInfo: RegionInfo,
     val frameDuration: Float,
-    val mode: Animation.PlayMode,
+    val mode: Animation.PlayMode = Animation.PlayMode.NORMAL,
     val bounds: List<Rectangle>
 ) : DrawableInfo() {
     companion object {
@@ -110,7 +111,11 @@ object AnimationInfoParser {
 }
 
 @SerializationType([DrawableInfo::class], "AnimationPackInfo")
-data class AnimationPackInfo(val animations: Map<AnimationType, AnimationInfo>) : DrawableInfo() {
+data class AnimationPackInfo(
+    val initialAnimation: AnimationType,
+    val animations: Map<AnimationType, AnimationInfo>,
+    val animationsOrder: Map<AnimationType, List<AnimationOrder>>,
+) : DrawableInfo() {
     companion object {
         @ManualJsonConstructor
         private fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
