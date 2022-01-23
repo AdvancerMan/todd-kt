@@ -2,6 +2,8 @@ $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:AnimationInfo/AnimationInfo.Default///PointingToDeclaration/core/AnimationInfo/-animation-info.-default.html
 $dokka.location:AnimationInfo/AnimationInfo///PointingToDeclaration/core/AnimationInfo/index.html
+$dokka.location:AnimationOrder/AnimationOrder.Default///PointingToDeclaration/core/AnimationOrder/-animation-order.-default.html
+$dokka.location:AnimationOrder/AnimationOrder///PointingToDeclaration/core/AnimationOrder/index.html
 $dokka.location:BitmapFont/BitmapFont.Default///PointingToDeclaration/core/BitmapFont/-bitmap-font.-default.html
 $dokka.location:BitmapFont/BitmapFont///PointingToDeclaration/core/BitmapFont/index.html
 $dokka.location:BodyPattern/BodyPattern///PointingToDeclaration/core/BodyPattern/index.html
@@ -48,6 +50,7 @@ $dokka.location:Weapon/SimpleGun///PointingToDeclaration/core/Weapon/-simple-gu
 $dokka.location:Weapon/SimpleMeleeWeapon///PointingToDeclaration/core/Weapon/-simple-melee-weapon.html
 $dokka.location:Weapon/Weapon///PointingToDeclaration/core/Weapon/index.html
 AnimationInfo
+AnimationOrder
 BitmapFont
 BodyPattern
 Bullet.Builder
