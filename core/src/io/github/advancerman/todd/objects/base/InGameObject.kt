@@ -133,6 +133,10 @@ abstract class InGameObject(
         }
     }
 
+    open fun reportAnimationEvent(eventName: String) {
+        drawable.reportEvent(eventName)
+    }
+
     final override fun setSize(width: Float, height: Float) {
         super.setSize(width, height)
         drawableActor.setSize(width, height)

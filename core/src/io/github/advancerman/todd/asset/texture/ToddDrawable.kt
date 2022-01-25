@@ -39,6 +39,7 @@ interface ToddDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex 
     fun reportEvent(eventName: String) {}
     fun getPlayingType(): AnimationType = "stay"
     fun isAnimationFinished() = true
+    fun getAdditionallyReportedEvents(): List<String> = listOf()
 }
 
 fun ToddDrawable.withMinSize() = apply {

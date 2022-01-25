@@ -16,6 +16,7 @@ import io.github.advancerman.todd.box2d.bodyPattern.sensor.Sensor
 import io.github.advancerman.todd.box2d.bodyPattern.base.SensorName
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.TopGroundListener
 import io.github.advancerman.todd.json.*
+import io.github.advancerman.todd.objects.base.DrawableActor
 import io.github.advancerman.todd.objects.weapon.Weapon
 import io.github.advancerman.todd.thinker.Thinker
 import io.github.advancerman.todd.thinker.operated.ScheduledThinker
@@ -131,17 +132,18 @@ open class Creature(
     override fun postAct(delta: Float) {
         super.postAct(delta)
         if (isOnGround) {
-            drawable.reportEvent(ON_GROUND_EVENT)
+            reportAnimationEvent(ON_GROUND_EVENT)
         } else if (body.getVelocity().y <= 0) {
-            drawable.reportEvent(FALL_EVENT)
+            reportAnimationEvent(FALL_EVENT)
         }
+        drawable.getAdditionallyReportedEvents().forEach(::reportAnimationEventToChildren)
         weapon?.postUpdate(delta)
     }
 
     fun jump() {
         if (isOnGround) {
             sinceJump = 0f
-            drawable.reportEvent(JUMP_EVENT)
+            reportAnimationEvent(JUMP_EVENT)
             preVelocity.y = jumpPower
         }
         screen.listenAction(ThinkerAction.JUMP, this)
@@ -152,7 +154,7 @@ open class Creature(
     }
 
     fun run(toRight: Boolean) {
-        drawable.reportEvent(RUN_EVENT)
+        reportAnimationEvent(RUN_EVENT)
         preVelocity.x += if (toRight) speed else -speed
 
         if (toRight) {
@@ -184,6 +186,17 @@ open class Creature(
             kill()
         }
         sinceDamage = 0f
+    }
+
+    override fun reportAnimationEvent(eventName: String) {
+        super.reportAnimationEvent(eventName)
+        reportAnimationEventToChildren(eventName)
+    }
+
+    private fun reportAnimationEventToChildren(eventName: String) {
+        children.filterIsInstance<DrawableActor>()
+            .filter { it.drawable !== drawable }
+            .forEach { it.drawable!!.reportEvent("owner.$eventName") }
     }
 
     override fun dispose() {

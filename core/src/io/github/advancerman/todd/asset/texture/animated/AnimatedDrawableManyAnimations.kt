@@ -78,10 +78,7 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
     }
 
     override fun update(delta: Float) {
-        if (isAnimationFinished()) {
-            reportedEvents.add(ANIMATION_FINISHED_EVENT)
-        }
-        reportedEvents.add(ALWAYS_EVENT)
+        reportedEvents.addAll(getAdditionallyReportedEvents())
 
         animationPackInfo.animationsOrder[type]
             .also {
@@ -102,6 +99,15 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
     }
 
     override fun getPlayingType() = type
+
+    override fun getAdditionallyReportedEvents(): List<String> {
+        return listOf(
+            isAnimationFinished() to ANIMATION_FINISHED_EVENT,
+            true to ALWAYS_EVENT
+        )
+            .filter { it.first }
+            .map { it.second }
+    }
 
     override fun dispose(manager: TextureManager) {
         manager.unload(animationPackInfo)
