@@ -44,7 +44,7 @@ $dokka.location:RegionInfo/RegionInfo///PointingToDeclaration/core/RegionInfo/i
 $dokka.location:RegionInfo/TiledRegionInfo///PointingToDeclaration/core/RegionInfo/-tiled-region-info.html
 $dokka.location:Thinker/AttackIfYouCanThinker///PointingToDeclaration/core/Thinker/-attack-if-you-can-thinker.html
 $dokka.location:Thinker/JumpToTargetThinker///PointingToDeclaration/core/Thinker/-jump-to-target-thinker.html
-$dokka.location:Thinker/PreparingThinker///PointingToDeclaration/core/Thinker/-preparing-thinker.html
+$dokka.location:Thinker/PrepareBeforeAttackThinker///PointingToDeclaration/core/Thinker/-prepare-before-attack-thinker.html
 $dokka.location:Thinker/RunToTargetThinker///PointingToDeclaration/core/Thinker/-run-to-target-thinker.html
 $dokka.location:Thinker/SequentialThinker///PointingToDeclaration/core/Thinker/-sequential-thinker.html
 $dokka.location:Thinker/Thinker///PointingToDeclaration/core/Thinker/index.html
