@@ -36,7 +36,9 @@ class PrepareBeforeAttackThinker(
     }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        if (sincePreparationStart < maxTimeSeconds) {
+        if (sincePreparationStart < minTimeSeconds) {
+            operatedObject.reportAnimationEvent(PREPARATION_EVENT)
+        } else if (sincePreparationStart < maxTimeSeconds) {
             if (!rolledRelaxation && Random.nextFloat() < relaxProbability) {
                 sincePreparationStart = maxTimeSeconds - delta
             } else if (shouldAttack(operatedObject, screen)) {
