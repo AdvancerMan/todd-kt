@@ -45,8 +45,8 @@ $dokka.location:RegionInfo/TiledRegionInfo///PointingToDeclaration/core/RegionI
 $dokka.location:Thinker/AttackIfYouCanThinker///PointingToDeclaration/core/Thinker/-attack-if-you-can-thinker.html
 $dokka.location:Thinker/JumpToTargetThinker///PointingToDeclaration/core/Thinker/-jump-to-target-thinker.html
 $dokka.location:Thinker/PreparingThinker///PointingToDeclaration/core/Thinker/-preparing-thinker.html
+$dokka.location:Thinker/RunToTargetThinker///PointingToDeclaration/core/Thinker/-run-to-target-thinker.html
 $dokka.location:Thinker/SequentialThinker///PointingToDeclaration/core/Thinker/-sequential-thinker.html
-$dokka.location:Thinker/StupidMeleeThinker///PointingToDeclaration/core/Thinker/-stupid-melee-thinker.html
 $dokka.location:Thinker/Thinker///PointingToDeclaration/core/Thinker/index.html
 $dokka.location:ToddDrawable/ToddDrawable.Default///PointingToDeclaration/core/ToddDrawable/-todd-drawable.-default.html
 $dokka.location:ToddDrawable/ToddDrawable///PointingToDeclaration/core/ToddDrawable/index.html
