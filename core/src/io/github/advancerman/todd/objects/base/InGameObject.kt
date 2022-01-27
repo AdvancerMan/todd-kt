@@ -201,20 +201,23 @@ abstract class InGameObject(
 }
 
 fun Actor.getActorAABB() =
-        worldAABBFor(Rectangle(0f, 0f, width, height))
+    worldAABBFor(Rectangle(0f, 0f, width, height))
 
 fun Actor.worldAABBFor(rectangle: Rectangle) =
-        rectangle.apply {
-            listOf(
-                    Vector2(x, y),
-                    Vector2(x + width, y),
-                    Vector2(x, y + height),
-                    Vector2(x + width, y + height)
-            )
-                    .map { localToStageCoordinates(it) }
-                    .also { set(it[0].x, it[0].y, 0f, 0f) }
-                    .fold(this) { r, v -> r.merge(v) }
+    rectangle.let {
+        listOf(
+            Vector2(it.x, it.y),
+            Vector2(it.x + it.width, it.y),
+            Vector2(it.x, it.y + it.height),
+            Vector2(it.x + it.width, it.y + it.height)
+        )
+    }
+        .map {
+            it.mirrorIf(this is InGameObject && !isDirectedToRight, width / 2)
         }
+        .map { localToStageCoordinates(it) }
+        .also { rectangle.set(it[0].x, it[0].y, 0f, 0f) }
+        .fold(rectangle) { r, v -> r.merge(v) }
 
 fun ToddDrawable.toDrawableActor() =
     Pools.obtain(DrawableActor::class.java)!!
