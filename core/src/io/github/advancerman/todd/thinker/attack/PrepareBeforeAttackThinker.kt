@@ -1,12 +1,13 @@
-package io.github.advancerman.todd.thinker
+package io.github.advancerman.todd.thinker.attack
 
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.screen.game.GameScreen
+import io.github.advancerman.todd.thinker.Thinker
 import kotlin.random.Random
 
 /**
- * Thinker for creatures with preparations
+ * Thinker for creatures with preparations.
  *
  * ## Behaviour
  *

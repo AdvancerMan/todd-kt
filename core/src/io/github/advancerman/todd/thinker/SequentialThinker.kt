@@ -2,13 +2,14 @@ package io.github.advancerman.todd.thinker
 
 import com.badlogic.gdx.utils.JsonValue
 import io.github.advancerman.todd.json.JsonSaveSerializable
+import io.github.advancerman.todd.json.ManualJsonConstructor
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.json.deserialization.construct
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.screen.game.GameScreen
 
 /**
- * Sequential thinker runner
+ * Sequential thinker runner.
  *
  * ## Behaviour
  *
@@ -23,6 +24,7 @@ class SequentialThinker(@JsonSaveSerializable val thinkers: List<Thinker>) : Thi
     }
 
     companion object {
+        @ManualJsonConstructor
         private fun manualConstructor(json: JsonValue, parsed: MutableMap<String, Any?>) {
             json["thinkers"]?.map { it.construct<Thinker>() }
                 ?.also { parsed["thinkers"] = it }
