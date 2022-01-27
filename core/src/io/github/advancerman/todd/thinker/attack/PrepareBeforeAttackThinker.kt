@@ -14,7 +14,7 @@ import kotlin.random.Random
  * TODO
  *
  */
-@SerializationType([Thinker::class], "PreparingThinker")
+@SerializationType([Thinker::class], "PrepareBeforeAttackThinker")
 class PrepareBeforeAttackThinker(
     triggerDistancePixels: Float,
     private val delaySeconds: Float,
