@@ -18,6 +18,7 @@ import io.github.advancerman.todd.box2d.bodyPattern.sensor.TopGroundListener
 import io.github.advancerman.todd.json.*
 import io.github.advancerman.todd.objects.base.DrawableActor
 import io.github.advancerman.todd.objects.weapon.Weapon
+import io.github.advancerman.todd.objects.weapon.WithCalculableAttackedObjects
 import io.github.advancerman.todd.thinker.Thinker
 import io.github.advancerman.todd.thinker.operated.ScheduledThinker
 import io.github.advancerman.todd.thinker.operated.ThinkerAction
@@ -203,6 +204,9 @@ open class Creature(
         healthBar.dispose(game.textureManager)
         super.dispose()
     }
+
+    fun getAttackedObjects(): List<InGameObject> =
+        (weapon as? WithCalculableAttackedObjects)?.calculateAttackedObjects()?.toList() ?: listOf()
 
     companion object {
         private const val RUN_EVENT = "run"

@@ -11,7 +11,8 @@ abstract class MeleeWeapon(
     handWeaponStyle: Style,
     @JsonFullSerializable protected val attackXYWH: Rectangle,
     cooldown: Float, safeAttackPeriod: Float, dangerousAttackPeriod: Float
-) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, dangerousAttackPeriod) {
+) : HandWeapon(handWeaponStyle, cooldown, safeAttackPeriod, dangerousAttackPeriod),
+    WithCalculableAttackedObjects {
     private val attacked = mutableSetOf<InGameObject>()
 
     override fun init(owner: InGameObject, screen: GameScreen) {
@@ -23,6 +24,15 @@ abstract class MeleeWeapon(
         if (doingFirstHit) {
             attacked.clear()
         }
+
+        calculateAttackedObjects()
+            .filter { !attacked.contains(it) }
+            .onEach { it.takeDamage(power) }
+            .let { attacked.addAll(it) }
+    }
+
+    override fun calculateAttackedObjects(): Set<InGameObject> {
+        val result = mutableSetOf<InGameObject>()
         worldAABBFor(Rectangle(attackXYWH)).let { aabb ->
             if (!owner.isDirectedToRight) {
                 aabb.setPosition(aabb.x - aabb.width - owner.body.getAABB().width, aabb.y)
@@ -32,12 +42,13 @@ abstract class MeleeWeapon(
                 val igo = it.body.userData as InGameObject
                 // TODO remove attacked set (attack everybody on each frame)
                 //  and add invulnerability for creatures
-                if (shouldAttack(it) && attacked.add(igo)) {
-                    igo.takeDamage(power)
+                if (shouldAttack(it)) {
+                    result.add(igo)
                 }
                 true
             }
         }
+        return result
     }
 
     protected abstract fun shouldAttack(fixture: Fixture): Boolean
