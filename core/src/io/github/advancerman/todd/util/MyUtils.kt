@@ -54,6 +54,19 @@ fun Rectangle.rotateAround(origin: Vector2, angle: Float) =
 fun Rectangle.rotateAroundRad(origin: Vector2, angleRad: Float) =
     rotateAroundRad(origin.x, origin.y, angleRad)
 
+fun Rectangle.coordinateDistanceTo(other: Rectangle): Float {
+    return if (overlaps(other)) {
+        0f
+    } else {
+        maxOf(
+            x - other.x - other.width,
+            other.x - x - width,
+            y - other.y - other.height,
+            other.y - y - height,
+        )
+    }
+}
+
 fun <K, V> MutableMap<K, V>.putAll(vararg pairs: Pair<K, V>) = putAll(pairs)
 
 inline fun FloatArray.mutate(f: (Float) -> Float) =

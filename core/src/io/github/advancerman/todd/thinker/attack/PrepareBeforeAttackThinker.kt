@@ -4,6 +4,7 @@ import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.thinker.Thinker
+import io.github.advancerman.todd.util.coordinateDistanceTo
 import kotlin.random.Random
 
 /**
@@ -16,15 +17,14 @@ import kotlin.random.Random
  */
 @SerializationType([Thinker::class], "PrepareBeforeAttackThinker")
 class PrepareBeforeAttackThinker(
-    triggerDistancePixels: Float,
+    private val triggerDistancePixels: Float,
     private val delaySeconds: Float,
     private val minTimeSeconds: Float,
     maxPreparedSeconds: Float,
     private val relaxProbability: Float,
 ) : Thinker {
-    private val triggerDistancePixels2 = triggerDistancePixels * triggerDistancePixels
     private val maxTimeSeconds = minTimeSeconds + maxPreparedSeconds
-    private var sincePreparationStart = 0f
+    private var sincePreparationStart = maxTimeSeconds + 1f
     private var rolledRelaxation = false
 
     init {
@@ -49,11 +49,10 @@ class PrepareBeforeAttackThinker(
             }
             rolledRelaxation = true
         } else if (sincePreparationStart > maxTimeSeconds + delaySeconds) {
-            val distance2 = operatedObject.body.getCenter()
-                .sub(screen.player.body.getCenter())
-                .len2()
+            val distance = operatedObject.body.getAABB()
+                .coordinateDistanceTo(screen.player.body.getAABB())
 
-            if (distance2 < triggerDistancePixels2) {
+            if (distance < triggerDistancePixels) {
                 rolledRelaxation = false
                 sincePreparationStart = -delta
                 operatedObject.reportAnimationEvent(PREPARATION_EVENT)
