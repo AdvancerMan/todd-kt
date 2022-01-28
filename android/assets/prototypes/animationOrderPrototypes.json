@@ -108,14 +108,57 @@
     "animationsOrder": {
       "STAY": [
         {
+          "nextAnimationType": "PREPARATION_BEGIN",
+          "on": ["owner.preparation"]
+        },
+        {
           "nextAnimationType": "ACTION",
           "on": ["action"]
         }
       ],
       "ACTION": [
         {
+          "nextAnimationType": "PREPARATION_BEGIN",
+          "on": ["owner.preparation"]
+        },
+        {
           "nextAnimationType": "STAY",
           "on": ["animationFinished"]
+        }
+      ],
+      "PREPARATION_BEGIN" : [
+        {
+          "nextAnimationType": "PREPARATION",
+          "on": ["owner.preparation", "animationFinished"]
+        },
+        {
+          "nextAnimationType": "PREPARATION_BEGIN",
+          "on": ["owner.preparation"],
+          "resetTime": false
+        },
+        {
+          "nextAnimationType": "ACTION",
+          "on": ["action"]
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["always"]
+        },
+      ]
+      ,
+      "PREPARATION" : [
+        {
+          "nextAnimationType": "PREPARATION",
+          "on": ["owner.preparation"],
+          "resetTime": false
+        },
+        {
+          "nextAnimationType": "ACTION",
+          "on": ["action"]
+        },
+        {
+          "nextAnimationType": "STAY",
+          "on": ["always"]
         }
       ]
     }

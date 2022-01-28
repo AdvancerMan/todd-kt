@@ -78,7 +78,12 @@
     "type": "SequentialThinker",
     "thinkers": [
       {
-        "type": "AttackIfYouCanThinker"
+        "type": "PrepareBeforeAttackThinker",
+        "triggerDistancePixels": 150,
+        "delaySeconds": 2,
+        "minTimeSeconds": 5,
+        "maxPreparedSeconds": 10,
+        "relaxProbability": 0
       },
       {
         "type": "JumpToTargetThinker",
