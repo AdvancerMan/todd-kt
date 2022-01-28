@@ -113,7 +113,7 @@
         },
         {
           "nextAnimationType": "ACTION",
-          "on": ["action"]
+          "on": ["owner.attack"]
         }
       ],
       "ACTION": [
@@ -138,14 +138,13 @@
         },
         {
           "nextAnimationType": "ACTION",
-          "on": ["action"]
+          "on": ["owner.attack"]
         },
         {
           "nextAnimationType": "STAY",
           "on": ["always"]
-        },
-      ]
-      ,
+        }
+      ],
       "PREPARATION" : [
         {
           "nextAnimationType": "PREPARATION",
@@ -154,7 +153,7 @@
         },
         {
           "nextAnimationType": "ACTION",
-          "on": ["action"]
+          "on": ["owner.attack"]
         },
         {
           "nextAnimationType": "STAY",

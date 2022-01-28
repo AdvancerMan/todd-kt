@@ -76,8 +76,6 @@ abstract class HandWeapon(
         if (canAttack()) {
             sinceAttack = 0f
             doingFirstHit = true
-            handWeaponStyle.handDrawable?.reportEvent(ACTION_EVENT)
-            handWeaponStyle.weaponDrawable?.reportEvent(ACTION_EVENT)
         }
     }
 
@@ -108,8 +106,4 @@ abstract class HandWeapon(
         @JsonFullSerializable val weaponDrawable: ToddDrawable? = null,
         @JsonFullSerializable val origin: Vector2 = Vector2(0f, 0f)
     )
-
-    companion object {
-        private const val ACTION_EVENT = "action"
-    }
 }

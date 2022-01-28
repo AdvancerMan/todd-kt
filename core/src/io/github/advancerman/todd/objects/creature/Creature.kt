@@ -176,7 +176,10 @@ open class Creature(
     fun canAttack() = weapon?.canAttack() ?: false
 
     fun attack() {
-        weapon?.attack()
+        if (weapon?.canAttack() == true) {
+            weapon?.attack()
+            reportAnimationEventToChildren(ATTACK_EVENT)
+        }
         screen.listenAction(ThinkerAction.ATTACK, this)
     }
 
@@ -213,6 +216,7 @@ open class Creature(
         private const val JUMP_EVENT = "jump"
         private const val ON_GROUND_EVENT = "onGround"
         private const val FALL_EVENT = "fall"
+        private const val ATTACK_EVENT = "attack"
 
         @ManualJsonConstructor
         private fun getJsonDefaults(
