@@ -55,6 +55,15 @@ val prototypes by lazy {
                 )
         }
         .onEach { it.value.remove("protoName") }
+        .onEach { (_, json) ->
+            if (json.has("isDeepPrototype")) {
+                if (!json["isDeepPrototype"].isBoolean) {
+                    throw DeserializationException(json, "'isDeepPrototype' should be boolean")
+                }
+            } else {
+                json.addChild("isDeepPrototype", JsonValue(false))
+            }
+        }
     val result = mutableMapOf<String, JsonValue>()
     val visited = mutableSetOf<String>()
     rawPrototypes.forEach { (name, linkedJson) ->
@@ -63,7 +72,7 @@ val prototypes by lazy {
     result
 }
 
-private fun insertPrototype(json: JsonValue, prototype: JsonValue) {
+private fun insertPrototype(json: JsonValue, prototype: JsonValue, isDeep: Boolean) {
     if (!prototype.isObject) {
         throw DeserializationException(json, "Prototype should be an object, prototype: $prototype")
     } else if (!json.isObject) {
@@ -74,10 +83,12 @@ private fun insertPrototype(json: JsonValue, prototype: JsonValue) {
     }
 
     prototype.forEach {
-        if (!json.has(it.name)) {
+        if (it.name == "isDeepPrototype") {
+            return@forEach
+        } else if (!json.has(it.name)) {
             json.addChild(it.cpy())
-        } else if (it.isObject) {
-            insertPrototype(json[it.name], it)
+        } else if (it.isObject && isDeep) {
+            insertPrototype(json[it.name], it, isDeep)
         }
     }
 }
@@ -93,7 +104,7 @@ private fun prototypesDfs(json: JsonValue, getPrototype: (String, JsonValue) -> 
             throw DeserializationException(json, "Prototype name should be a string")
         }
         val prototype = getPrototype(it.asString(), json)
-        insertPrototype(json, prototype)
+        insertPrototype(json, prototype, prototype["isDeepPrototype"].asBoolean())
     }
 }
 

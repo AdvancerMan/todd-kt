@@ -1,5 +1,6 @@
 {
   "protoName": "arenaSolid",
+  "isDeepPrototype": true,
   "type": "Solid",
   "drawable": {
     "name": "arenaSolid"
@@ -12,6 +13,7 @@
 
 {
   "protoName": "arenaPortal",
+  "isDeepPrototype": true,
   "type": "Portal",
   "drawable": {
     "name": "arenaPortal"
@@ -25,6 +27,7 @@
 
 {
   "protoName": "Skeleton",
+  "isDeepPrototype": true,
   "type": "Creature",
   "scale": 2,
   "drawable": {
@@ -100,6 +103,7 @@
 
 {
   "protoName": "Alexander",
+  "isDeepPrototype": true,
   "type": "Creature",
   "drawable": {
     "name": "stupidMeleeEnemy",
@@ -162,6 +166,7 @@
 
 {
   "protoName": "AlexanderSpawner",
+  "isDeepPrototype": true,
   "type": "Spawner",
   "drawable": {
     "name": "stupidMeleeEnemy"
