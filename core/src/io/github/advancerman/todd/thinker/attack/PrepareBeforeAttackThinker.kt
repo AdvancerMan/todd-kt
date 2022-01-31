@@ -88,12 +88,13 @@ class PrepareBeforeAttackThinker(
     }
 
     private fun initPreparation(delta: Float = 0f) {
+        rolledRelaxation = false
         sincePreparationStart = -delta
         triedHits = 0
     }
 
     private fun resetPreparation(delta: Float = 0f) {
-        rolledRelaxation = false
+        rolledRelaxation = true
         sincePreparationStart = tillPreparationEnd - delta
         triedHits = maxHitTries
     }
