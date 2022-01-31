@@ -1,181 +1,180 @@
-{
-  "protoName": "arenaSolid",
-  "isDeepPrototype": true,
-  "type": "Solid",
-  "drawable": {
-    "name": "arenaSolid"
+[
+  {
+    "protoName": "arenaSolid",
+    "isDeepPrototype": true,
+    "type": "Solid",
+    "drawable": {
+      "name": "arenaSolid"
+    },
+    "bodyPattern": {
+      "type": "RectangleWithTopGS",
+      "b2dType": "static"
+    }
   },
-  "bodyPattern": {
-    "type": "RectangleWithTopGS",
-    "b2dType": "static"
+  {
+    "protoName": "arenaPortal",
+    "isDeepPrototype": true,
+    "type": "Portal",
+    "drawable": {
+      "name": "arenaPortal"
+    },
+    "bodyPattern": {
+      "type": "Circle",
+      "b2dType": "static"
+    },
+    "teleportDelay": 0.1
+  },
+  {
+    "protoName": "Skeleton",
+    "isDeepPrototype": true,
+    "type": "Creature",
+    "scale": 2,
+    "drawable": {
+      "name": "Skeleton",
+      "zIndex": 0,
+      "size": [24, 47],
+      "offset": [0, 0]
+    },
+    "weapon": {
+      "type": "SimpleMeleeWeapon",
+      "handWeaponStyle": {
+        "weaponDrawable": {
+          "name": "skeletonSpear",
+          "zIndex": 1,
+          "size": [57, 37],
+          "offset": [-10, -2]
+        },
+        "handDrawable": {
+          "name": "skeletonBack",
+          "zIndex": -1,
+          "size": [34, 28],
+          "offset": [-13, 2]
+        },
+        "origin": [0, 0]
+      },
+      "attackXYWH": [26, 16, 32, 2],
+      "power": 8,
+      "cooldown": 1,
+      "safeAttackPeriod": 0.295,
+      "dangerousAttackPeriod": 0.3
+    },
+    "bodyPattern": {
+      "type": "RectangleWithTopGSBottomGS",
+      "b2dType": "dynamic"
+    },
+    "healthBar": {
+      "maxHealth": 100,
+      "backgroundDrawable": {
+        "name": "healthBarBackground",
+        "size": [140, 10]
+      },
+      "foregroundDrawable": {
+        "name": "healthBarHealth",
+        "size": [0, 10]
+      },
+      "animateDuration": 0.1
+    },
+    "speed": 200,
+    "jumpPower": 500,
+    "thinker": {
+      "type": "SequentialThinker",
+      "thinkers": [
+        {
+          "type": "PrepareBeforeAttackThinker",
+          "triggerDistancePixels": 150,
+          "preparationSeconds": 1.7,
+          "maxHitTries": 3,
+          "delayBetweenHitsSeconds": 0.8,
+          "relaxSeconds": 2,
+          "relaxWithoutHitProbability": 0
+        },
+        {
+          "type": "JumpToTargetThinker",
+          "jumpCooldown": 1.5,
+          "highGroundThreshold": 1
+        },
+        {
+          "type": "RunToTargetThinker",
+          "maxDistanceFromTarget": 3
+        }
+      ]
+    }
+  },
+  {
+    "protoName": "Alexander",
+    "isDeepPrototype": true,
+    "type": "Creature",
+    "drawable": {
+      "name": "stupidMeleeEnemy",
+      "size": [30, 91]
+    },
+    "weapon": {
+      "type": "SimpleMeleeWeapon",
+      "handWeaponStyle": {
+        "weaponDrawable": {
+          "name": "simpleWeapon",
+          "zIndex": 0,
+          "size": [61, 59],
+          "offset": [0, 25]
+        },
+        "origin": [0, 0]
+      },
+      "attackXYWH": [30, 1, 20, 89],
+      "power": 5,
+      "cooldown": 1.5,
+      "safeAttackPeriod": 0.195,
+      "dangerousAttackPeriod": 0.3
+    },
+    "bodyPattern": {
+      "type": "RectangleWithTopGSBottomGS",
+      "b2dType": "dynamic",
+      "size": [30, 91]
+    },
+    "healthBar": {
+      "maxHealth": 100,
+      "backgroundDrawable": {
+        "name": "healthBarBackground",
+        "size": [140, 10]
+      },
+      "foregroundDrawable": {
+        "name": "healthBarHealth",
+        "size": [0, 10]
+      },
+      "animateDuration": 0.1
+    },
+    "speed": 200,
+    "jumpPower": 500,
+    "thinker": {
+      "type": "SequentialThinker",
+      "thinkers": [
+        {
+          "type": "AttackIfYouCanThinker"
+        },
+        {
+          "type": "JumpToTargetThinker",
+          "jumpCooldown": 1.5,
+          "highGroundThreshold": 1
+        },
+        {
+          "type": "RunToTargetThinker",
+          "maxDistanceFromTarget": 3
+        }
+      ]
+    }
+  },
+  {
+    "protoName": "AlexanderSpawner",
+    "isDeepPrototype": true,
+    "type": "Spawner",
+    "drawable": {
+      "name": "stupidMeleeEnemy"
+    },
+    "bodyPattern": {
+      "type": "RectangleWithTopGSBottomGS",
+      "b2dType": "static",
+      "size": [50, 50]
+    },
+    "maxAmount": 1,
+    "spawnPeriod": 20
   }
-}
-
-{
-  "protoName": "arenaPortal",
-  "isDeepPrototype": true,
-  "type": "Portal",
-  "drawable": {
-    "name": "arenaPortal"
-  },
-  "bodyPattern": {
-    "type": "Circle",
-    "b2dType": "static"
-  },
-  "teleportDelay": 0.1
-}
-
-{
-  "protoName": "Skeleton",
-  "isDeepPrototype": true,
-  "type": "Creature",
-  "scale": 2,
-  "drawable": {
-    "name": "Skeleton",
-    "zIndex": 0,
-    "size": [24, 47],
-    "offset": [0, 0]
-  },
-  "weapon": {
-    "type": "SimpleMeleeWeapon",
-    "handWeaponStyle": {
-      "weaponDrawable": {
-        "name": "skeletonSpear",
-        "zIndex": 1,
-        "size": [57, 37],
-        "offset": [-10, -2]
-      },
-      "handDrawable": {
-        "name": "skeletonBack",
-        "zIndex": -1,
-        "size": [34, 28],
-        "offset": [-13, 2]
-      },
-      "origin": [0, 0]
-    },
-    "attackXYWH": [26, 16, 32, 2],
-    "power": 8,
-    "cooldown": 1,
-    "safeAttackPeriod": 0.295,
-    "dangerousAttackPeriod": 0.3
-  },
-  "bodyPattern": {
-    "type": "RectangleWithTopGSBottomGS",
-    "b2dType": "dynamic"
-  },
-  "healthBar": {
-    "maxHealth": 100,
-    "backgroundDrawable": {
-      "name": "healthBarBackground",
-      "size": [140, 10]
-    },
-    "foregroundDrawable": {
-      "name": "healthBarHealth",
-      "size": [0, 10]
-    },
-    "animateDuration": 0.1
-  },
-  "speed": 200,
-  "jumpPower": 500,
-  "thinker": {
-    "type": "SequentialThinker",
-    "thinkers": [
-      {
-        "type": "PrepareBeforeAttackThinker",
-        "triggerDistancePixels": 150,
-        "delaySeconds": 2,
-        "minTimeSeconds": 5,
-        "maxPreparedSeconds": 10,
-        "relaxProbability": 0
-      },
-      {
-        "type": "JumpToTargetThinker",
-        "jumpCooldown": 1.5,
-        "highGroundThreshold": 1
-      },
-      {
-        "type": "RunToTargetThinker",
-        "maxDistanceFromTarget": 3
-      }
-    ]
-  }
-}
-
-{
-  "protoName": "Alexander",
-  "isDeepPrototype": true,
-  "type": "Creature",
-  "drawable": {
-    "name": "stupidMeleeEnemy",
-    "size": [30, 91]
-  },
-  "weapon": {
-    "type": "SimpleMeleeWeapon",
-    "handWeaponStyle": {
-      "weaponDrawable": {
-        "name": "simpleWeapon",
-        "zIndex": 0,
-        "size": [61, 59],
-        "offset": [0, 25]
-      },
-      "origin": [0, 0]
-    },
-    "attackXYWH": [30, 1, 20, 89],
-    "power": 5,
-    "cooldown": 1.5,
-    "safeAttackPeriod": 0.195,
-    "dangerousAttackPeriod": 0.3
-  },
-  "bodyPattern": {
-    "type": "RectangleWithTopGSBottomGS",
-    "b2dType": "dynamic",
-    "size": [30, 91]
-  },
-  "healthBar": {
-    "maxHealth": 100,
-    "backgroundDrawable": {
-      "name": "healthBarBackground",
-      "size": [140, 10]
-    },
-    "foregroundDrawable": {
-      "name": "healthBarHealth",
-      "size": [0, 10]
-    },
-    "animateDuration": 0.1
-  },
-  "speed": 200,
-  "jumpPower": 500,
-  "thinker": {
-    "type": "SequentialThinker",
-    "thinkers": [
-      {
-        "type": "AttackIfYouCanThinker"
-      },
-      {
-        "type": "JumpToTargetThinker",
-        "jumpCooldown": 1.5,
-        "highGroundThreshold": 1
-      },
-      {
-        "type": "RunToTargetThinker",
-        "maxDistanceFromTarget": 3
-      }
-    ]
-  }
-}
-
-{
-  "protoName": "AlexanderSpawner",
-  "isDeepPrototype": true,
-  "type": "Spawner",
-  "drawable": {
-    "name": "stupidMeleeEnemy"
-  },
-  "bodyPattern": {
-    "type": "RectangleWithTopGSBottomGS",
-    "b2dType": "static",
-    "size": [50, 50]
-  },
-  "maxAmount": 1,
-  "spawnPeriod": 20
-}
+]
