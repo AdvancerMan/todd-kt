@@ -53,13 +53,14 @@ class PrepareBeforeAttackThinker(
     }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
+        sincePreparationStart += delta
         if (sincePreparationStart < preparationSeconds) {
             operatedObject.reportAnimationEvent(PREPARATION_EVENT)
         } else if (triedHits < maxHitTries) {
             if (!rolledRelaxation && Random.nextFloat() < relaxWithoutHitProbability) {
-                resetPreparation(delta)
+                resetPreparation()
             } else if (shouldTryHit(delta)) {
-                tryHit(delta, operatedObject, screen)
+                tryHit(operatedObject, screen)
             } else {
                 operatedObject.reportAnimationEvent(PREPARATION_EVENT)
             }
@@ -69,38 +70,36 @@ class PrepareBeforeAttackThinker(
                 .coordinateDistanceTo(screen.player.body.getAABB())
 
             if (distance < triggerDistancePixels) {
-                initPreparation(delta)
+                initPreparation()
                 operatedObject.reportAnimationEvent(PREPARATION_EVENT)
             }
         }
-
-        sincePreparationStart += delta
     }
 
-    private fun tryHit(delta: Float, operatedObject: Creature, screen: GameScreen) {
+    private fun tryHit(operatedObject: Creature, screen: GameScreen) {
         triedHits++
         if (shouldHit(operatedObject, screen)) {
             operatedObject.attack()
-            resetPreparation(delta)
+            resetPreparation()
         } else {
             operatedObject.reportAnimationEvent(PREPARATION_EVENT)
         }
     }
 
-    private fun initPreparation(delta: Float = 0f) {
+    private fun initPreparation() {
         rolledRelaxation = false
-        sincePreparationStart = -delta
+        sincePreparationStart = 0f
         triedHits = 0
     }
 
-    private fun resetPreparation(delta: Float = 0f) {
+    private fun resetPreparation() {
         rolledRelaxation = true
-        sincePreparationStart = tillPreparationEnd - delta
+        sincePreparationStart = tillPreparationEnd
         triedHits = maxHitTries
     }
 
     private fun shouldTryHit(delta: Float) = (sincePreparationStart - preparationSeconds).let {
-        floor(it / delayBetweenHitsSeconds) != floor((it - delta) / delayBetweenHitsSeconds)
+        floor(it / delayBetweenHitsSeconds) != floor((it + delta) / delayBetweenHitsSeconds)
     }
 
     private fun shouldHit(operatedObject: Creature, screen: GameScreen): Boolean =
