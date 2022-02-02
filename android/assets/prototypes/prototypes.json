@@ -82,7 +82,7 @@
         {
           "type": "PrepareBeforeAttackThinker",
           "triggerDistancePixels": 150,
-          "preparationSeconds": 1.6,
+          "preparationSeconds": 1.7,
           "maxHitTries": 3,
           "delayBetweenHitsSeconds": 0.8,
           "relaxSeconds": 2,
