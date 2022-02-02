@@ -41,8 +41,8 @@
         "weaponDrawable": {
           "name": "skeletonSpear",
           "zIndex": 1,
-          "size": [57, 37],
-          "offset": [-10, -2]
+          "size": [57, 39],
+          "offset": [-10, -4]
         },
         "handDrawable": {
           "name": "skeletonBack",
@@ -82,7 +82,7 @@
         {
           "type": "PrepareBeforeAttackThinker",
           "triggerDistancePixels": 150,
-          "preparationSeconds": 1.7,
+          "preparationSeconds": 1.6,
           "maxHitTries": 3,
           "delayBetweenHitsSeconds": 0.8,
           "relaxSeconds": 2,
