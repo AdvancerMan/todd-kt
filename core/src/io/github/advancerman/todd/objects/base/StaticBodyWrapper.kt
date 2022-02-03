@@ -42,6 +42,7 @@ class StaticBodyWrapper(private val unrotatedAABB: Rectangle, private var angle:
     override fun setOwner(owner: InGameObject) {}
     override fun setActive(value: Boolean) {}
     override fun setBullet(value: Boolean) {}
+    override fun setGravityScale(value: Float) {}
 
     override fun destroy(world: World) {}
 

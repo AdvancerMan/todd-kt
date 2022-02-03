@@ -10,15 +10,15 @@ import io.github.advancerman.todd.thinker.operated.ThinkerAction
 
 @SerializationType([Behaviour::class], "RunBehaviour")
 open class RunBehaviour(private val runSpeed: Float) : RunAction {
-    private var preVelocity: Float = 0f
+    private var preRunVelocity: Float = 0f
 
     override fun update(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        preVelocity = 0f
+        preRunVelocity = 0f
     }
 
     override fun prePhysicsUpdate(delta: Float, operatedObject: Creature, screen: GameScreen) {
         val body = operatedObject.body
-        body.applyLinearImpulseToCenter(Vector2(preVelocity - body.getVelocity().x, 0f))
+        body.applyLinearImpulseToCenter(Vector2(preRunVelocity - body.getVelocity().x, 0f))
     }
 
     override fun run(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
@@ -32,7 +32,7 @@ open class RunBehaviour(private val runSpeed: Float) : RunAction {
         speed: Float,
     ) {
         operatedObject.reportAnimationEvent(RunAction.RUN_EVENT)
-        preVelocity = if (toRight) speed else -speed
+        preRunVelocity = if (toRight) speed else -speed
 
         if (toRight) {
             screen.listenAction(ThinkerAction.RUN_RIGHT, operatedObject)

@@ -61,6 +61,8 @@ interface BodyWrapper : ManuallyJsonSerializable {
 
     fun setBullet(value: Boolean)
 
+    fun setGravityScale(value: Float)
+
     fun getUnrotatedAABB(): Rectangle
 
     fun getAABB(): Rectangle

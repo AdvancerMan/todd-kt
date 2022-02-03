@@ -94,6 +94,10 @@ class RealBodyWrapper(private val bodyPattern: BodyPattern) : BodyWrapper, Manua
         body.isBullet = value
     }
 
+    override fun setGravityScale(value: Float) {
+        body.gravityScale = value
+    }
+
     override fun getUnrotatedAABB() =
             // TODO (0, 0) isn't always in AABB
             Rectangle().apply {
