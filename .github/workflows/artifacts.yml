@@ -1,8 +1,6 @@
 name: Development Build
 
-on:
-  push:
-    branches: [ master ]
+on: [push]
 
 jobs:
   pre-release:
@@ -70,6 +68,7 @@ jobs:
           rm "$JAR_NAME"
 
       - name: Upload latest version to the release
+        if: contains(github.ref, 'master')
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
