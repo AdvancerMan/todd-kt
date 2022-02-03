@@ -90,6 +90,8 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
             override fun changed(event: ChangeListener.ChangeEvent) {
                 isMovingLeft = actor.knobPercentX < 0
                 isMovingRight = actor.knobPercentX > 0
+                isJumping = actor.knobPercentY > 0.2
+                isNotJumping = actor.knobPercentY < -0.2
             }
         },
 
