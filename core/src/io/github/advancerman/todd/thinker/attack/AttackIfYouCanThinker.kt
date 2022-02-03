@@ -2,6 +2,7 @@ package io.github.advancerman.todd.thinker.attack
 
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
+import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.thinker.Thinker
 
@@ -17,8 +18,10 @@ import io.github.advancerman.todd.thinker.Thinker
 @SerializationType([Thinker::class], "AttackIfYouCanThinker")
 class AttackIfYouCanThinker : Thinker {
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        if (operatedObject.canAttack()) {
-            operatedObject.attack()
+        operatedObject.getBehaviour<AttackAction>()?.let { attackAction ->
+            if (attackAction.canAttack()) {
+                attackAction.attack(delta, operatedObject, screen)
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package io.github.advancerman.todd.thinker.run
 import io.github.advancerman.todd.json.JsonSaveSerializable
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
+import io.github.advancerman.todd.objects.creature.behaviour.RunAction
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.thinker.Thinker
 
@@ -24,10 +25,10 @@ class RunToTargetThinker(
 
         if (targetAABB.x - myAABB.x - myAABB.width > maxDistanceFromTarget) {
             operatedObject.isDirectedToRight = true
-            operatedObject.run(true)
+            operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, true)
         } else if (targetAABB.x + targetAABB.width - myAABB.x < -maxDistanceFromTarget) {
             operatedObject.isDirectedToRight = false
-            operatedObject.run(false)
+            operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, false)
         }
     }
 }

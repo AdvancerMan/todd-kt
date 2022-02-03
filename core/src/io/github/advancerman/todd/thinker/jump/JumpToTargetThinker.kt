@@ -2,6 +2,7 @@ package io.github.advancerman.todd.thinker.jump
 
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
+import io.github.advancerman.todd.objects.creature.behaviour.JumpAction
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.thinker.Thinker
 
@@ -31,7 +32,7 @@ class JumpToTargetThinker(
 
         if (sinceJump >= jumpCooldown && targetAABB.y - myAABB.y > highGroundThreshold && operatedObject.isOnGround) {
             sinceJump = 0f
-            operatedObject.jump()
+            operatedObject.getBehaviour<JumpAction>()?.jump(delta, operatedObject, screen)
         }
     }
 }

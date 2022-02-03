@@ -2,6 +2,7 @@ package io.github.advancerman.todd.thinker.attack
 
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
+import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.thinker.Thinker
 import io.github.advancerman.todd.util.coordinateDistanceTo
@@ -60,7 +61,7 @@ class PrepareBeforeAttackThinker(
             if (!rolledRelaxation && Random.nextFloat() < relaxWithoutHitProbability) {
                 resetPreparation()
             } else if (shouldTryHit(delta)) {
-                tryHit(operatedObject, screen)
+                tryHit(delta, operatedObject, screen)
             } else {
                 operatedObject.reportAnimationEvent(PREPARATION_EVENT)
             }
@@ -76,10 +77,10 @@ class PrepareBeforeAttackThinker(
         }
     }
 
-    private fun tryHit(operatedObject: Creature, screen: GameScreen) {
+    private fun tryHit(delta: Float, operatedObject: Creature, screen: GameScreen) {
         triedHits++
         if (shouldHit(operatedObject, screen)) {
-            operatedObject.attack()
+            operatedObject.getBehaviour<AttackAction>()?.attack(delta, operatedObject, screen)
             resetPreparation()
         } else {
             operatedObject.reportAnimationEvent(PREPARATION_EVENT)
@@ -102,10 +103,14 @@ class PrepareBeforeAttackThinker(
         floor(it / delayBetweenHitsSeconds) != floor((it + delta) / delayBetweenHitsSeconds)
     }
 
-    private fun shouldHit(operatedObject: Creature, screen: GameScreen): Boolean =
-        sincePreparationStart >= preparationSeconds
-                && operatedObject.canAttack()
-                && operatedObject.getAttackedObjects().contains(screen.player)
+    private fun shouldHit(operatedObject: Creature, screen: GameScreen): Boolean {
+        val result = operatedObject.getBehaviour<AttackAction>()?.let { attackAction ->
+            sincePreparationStart >= preparationSeconds
+                    && attackAction.canAttack()
+                    && attackAction.getAttackedObjects().contains(screen.player)
+        }
+        return result == true
+    }
 
     companion object {
         private const val PREPARATION_EVENT = "preparation"

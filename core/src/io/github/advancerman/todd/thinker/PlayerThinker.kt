@@ -14,6 +14,9 @@ import io.github.advancerman.todd.gui.ScreenInputActor
 import io.github.advancerman.todd.json.deserialization.*
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.creature.Creature
+import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
+import io.github.advancerman.todd.objects.creature.behaviour.JumpAction
+import io.github.advancerman.todd.objects.creature.behaviour.RunAction
 import io.github.advancerman.todd.screen.game.GameScreen
 
 enum class MovingInputType(val jsonName: String) {
@@ -128,17 +131,17 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
         if (isMovingLeft) {
             operatedObject.isDirectedToRight = false
-            operatedObject.run(false)
+            operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, false)
         }
         if (isMovingRight) {
             operatedObject.isDirectedToRight = true
-            operatedObject.run(true)
+            operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, true)
         }
         if (isJumping) {
-            operatedObject.jump()
+            operatedObject.getBehaviour<JumpAction>()?.jump(delta, operatedObject, screen)
         }
         if (isAttacking) {
-            operatedObject.attack()
+            operatedObject.getBehaviour<AttackAction>()?.attack(delta, operatedObject, screen)
         }
     }
 

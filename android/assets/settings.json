@@ -70,21 +70,34 @@
       "size": [61, 59],
       "offset": [-11, 0]
     },
-    "weapon": {
-      "type": "SimpleMeleeWeapon",
-      "handWeaponStyle": {
-        "weaponDrawable": {
-          "name": "simpleWeapon",
-          "size": [61, 59],
-          "offset": [0, 0]
+    "behaviours": [
+      {
+        "type": "RunBehaviour",
+        "runSpeed": 300
+      },
+      {
+        "type": "AttackBehaviour",
+        "weapon": {
+          "type": "SimpleMeleeWeapon",
+          "handWeaponStyle": {
+            "weaponDrawable": {
+              "name": "simpleWeapon",
+              "size": [61, 59],
+              "offset": [0, 0]
+            }
+          },
+          "attackXYWH": [20, 4, 40, 40],
+          "power": 25,
+          "cooldown": 1,
+          "safeAttackPeriod": 0.3,
+          "dangerousAttackPeriod": 0.4
         }
       },
-      "attackXYWH": [20, 4, 40, 40],
-      "power": 25,
-      "cooldown": 1,
-      "safeAttackPeriod": 0.3,
-      "dangerousAttackPeriod": 0.4
-    },
+      {
+        "type": "JumpBehaviour",
+        "jumpPower": 500
+      }
+    ],
     "bodyPattern": {
       "type": "RectangleWithTopGSBottomGS",
       "b2dType": "dynamic",
@@ -102,8 +115,6 @@
       },
       "animateDuration": 0.1
     },
-    "speed": 300,
-    "jumpPower": 500,
     "scale": 2
   }
 }

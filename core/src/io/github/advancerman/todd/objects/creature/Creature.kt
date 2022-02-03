@@ -16,47 +16,45 @@ import io.github.advancerman.todd.box2d.bodyPattern.sensor.Sensor
 import io.github.advancerman.todd.box2d.bodyPattern.base.SensorName
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.TopGroundListener
 import io.github.advancerman.todd.json.*
+import io.github.advancerman.todd.json.deserialization.construct
+import io.github.advancerman.todd.launcher.game
 import io.github.advancerman.todd.objects.base.DrawableActor
-import io.github.advancerman.todd.objects.weapon.Weapon
-import io.github.advancerman.todd.objects.weapon.WithCalculableAttackedObjects
+import io.github.advancerman.todd.objects.creature.behaviour.Behaviour
 import io.github.advancerman.todd.thinker.Thinker
 import io.github.advancerman.todd.thinker.operated.ScheduledThinker
-import io.github.advancerman.todd.thinker.operated.ThinkerAction
 import io.github.advancerman.todd.util.JUMP_COOLDOWN
 import io.github.advancerman.todd.util.DAMAGE_TINT_TIME
 import io.github.advancerman.todd.util.Y_VEL_JUMP_THRESHOLD
 
 /**
- * Basic creature that can run, jump and attack
+ * Basic creature that combines different behaviours and thinkers
  *
  * @param drawable Base drawable for InGameObject.
  *                 Z-index is relative to object's actor,
  *                 offset is relative to unrotated, unflipped actor position
  * @param bodyPattern Body description for InGameObject
- * @param weapon Weapon
  * @param thinker AI for InGameObject
  * @param healthBar Health bar
- * @param speed Speed
- * @param jumpPower Jump power
+ * @param behaviours Behaviours list
  * @param scale Actor's scale
  */
 @SerializationType([InGameObject::class], "Creature")
-open class Creature(
-    game: ToddGame, drawable: ToddDrawable, bodyPattern: BodyPattern,
-    @JsonUpdateSerializable protected var weapon: Weapon?,
+class Creature(
+    game: ToddGame,
+    drawable: ToddDrawable,
+    bodyPattern: BodyPattern,
     @JsonSaveSerializable var thinker: Thinker,
     @JsonUpdateSerializable val healthBar: HealthBar,
-    @JsonUpdateSerializable private var speed: Float,
-    @JsonUpdateSerializable private var jumpPower: Float,
+    val behaviours: List<Behaviour>,
     scale: Float = 1f
 ) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
-    private val preVelocity = Vector2()
     @JsonUpdateSerializable
     private var sinceJump = JUMP_COOLDOWN + 1
     @JsonUpdateSerializable
     private var sinceDamage = DAMAGE_TINT_TIME + 1
     var isOnGround = false
-        get() = field && body.getVelocity().y <= Y_VEL_JUMP_THRESHOLD && sinceJump >= JUMP_COOLDOWN
+        // TODO think about sinceJump
+        get() = field && body.getVelocity().y <= Y_VEL_JUMP_THRESHOLD //&& sinceJump >= JUMP_COOLDOWN
         private set
 
     private val grounds = mutableMapOf<InGameObject, Int>()
@@ -97,10 +95,7 @@ open class Creature(
             it.setOwnerTopCenter(width / 2, height)
             addActor(it)
         }
-        weapon?.let {
-            addActor(it)
-            it.init(this, gameScreen)
-        }
+        behaviours.forEach { it.init(this, gameScreen) }
     }
 
     fun think(delta: Float) {
@@ -111,14 +106,11 @@ open class Creature(
         super.act(delta)
         sinceJump += delta
         sinceDamage += delta
+        behaviours.forEach { it.update(delta, this, screen) }
 
-        preVelocity.setZero()
         isOnGround = grounds.isNotEmpty()
         think(delta)
-        updateXVelocity()
-        if (!preVelocity.epsilonEquals(preVelocity.x, 0f)) {
-            updateYVelocity()
-        }
+        behaviours.forEach { it.prePhysicsUpdate(delta, this, screen) }
     }
 
     override fun updateColor() {
@@ -137,50 +129,12 @@ open class Creature(
         } else if (body.getVelocity().y <= 0) {
             reportAnimationEvent(FALL_EVENT)
         }
+        behaviours.forEach { it.postUpdate(delta, this, screen) }
         drawable.getAdditionallyReportedEvents().forEach(::reportAnimationEventToChildren)
-        weapon?.postUpdate(delta)
     }
 
-    fun jump() {
-        if (isOnGround) {
-            sinceJump = 0f
-            reportAnimationEvent(JUMP_EVENT)
-            preVelocity.y = jumpPower
-        }
-        screen.listenAction(ThinkerAction.JUMP, this)
-    }
-
-    fun run() {
-        run(isDirectedToRight)
-    }
-
-    fun run(toRight: Boolean) {
-        reportAnimationEvent(RUN_EVENT)
-        preVelocity.x += if (toRight) speed else -speed
-
-        if (toRight) {
-            screen.listenAction(ThinkerAction.RUN_RIGHT, this)
-        } else {
-            screen.listenAction(ThinkerAction.RUN_LEFT, this)
-        }
-    }
-
-    protected fun updateXVelocity() {
-        body.applyLinearImpulseToCenter(Vector2(preVelocity.x - body.getVelocity().x, 0f))
-    }
-
-    protected fun updateYVelocity() {
-        body.setYVelocity(preVelocity.y)
-    }
-
-    fun canAttack() = weapon?.canAttack() ?: false
-
-    fun attack() {
-        if (weapon?.canAttack() == true) {
-            weapon?.attack()
-            reportAnimationEventToChildren(ATTACK_EVENT)
-        }
-        screen.listenAction(ThinkerAction.ATTACK, this)
+    inline fun <reified T> getBehaviour(): T? {
+        return behaviours.filterIsInstance<T>().firstOrNull()
     }
 
     override fun takeDamage(amount: Float) {
@@ -208,21 +162,16 @@ open class Creature(
         super.dispose()
     }
 
-    fun getAttackedObjects(): List<InGameObject> =
-        (weapon as? WithCalculableAttackedObjects)?.calculateAttackedObjects()?.toList() ?: listOf()
-
     companion object {
-        private const val RUN_EVENT = "run"
-        private const val JUMP_EVENT = "jump"
         private const val ON_GROUND_EVENT = "onGround"
         private const val FALL_EVENT = "fall"
-        private const val ATTACK_EVENT = "attack"
 
         @ManualJsonConstructor
         private fun getJsonDefaults(
             @Suppress("UNUSED_PARAMETER") json: JsonValue,
             parsed: MutableMap<String, Any?>
         ) {
+            json["behaviours"]?.map { it.construct<Behaviour>(game) }?.also { parsed["behaviours"] = it }
             // TODO remove this default
             parsed.getOrPut("thinker") { ScheduledThinker() }
         }

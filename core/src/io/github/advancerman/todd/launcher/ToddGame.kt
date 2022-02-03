@@ -14,6 +14,9 @@ import io.github.advancerman.todd.util.files.MyApplicationLogger
 import io.github.advancerman.todd.util.withExceptionHandler
 import kotlin.math.min
 
+// TODO remove, is needed to pass through deserialization of behaviours list
+lateinit var game: ToddGame
+
 class ToddGame: ApplicationListener {
     lateinit var logger: MyApplicationLogger private set
     lateinit var screenManager: ScreenManager private set
@@ -28,6 +31,7 @@ class ToddGame: ApplicationListener {
         textureManager = TextureManager()
         fontManager = FontManager()
         screenManager = ScreenManager(MainMenuScreen(this))
+        game = this
     }
 
     override fun render() {
