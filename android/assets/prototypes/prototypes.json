@@ -44,8 +44,8 @@
             "weaponDrawable": {
               "name": "skeletonSpear",
               "zIndex": 1,
-              "size": [57, 37],
-              "offset": [-10, -2]
+              "size": [57, 39],
+              "offset": [-10, -4]
             },
             "handDrawable": {
               "name": "skeletonBack",
