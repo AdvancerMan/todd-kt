@@ -72,8 +72,12 @@
     },
     "behaviours": [
       {
-        "type": "MoveHorizontallyBehaviour",
-        "moveSpeed": 300
+        "type": "BouncyFlyBehaviour",
+        "runSpeed": 300,
+        "horizontalFlySpeed": 300,
+        "flyUpSpeed": 300,
+        "flyDownSpeed": 450,
+        "bounceDownSeconds": 0.5
       },
       {
         "type": "AttackBehaviour",
@@ -92,10 +96,6 @@
           "safeAttackPeriod": 0.3,
           "dangerousAttackPeriod": 0.4
         }
-      },
-      {
-        "type": "JumpBehaviour",
-        "jumpPower": 500
       }
     ],
     "bodyPattern": {

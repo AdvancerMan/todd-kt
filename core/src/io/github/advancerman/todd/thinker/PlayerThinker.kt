@@ -15,6 +15,7 @@ import io.github.advancerman.todd.json.deserialization.*
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
+import io.github.advancerman.todd.objects.creature.behaviour.FlyAction
 import io.github.advancerman.todd.objects.creature.behaviour.JumpAction
 import io.github.advancerman.todd.objects.creature.behaviour.MoveHorizontallyAction
 import io.github.advancerman.todd.screen.game.GameScreen
@@ -27,6 +28,7 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
     private var isMovingLeft = false
     private var isMovingRight = false
     private var isJumping = false
+    private var isNotJumping = false
     private var isAttacking = false
 
     private val settings = jsonSettings["input"]
@@ -138,7 +140,10 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
             operatedObject.getBehaviour<MoveHorizontallyAction>()?.moveHorizontally(delta, operatedObject, screen, true)
         }
         if (isJumping) {
-            operatedObject.getBehaviour<JumpAction>()?.jump(delta, operatedObject, screen)
+            operatedObject.getBehaviour<FlyAction>()?.flyVertically(delta, operatedObject, screen, true)
+        }
+        if (isNotJumping) {
+            operatedObject.getBehaviour<FlyAction>()?.flyVertically(delta, operatedObject, screen, false)
         }
         if (isAttacking) {
             operatedObject.getBehaviour<AttackAction>()?.attack(delta, operatedObject, screen)
@@ -173,6 +178,7 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                         Input.Keys.UP -> isJumping = false
                         Input.Keys.LEFT -> isMovingLeft = false
                         Input.Keys.RIGHT -> isMovingRight = false
+                        Input.Keys.S -> isNotJumping = false
                         else -> return false
                     }
                     return true
@@ -187,6 +193,7 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                         Input.Keys.UP -> isJumping = true
                         Input.Keys.LEFT -> isMovingLeft = true
                         Input.Keys.RIGHT -> isMovingRight = true
+                        Input.Keys.S -> isNotJumping = true
                         else -> return false
                     }
                     return true
