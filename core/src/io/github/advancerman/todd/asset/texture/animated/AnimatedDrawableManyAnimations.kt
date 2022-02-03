@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import io.github.advancerman.todd.asset.texture.AnimationPackInfo
 import io.github.advancerman.todd.asset.texture.ToddDrawable
 import io.github.advancerman.todd.asset.texture.TextureManager
+import io.github.advancerman.todd.util.files.MyApplicationLogger
 
-private val reportedBadTypes = mutableSetOf<String>()
-private val reportedBadOrders = mutableSetOf<String>()
 private const val LOG_TAG = "AnimatedDrawableManyAnimations"
 
 private fun AnimationPackInfo.getDescriptor() =
@@ -25,14 +24,11 @@ private fun AnimatedDrawableManyAnimations.reportBadType(
     packInfo: AnimationPackInfo,
 ) {
     val packDescriptor = packInfo.getDescriptor()
-    if (!reportedBadTypes.add(packDescriptor)) {
-        return
-    }
 
-    Gdx.app.error(
-        LOG_TAG,
-        "Trying to get non-existing animation $type for pack $drawableName: $packDescriptor"
-    )
+    val logMessage = "Trying to get non-existing animation $type for pack $drawableName: $packDescriptor"
+    (Gdx.app.applicationLogger as? MyApplicationLogger)?.doIfUnique(logMessage) {
+        Gdx.app.error(LOG_TAG, it)
+    }
 }
 
 private fun AnimatedDrawableManyAnimations.reportBadOrder(
@@ -40,14 +36,11 @@ private fun AnimatedDrawableManyAnimations.reportBadOrder(
     packInfo: AnimationPackInfo,
 ) {
     val packDescriptor = packInfo.getDescriptor()
-    if (!reportedBadOrders.add(packDescriptor)) {
-        return
-    }
 
-    Gdx.app.error(
-        LOG_TAG,
-        "Can not find order for animation $type for pack $drawableName: $packDescriptor"
-    )
+    val logMessage = "Can not find order for animation $type for pack $drawableName: $packDescriptor"
+    (Gdx.app.applicationLogger as? MyApplicationLogger)?.doIfUnique(logMessage) {
+        Gdx.app.error(LOG_TAG, it)
+    }
 }
 
 class AnimatedDrawableManyAnimations

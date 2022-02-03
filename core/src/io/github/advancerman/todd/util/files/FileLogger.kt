@@ -10,11 +10,18 @@ import java.util.*
 class FileLogger(fileName: String, private val innerLogger: ApplicationLogger? = null)
     : MyApplicationLogger, Disposable {
     private val printer = PrintWriter(Gdx.files.local(fileName).writer(false, Charsets.UTF_8.toString()))
+    private val uniqueMessages = mutableSetOf<String>()
 
     @Suppress("SimpleDateFormat")
     private fun formatMessage(level: String, tag: String, message: String): String {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         return "[$level][${dateFormat.format(Calendar.getInstance().time)}][$tag] $message"
+    }
+
+    override fun doIfUnique(text: String, log: (String) -> Unit) {
+        if (uniqueMessages.add(text)) {
+            log(text)
+        }
     }
 
     override fun log(tag: String, message: String) {
