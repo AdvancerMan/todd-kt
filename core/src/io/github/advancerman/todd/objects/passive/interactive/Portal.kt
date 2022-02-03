@@ -41,6 +41,7 @@ class Portal(
         while (delayedObjects.notEmpty() && delayedObjects.first().second < timeSinceCreation) {
             val igo = delayedObjects.removeFirst().first
             if (igo.alive) {
+                reportAnimationEvent(TELEPORT_ENTITY_EVENT)
                 igo.body.setPosition(teleportTo.x, teleportTo.y, false)
             }
         }
@@ -51,6 +52,7 @@ class Portal(
                               otherFixture: Fixture, contact: Contact) {
         super.beginContact(otherSensor, other, myFixture, otherFixture, contact)
         if (otherSensor === other) {
+            reportAnimationEvent(DETECT_ENTITY_EVENT)
             delayedObjects.addLast(other to timeSinceCreation + teleportDelay)
         }
     }
@@ -59,5 +61,10 @@ class Portal(
                           otherFixture: Fixture, contact: Contact, oldManifold: Manifold) {
         super.preSolve(otherSensor, other, myFixture, otherFixture, contact, oldManifold)
         contact.isEnabled = false
+    }
+
+    companion object {
+        const val DETECT_ENTITY_EVENT = "detectEntity"
+        const val TELEPORT_ENTITY_EVENT = "teleportEntity"
     }
 }
