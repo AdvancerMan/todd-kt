@@ -6,6 +6,7 @@ $dokka.location:AnimationOrder/AnimationOrder.Default///PointingToDeclaration/c
 $dokka.location:AnimationOrder/AnimationOrder///PointingToDeclaration/core/AnimationOrder/index.html
 $dokka.location:Behaviour/AttackBehaviour///PointingToDeclaration/core/Behaviour/-attack-behaviour.html
 $dokka.location:Behaviour/Behaviour///PointingToDeclaration/core/Behaviour/index.html
+$dokka.location:Behaviour/BouncyFlyBehaviour///PointingToDeclaration/core/Behaviour/-bouncy-fly-behaviour.html
 $dokka.location:Behaviour/JumpBehaviour///PointingToDeclaration/core/Behaviour/-jump-behaviour.html
 $dokka.location:Behaviour/RunBehaviour///PointingToDeclaration/core/Behaviour/-run-behaviour.html
 $dokka.location:BitmapFont/BitmapFont.Default///PointingToDeclaration/core/BitmapFont/-bitmap-font.-default.html
