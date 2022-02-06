@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
+import com.badlogic.gdx.physics.box2d.Manifold
 import com.badlogic.gdx.utils.JsonValue
 import io.github.advancerman.todd.gui.HealthBar
 import io.github.advancerman.todd.launcher.ToddGame
@@ -46,6 +47,7 @@ class Creature(
     @JsonSaveSerializable var thinker: Thinker,
     @JsonUpdateSerializable val healthBar: HealthBar,
     val behaviours: List<Behaviour>,
+    val enableCreatureCollisions: Boolean = false,
     scale: Float = 1f
 ) : InGameObject(game, drawable, RealBodyWrapper(bodyPattern), scale) {
     @JsonUpdateSerializable
@@ -155,6 +157,20 @@ class Creature(
         children.filterIsInstance<DrawableActor>()
             .filter { it.drawable !== drawable }
             .forEach { it.drawable!!.reportEvent("owner.$eventName") }
+    }
+
+    override fun preSolve(
+        otherSensor: Sensor,
+        other: InGameObject,
+        myFixture: Fixture,
+        otherFixture: Fixture,
+        contact: Contact,
+        oldManifold: Manifold
+    ) {
+        super.preSolve(otherSensor, other, myFixture, otherFixture, contact, oldManifold)
+        if (other is Creature && !enableCreatureCollisions && !other.enableCreatureCollisions) {
+            contact.isEnabled = false
+        }
     }
 
     override fun dispose() {
