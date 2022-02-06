@@ -12,8 +12,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.base.getActorAABB
-import io.github.advancerman.todd.util.SCREEN_HEIGHT
-import io.github.advancerman.todd.util.SCREEN_WIDTH
+import io.github.advancerman.todd.util.*
 
 abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable, PostUpdatable {
     protected val stage = Stage(StretchViewport(
@@ -55,7 +54,12 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable, Post
     protected open fun shouldSkipFrame() = false
 
     open fun draw() {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClearColor(
+            SCREEN_BACKGROUND_COLOR_R,
+            SCREEN_BACKGROUND_COLOR_G,
+            SCREEN_BACKGROUND_COLOR_B,
+            1f
+        )
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         stage.draw()
