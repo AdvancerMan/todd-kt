@@ -12,4 +12,10 @@ interface FlyAction : Behaviour {
     )
 
     fun flyVertically(delta: Float, operatedObject: Creature, screen: GameScreen, toUp: Boolean)
+
+    fun land()
+
+    fun takeOff()
+
+    val isLanded: Boolean
 }

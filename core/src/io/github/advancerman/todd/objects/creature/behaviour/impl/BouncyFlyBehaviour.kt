@@ -20,6 +20,7 @@ class BouncyFlyBehaviour(
 ) : RunBehaviour(runSpeed), FlyAction {
     private var preVerticalFlyVelocity = 0f
     private var sinceBounceStart = 0f
+    override var isLanded = false
 
     override fun init(operatedObject: Creature, screen: GameScreen) {
         super<RunBehaviour>.init(operatedObject, screen)
@@ -29,7 +30,7 @@ class BouncyFlyBehaviour(
     override fun update(delta: Float, operatedObject: Creature, screen: GameScreen) {
         super<RunBehaviour>.update(delta, operatedObject, screen)
 
-        if (operatedObject.isOnGround) {
+        if (isLanded) {
             operatedObject.body.setGravityScale(1f)
             sinceBounceStart = 0f
         } else {
@@ -55,8 +56,12 @@ class BouncyFlyBehaviour(
 
     override fun prePhysicsUpdate(delta: Float, operatedObject: Creature, screen: GameScreen) {
         super<RunBehaviour>.prePhysicsUpdate(delta, operatedObject, screen)
-        val body = operatedObject.body
-        body.applyLinearImpulseToCenter(Vector2(0f, preVerticalFlyVelocity - body.getVelocity().y))
+        if (!isLanded) {
+            val body = operatedObject.body
+            body.applyLinearImpulseToCenter(
+                Vector2(0f, preVerticalFlyVelocity - body.getVelocity().y)
+            )
+        }
     }
 
     override fun flyHorizontally(
@@ -65,7 +70,9 @@ class BouncyFlyBehaviour(
         screen: GameScreen,
         toRight: Boolean
     ) {
-        run(operatedObject, screen, toRight, horizontalFlySpeed)
+        if (!isLanded) {
+            run(operatedObject, screen, toRight, horizontalFlySpeed)
+        }
     }
 
     override fun flyVertically(
@@ -74,12 +81,22 @@ class BouncyFlyBehaviour(
         screen: GameScreen,
         toUp: Boolean
     ) {
-        sinceBounceStart = 0f
-        preVerticalFlyVelocity = if (toUp) flyUpSpeed else -flyDownSpeed
+        if (!isLanded) {
+            sinceBounceStart = 0f
+            preVerticalFlyVelocity = if (toUp) flyUpSpeed else -flyDownSpeed
+        }
+    }
+
+    override fun land() {
+        isLanded = true
+    }
+
+    override fun takeOff() {
+        isLanded = false
     }
 
     override fun run(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
-        if (operatedObject.isOnGround) {
+        if (isLanded && operatedObject.isOnGround) {
             super.run(delta, operatedObject, screen, toRight)
         }
     }
