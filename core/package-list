@@ -8,7 +8,7 @@ $dokka.location:Behaviour/AttackBehaviour///PointingToDeclaration/core/Behaviou
 $dokka.location:Behaviour/Behaviour///PointingToDeclaration/core/Behaviour/index.html
 $dokka.location:Behaviour/BouncyFlyBehaviour///PointingToDeclaration/core/Behaviour/-bouncy-fly-behaviour.html
 $dokka.location:Behaviour/JumpBehaviour///PointingToDeclaration/core/Behaviour/-jump-behaviour.html
-$dokka.location:Behaviour/RunBehaviour///PointingToDeclaration/core/Behaviour/-run-behaviour.html
+$dokka.location:Behaviour/MoveHorizontallyBehaviour///PointingToDeclaration/core/Behaviour/-move-horizontally-behaviour.html
 $dokka.location:BitmapFont/BitmapFont.Default///PointingToDeclaration/core/BitmapFont/-bitmap-font.-default.html
 $dokka.location:BitmapFont/BitmapFont///PointingToDeclaration/core/BitmapFont/index.html
 $dokka.location:BodyPattern/BodyPattern///PointingToDeclaration/core/BodyPattern/index.html
@@ -53,6 +53,7 @@ $dokka.location:Thinker/PrepareBeforeAttackThinker///PointingToDeclaration/core
 $dokka.location:Thinker/RunToTargetThinker///PointingToDeclaration/core/Thinker/-run-to-target-thinker.html
 $dokka.location:Thinker/SequentialThinker///PointingToDeclaration/core/Thinker/-sequential-thinker.html
 $dokka.location:Thinker/Thinker///PointingToDeclaration/core/Thinker/index.html
+$dokka.location:Thinker/WitchThinker///PointingToDeclaration/core/Thinker/-witch-thinker.html
 $dokka.location:ToddDrawable/ToddDrawable.Default///PointingToDeclaration/core/ToddDrawable/-todd-drawable.-default.html
 $dokka.location:ToddDrawable/ToddDrawable///PointingToDeclaration/core/ToddDrawable/index.html
 $dokka.location:Weapon/SimpleGun///PointingToDeclaration/core/Weapon/-simple-gun.html
