@@ -17,18 +17,18 @@ class BouncyFlyBehaviour(
     private val bounceDownSpeed: Float = flyDownSpeed,
     private val bounceDownSeconds: Float,
     runSpeed: Float,
-) : RunBehaviour(runSpeed), FlyAction {
+) : MoveHorizontallyBehaviour(runSpeed), FlyAction {
     private var preVerticalFlyVelocity = 0f
     private var sinceBounceStart = 0f
     override var isLanded = false
 
     override fun init(operatedObject: Creature, screen: GameScreen) {
-        super<RunBehaviour>.init(operatedObject, screen)
+        super<MoveHorizontallyBehaviour>.init(operatedObject, screen)
         operatedObject.body.setGravityScale(0f)
     }
 
     override fun update(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        super<RunBehaviour>.update(delta, operatedObject, screen)
+        super<MoveHorizontallyBehaviour>.update(delta, operatedObject, screen)
 
         if (isLanded) {
             operatedObject.body.setGravityScale(1f)
@@ -55,23 +55,12 @@ class BouncyFlyBehaviour(
     }
 
     override fun prePhysicsUpdate(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        super<RunBehaviour>.prePhysicsUpdate(delta, operatedObject, screen)
+        super<MoveHorizontallyBehaviour>.prePhysicsUpdate(delta, operatedObject, screen)
         if (!isLanded) {
             val body = operatedObject.body
             body.applyLinearImpulseToCenter(
                 Vector2(0f, preVerticalFlyVelocity - body.getVelocity().y)
             )
-        }
-    }
-
-    override fun flyHorizontally(
-        delta: Float,
-        operatedObject: Creature,
-        screen: GameScreen,
-        toRight: Boolean
-    ) {
-        if (!isLanded) {
-            run(operatedObject, screen, toRight, horizontalFlySpeed)
         }
     }
 
@@ -95,9 +84,11 @@ class BouncyFlyBehaviour(
         isLanded = false
     }
 
-    override fun run(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
-        if (isLanded && operatedObject.isOnGround) {
-            super.run(delta, operatedObject, screen, toRight)
+    override fun moveHorizontally(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
+        if (isLanded) {
+            super.moveHorizontally(delta, operatedObject, screen, toRight)
+        } else {
+            super.moveHorizontally(operatedObject, screen, toRight, horizontalFlySpeed)
         }
     }
 }

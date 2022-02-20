@@ -2,17 +2,17 @@ package io.github.advancerman.todd.thinker.operated
 
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.screen.game.GameScreen
-import io.github.advancerman.todd.objects.creature.behaviour.RunAction
+import io.github.advancerman.todd.objects.creature.behaviour.MoveHorizontallyAction
 import io.github.advancerman.todd.objects.creature.behaviour.JumpAction
 import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
 
 enum class ThinkerAction(val action: (Float, Creature, GameScreen) -> Unit) {
-    RUN_LEFT({ delta, operatedObject, screen ->
-        operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, false)
+    MOVE_LEFT({ delta, operatedObject, screen ->
+        operatedObject.getBehaviour<MoveHorizontallyAction>()?.moveHorizontally(delta, operatedObject, screen, false)
         operatedObject.isDirectedToRight = false
     }),
-    RUN_RIGHT({ delta, operatedObject, screen ->
-        operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, true)
+    MOVE_RIGHT({ delta, operatedObject, screen ->
+        operatedObject.getBehaviour<MoveHorizontallyAction>()?.moveHorizontally(delta, operatedObject, screen, true)
         operatedObject.isDirectedToRight = true
     }),
     JUMP({ delta, operatedObject, screen ->

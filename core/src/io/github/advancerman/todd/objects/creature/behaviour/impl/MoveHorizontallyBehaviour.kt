@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.Vector2
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.objects.creature.behaviour.Behaviour
-import io.github.advancerman.todd.objects.creature.behaviour.RunAction
+import io.github.advancerman.todd.objects.creature.behaviour.MoveHorizontallyAction
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.thinker.operated.ThinkerAction
 
-@SerializationType([Behaviour::class], "RunBehaviour")
-open class RunBehaviour(private val runSpeed: Float) : RunAction {
+@SerializationType([Behaviour::class], "MoveHorizontallyBehaviour")
+open class MoveHorizontallyBehaviour(private val moveSpeed: Float) : MoveHorizontallyAction {
     private var preRunVelocity: Float = 0f
 
     override fun update(delta: Float, operatedObject: Creature, screen: GameScreen) {
@@ -21,23 +21,23 @@ open class RunBehaviour(private val runSpeed: Float) : RunAction {
         body.applyLinearImpulseToCenter(Vector2(preRunVelocity - body.getVelocity().x, 0f))
     }
 
-    override fun run(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
-        run(operatedObject, screen, toRight, runSpeed)
+    override fun moveHorizontally(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
+        moveHorizontally(operatedObject, screen, toRight, moveSpeed)
     }
 
-    protected fun run(
+    protected fun moveHorizontally(
         operatedObject: Creature,
         screen: GameScreen,
         toRight: Boolean,
         speed: Float,
     ) {
-        operatedObject.reportAnimationEvent(RunAction.RUN_EVENT)
+        operatedObject.reportAnimationEvent(MoveHorizontallyAction.MOVE_EVENT)
         preRunVelocity = if (toRight) speed else -speed
 
         if (toRight) {
-            screen.listenAction(ThinkerAction.RUN_RIGHT, operatedObject)
+            screen.listenAction(ThinkerAction.MOVE_RIGHT, operatedObject)
         } else {
-            screen.listenAction(ThinkerAction.RUN_LEFT, operatedObject)
+            screen.listenAction(ThinkerAction.MOVE_LEFT, operatedObject)
         }
     }
 }

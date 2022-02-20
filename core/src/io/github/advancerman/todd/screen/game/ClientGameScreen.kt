@@ -192,7 +192,7 @@ class ClientGameScreen(
     }
 
     data class Action(@JsonUpdateSerializable var action: ThinkerAction) {
-        constructor() : this(ThinkerAction.RUN_RIGHT)
+        constructor() : this(ThinkerAction.MOVE_RIGHT)
     }
 
     companion object {

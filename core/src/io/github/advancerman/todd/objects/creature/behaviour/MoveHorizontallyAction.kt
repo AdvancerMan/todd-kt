@@ -3,8 +3,8 @@ package io.github.advancerman.todd.objects.creature.behaviour
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.screen.game.GameScreen
 
-interface RunAction : Behaviour {
-    fun run(
+interface MoveHorizontallyAction : Behaviour {
+    fun moveHorizontally(
         delta: Float,
         operatedObject: Creature,
         screen: GameScreen,
@@ -12,6 +12,6 @@ interface RunAction : Behaviour {
     )
 
     companion object {
-        const val RUN_EVENT = "run"
+        const val MOVE_EVENT = "move"
     }
 }

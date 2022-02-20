@@ -14,7 +14,7 @@
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["run"]
+          "on": ["move"]
         }
       ],
       "RUN": [
@@ -28,7 +28,7 @@
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["run"],
+          "on": ["move"],
           "resetTime": false
         },
         {
@@ -43,7 +43,7 @@
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "run"]
+          "on": ["onGround", "move"]
         },
         {
           "nextAnimationType": "STAY",
@@ -61,7 +61,7 @@
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "run"]
+          "on": ["onGround", "move"]
         },
         {
           "nextAnimationType": "STAY",
@@ -79,7 +79,7 @@
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "run"]
+          "on": ["onGround", "move"]
         },
         {
           "nextAnimationType": "STAY",
@@ -93,7 +93,7 @@
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "run"]
+          "on": ["onGround", "move"]
         },
         {
           "nextAnimationType": "STAY",

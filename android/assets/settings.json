@@ -72,8 +72,8 @@
     },
     "behaviours": [
       {
-        "type": "RunBehaviour",
-        "runSpeed": 300
+        "type": "MoveHorizontallyBehaviour",
+        "moveSpeed": 300
       },
       {
         "type": "AttackBehaviour",

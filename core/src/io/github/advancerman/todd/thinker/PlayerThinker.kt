@@ -16,7 +16,7 @@ import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
 import io.github.advancerman.todd.objects.creature.behaviour.JumpAction
-import io.github.advancerman.todd.objects.creature.behaviour.RunAction
+import io.github.advancerman.todd.objects.creature.behaviour.MoveHorizontallyAction
 import io.github.advancerman.todd.screen.game.GameScreen
 
 enum class MovingInputType(val jsonName: String) {
@@ -131,11 +131,11 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
         if (isMovingLeft) {
             operatedObject.isDirectedToRight = false
-            operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, false)
+            operatedObject.getBehaviour<MoveHorizontallyAction>()?.moveHorizontally(delta, operatedObject, screen, false)
         }
         if (isMovingRight) {
             operatedObject.isDirectedToRight = true
-            operatedObject.getBehaviour<RunAction>()?.run(delta, operatedObject, screen, true)
+            operatedObject.getBehaviour<MoveHorizontallyAction>()?.moveHorizontally(delta, operatedObject, screen, true)
         }
         if (isJumping) {
             operatedObject.getBehaviour<JumpAction>()?.jump(delta, operatedObject, screen)

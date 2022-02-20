@@ -145,7 +145,7 @@ class ServerGameScreen(game: ToddGame, info: String, level: Level? = null): Game
     data class Action(@JsonUpdateSerializable var action: ThinkerAction,
                       @JsonUpdateSerializable var tick: Long,
                       @JsonUpdateSerializable var id: Int) {
-        constructor() : this(ThinkerAction.RUN_RIGHT, 0, 0)
+        constructor() : this(ThinkerAction.MOVE_RIGHT, 0, 0)
     }
 
     companion object {

@@ -134,7 +134,7 @@
       },
       {
         "nextAnimationType": "RUN",
-        "on": ["run"]
+        "on": ["move"]
       }
     ],
     "JUMP": [

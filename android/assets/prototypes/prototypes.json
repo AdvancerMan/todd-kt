@@ -67,8 +67,8 @@
         "jumpPower": 500
       },
       {
-        "type": "RunBehaviour",
-        "runSpeed": 200
+        "type": "MoveHorizontallyBehaviour",
+        "moveSpeed": 200
       }
     ],
     "bodyPattern": {
@@ -145,8 +145,8 @@
         "jumpPower": 500
       },
       {
-        "type": "RunBehaviour",
-        "runSpeed": 200
+        "type": "MoveHorizontallyBehaviour",
+        "moveSpeed": 200
       }
     ],
     "bodyPattern": {
