@@ -70,14 +70,15 @@ class BouncyFlyBehaviour(
         delta: Float,
         operatedObject: Creature,
         screen: GameScreen,
-        toUp: Boolean
+        toUp: Boolean,
+        speedScale: Float,
     ) {
         if (!isLanded) {
             if (toUp) {
-                preVerticalFlyVelocity = flyUpSpeed
+                preVerticalFlyVelocity = flyUpSpeed * speedScale
                 sinceBounceStart = (bounceUpSeconds + bounceDownSeconds) / 2
             } else {
-                preVerticalFlyVelocity = -flyDownSpeed
+                preVerticalFlyVelocity = -flyDownSpeed * speedScale
                 sinceBounceStart = 0f
             }
         }
@@ -91,11 +92,17 @@ class BouncyFlyBehaviour(
         isLanded = false
     }
 
-    override fun moveHorizontally(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
+    override fun moveHorizontally(
+        delta: Float,
+        operatedObject: Creature,
+        screen: GameScreen,
+        toRight: Boolean,
+        speedScale: Float,
+    ) {
         if (isLanded) {
-            super.moveHorizontally(delta, operatedObject, screen, toRight)
+            super.moveHorizontally(delta, operatedObject, screen, toRight, speedScale)
         } else {
-            super.moveHorizontally(operatedObject, screen, toRight, horizontalFlySpeed)
+            super.moveHorizontally(operatedObject, screen, toRight, horizontalFlySpeed * speedScale)
         }
     }
 }

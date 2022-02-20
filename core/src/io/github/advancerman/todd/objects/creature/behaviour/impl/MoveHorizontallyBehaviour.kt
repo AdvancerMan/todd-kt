@@ -21,8 +21,14 @@ open class MoveHorizontallyBehaviour(private val moveSpeed: Float) : MoveHorizon
         body.applyLinearImpulseToCenter(Vector2(preRunVelocity - body.getVelocity().x, 0f))
     }
 
-    override fun moveHorizontally(delta: Float, operatedObject: Creature, screen: GameScreen, toRight: Boolean) {
-        moveHorizontally(operatedObject, screen, toRight, moveSpeed)
+    override fun moveHorizontally(
+        delta: Float,
+        operatedObject: Creature,
+        screen: GameScreen,
+        toRight: Boolean,
+        speedScale: Float,
+    ) {
+        moveHorizontally(operatedObject, screen, toRight, moveSpeed * speedScale)
     }
 
     protected fun moveHorizontally(

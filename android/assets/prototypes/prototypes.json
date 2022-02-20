@@ -185,6 +185,78 @@
     }
   },
   {
+    "protoName": "Witch",
+    "isDeepPrototype": true,
+    "type": "Creature",
+    "drawable": {
+      "name": "stupidMeleeEnemy",
+      "size": [30, 91]
+    },
+    "behaviours": [
+      {
+        "type": "BouncyFlyBehaviour",
+        "runSpeed": 200,
+        "horizontalFlySpeed": 200,
+        "flyUpSpeed": 200,
+        "flyDownSpeed": 300,
+        "bounceDownSeconds": 0.5
+      },
+      {
+        "type": "AttackBehaviour",
+        "weapon": {
+          "type": "SimpleGun",
+          "bulletOffset": [30, 20],
+          "bulletBuilder": {
+            "type": "SimpleBuilder",
+            "drawableName":  "rocket",
+            "radius": 5,
+            "speed": 10000,
+            "ownerFriendlyPeriod": 0.1
+          },
+          "handWeaponStyle": {
+            "weaponDrawable": {
+              "name": "simpleWeapon",
+              "zIndex": 0,
+              "size": [61, 59],
+              "offset": [0, 25]
+            },
+            "origin": [0, 0]
+          },
+          "power": 5,
+          "cooldown": 1.5,
+          "safeAttackPeriod": 0.195,
+          "dangerousAttackPeriod": 0.3
+        }
+      }
+    ],
+    "bodyPattern": {
+      "type": "RectangleWithTopGSBottomGS",
+      "b2dType": "dynamic",
+      "size": [30, 91]
+    },
+    "healthBar": {
+      "maxHealth": 100,
+      "backgroundDrawable": {
+        "name": "healthBarBackground",
+        "size": [140, 10]
+      },
+      "foregroundDrawable": {
+        "name": "healthBarHealth",
+        "size": [0, 10]
+      },
+      "animateDuration": 0.1
+    },
+    "thinker": {
+      "type": "WitchThinker",
+      "searchingRelaxOnTurnSeconds": 0.5,
+      "searchingFlySeconds": 2,
+      "chaseTriggerDistance": 500,
+      "attackTriggerDistance": 300,
+      "slowEscapeTriggerDistance": 200,
+      "fastEscapeTriggerDistance": 100
+    }
+  },
+  {
     "protoName": "AlexanderSpawner",
     "isDeepPrototype": true,
     "type": "Spawner",

@@ -60,25 +60,10 @@
     },
     {
       "prototype": "AlexanderSpawner",
-      "bodyPattern": {
-        "worldPosition": [200, 200]
-      },
+      "bodyPattern.worldPosition": [200, 200],
       "igoPattern": {
-        "prototype": "Alexander",
-        "bodyPattern": {
-          "worldPosition": [200, 250]
-        },
-        "weapon": {
-          "type": "SimpleGun",
-          "bulletOffset": [30, 20],
-          "bulletBuilder": {
-            "type": "SimpleBuilder",
-            "drawableName":  "rocket",
-            "radius": 5,
-            "speed": 10000,
-            "ownerFriendlyPeriod": 0.1
-          }
-        }
+        "prototype": "Witch",
+        "bodyPattern.worldPosition": [200, 250]
       }
     },
     {
