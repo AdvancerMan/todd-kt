@@ -45,8 +45,16 @@ class WitchThinker(
     }
 
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
-        val distance = operatedObject.body.getAABB()
-            .coordinateDistanceTo(screen.player.body.getAABB())
+        val distance = operatedObject.body.getAABB().let { myAabb ->
+            screen.player.body.getAABB().let { playerAabb ->
+                maxOf(
+                    myAabb.x - playerAabb.x - playerAabb.width,
+                    playerAabb.x - myAabb.x - myAabb.width,
+                    0f,
+                )
+            }
+        }
+
         val myCenter = operatedObject.body.getCenter()
         val targetCenter = screen.player.body.getCenter()
 
