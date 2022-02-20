@@ -1,5 +1,6 @@
 package io.github.advancerman.todd.objects.creature.behaviour.impl
 
+import io.github.advancerman.todd.asset.texture.animated.ToddAnimationEvent
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.objects.creature.behaviour.Behaviour
@@ -12,7 +13,7 @@ class JumpBehaviour(private val jumpPower: Float) : JumpAction {
     override fun jump(delta: Float, operatedObject: Creature, screen: GameScreen) {
         if (operatedObject.isOnGround) {
             operatedObject.body.setYVelocity(jumpPower)
-            operatedObject.reportAnimationEvent(JumpAction.JUMP_EVENT)
+            operatedObject.reportAnimationEvent(ToddAnimationEvent.JUMP)
         }
         screen.listenAction(ThinkerAction.JUMP, operatedObject)
     }

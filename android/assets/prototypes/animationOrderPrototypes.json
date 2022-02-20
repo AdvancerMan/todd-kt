@@ -6,98 +6,98 @@
       "STAY": [
         {
           "nextAnimationType": "JUMP",
-          "on": ["jump"]
+          "on": ["JUMP"]
         },
         {
           "nextAnimationType": "FALL_AFTER_GROUND",
-          "on": ["fall"]
+          "on": ["FALL"]
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["move"]
+          "on": ["HORIZONTAL_MOVE"]
         }
       ],
       "RUN": [
         {
           "nextAnimationType": "JUMP",
-          "on": ["jump"]
+          "on": ["JUMP"]
         },
         {
           "nextAnimationType": "FALL_AFTER_GROUND",
-          "on": ["fall"]
+          "on": ["FALL"]
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["move"],
+          "on": ["HORIZONTAL_MOVE"],
           "resetTime": false
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["always"]
+          "on": ["ALWAYS"]
         }
       ],
       "JUMP": [
         {
           "nextAnimationType": "JUMP",
-          "on": ["jump"]
+          "on": ["JUMP"]
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "move"]
+          "on": ["ON_GROUND", "HORIZONTAL_MOVE"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["onGround"]
+          "on": ["ON_GROUND"]
         },
         {
           "nextAnimationType": "PRE_FALL",
-          "on": ["fall"]
+          "on": ["FALL"]
         }
       ],
       "PRE_FALL": [
         {
           "nextAnimationType": "JUMP",
-          "on": ["jump"]
+          "on": ["JUMP"]
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "move"]
+          "on": ["ON_GROUND", "HORIZONTAL_MOVE"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["onGround"]
+          "on": ["ON_GROUND"]
         },
         {
           "nextAnimationType": "FALL",
-          "on": ["animationFinished"]
+          "on": ["ANIMATION_FINISHED"]
         }
       ],
       "FALL": [
         {
           "nextAnimationType": "JUMP",
-          "on": ["jump"]
+          "on": ["JUMP"]
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "move"]
+          "on": ["ON_GROUND", "HORIZONTAL_MOVE"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["onGround"]
+          "on": ["ON_GROUND"]
         }
       ],
       "FALL_AFTER_GROUND": [
         {
           "nextAnimationType": "JUMP",
-          "on": ["jump"]
+          "on": ["JUMP"]
         },
         {
           "nextAnimationType": "RUN",
-          "on": ["onGround", "move"]
+          "on": ["ON_GROUND", "HORIZONTAL_MOVE"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["onGround"]
+          "on": ["ON_GROUND"]
         }
       ]
     }
@@ -109,55 +109,55 @@
       "STAY": [
         {
           "nextAnimationType": "PREPARATION_BEGIN",
-          "on": ["owner.preparation"]
+          "on": ["owner.ATTACK_PREPARATION"]
         },
         {
           "nextAnimationType": "ACTION",
-          "on": ["owner.attack"]
+          "on": ["owner.ATTACK"]
         }
       ],
       "ACTION": [
         {
           "nextAnimationType": "PREPARATION_BEGIN",
-          "on": ["owner.preparation"]
+          "on": ["owner.ATTACK_PREPARATION"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["animationFinished"]
+          "on": ["ANIMATION_FINISHED"]
         }
       ],
       "PREPARATION_BEGIN" : [
         {
           "nextAnimationType": "PREPARATION",
-          "on": ["owner.preparation", "animationFinished"]
+          "on": ["owner.ATTACK_PREPARATION", "ANIMATION_FINISHED"]
         },
         {
           "nextAnimationType": "PREPARATION_BEGIN",
-          "on": ["owner.preparation"],
+          "on": ["owner.ATTACK_PREPARATION"],
           "resetTime": false
         },
         {
           "nextAnimationType": "ACTION",
-          "on": ["owner.attack"]
+          "on": ["owner.ATTACK"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["always"]
+          "on": ["ALWAYS"]
         }
       ],
       "PREPARATION" : [
         {
           "nextAnimationType": "PREPARATION",
-          "on": ["owner.preparation"],
+          "on": ["owner.ATTACK_PREPARATION"],
           "resetTime": false
         },
         {
           "nextAnimationType": "ACTION",
-          "on": ["owner.attack"]
+          "on": ["owner.ATTACK"]
         },
         {
           "nextAnimationType": "STAY",
-          "on": ["always"]
+          "on": ["ALWAYS"]
         }
       ]
     }

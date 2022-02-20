@@ -22,8 +22,4 @@ interface MoveHorizontallyAction : Behaviour {
         operatedObject.isDirectedToRight = toRight
         moveHorizontally(delta, operatedObject, screen, toRight, speedScale)
     }
-
-    companion object {
-        const val MOVE_EVENT = "move"
-    }
 }

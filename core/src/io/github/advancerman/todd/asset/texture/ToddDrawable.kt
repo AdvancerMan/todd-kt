@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable
 import io.github.advancerman.todd.asset.texture.animated.AnimationType
+import io.github.advancerman.todd.asset.texture.animated.AnimationEvent
 import io.github.advancerman.todd.json.JsonFullSerializable
 
 interface DisposableByManager {
@@ -36,10 +37,10 @@ interface ToddDrawable : FlipTransformDrawable, DisposableByManager, WithZIndex 
     fun update(delta: Float) {}
 
     // for animations
-    fun reportEvent(eventName: String) {}
+    fun reportEvent(animationEvent: AnimationEvent, prefix: String = "") {}
     fun getPlayingType(): AnimationType = "stay"
     fun isAnimationFinished() = true
-    fun getAdditionallyReportedEvents(): List<String> = listOf()
+    fun getAdditionallyReportedEvents(): List<AnimationEvent> = listOf()
 }
 
 fun ToddDrawable.withMinSize() = apply {

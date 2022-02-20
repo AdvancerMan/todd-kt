@@ -9,8 +9,4 @@ interface JumpAction : Behaviour {
         operatedObject: Creature,
         screen: GameScreen
     )
-
-    companion object {
-        const val JUMP_EVENT = "jump"
-    }
 }

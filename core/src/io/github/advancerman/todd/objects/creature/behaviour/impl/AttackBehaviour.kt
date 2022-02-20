@@ -1,5 +1,6 @@
 package io.github.advancerman.todd.objects.creature.behaviour.impl
 
+import io.github.advancerman.todd.asset.texture.animated.ToddAnimationEvent
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.base.InGameObject
 import io.github.advancerman.todd.objects.creature.Creature
@@ -24,7 +25,7 @@ class AttackBehaviour(private val weapon: Weapon) : AttackAction {
     override fun attack(delta: Float, operatedObject: Creature, screen: GameScreen) {
         if (canAttack()) {
             weapon.attack()
-            operatedObject.reportAnimationEvent(AttackAction.ATTACK_EVENT)
+            operatedObject.reportAnimationEvent(ToddAnimationEvent.ATTACK)
         }
         screen.listenAction(ThinkerAction.ATTACK, operatedObject)
     }

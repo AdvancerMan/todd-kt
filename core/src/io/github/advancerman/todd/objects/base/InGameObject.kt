@@ -14,6 +14,7 @@ import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.asset.texture.ToddDrawable
 import io.github.advancerman.todd.asset.texture.WithZIndex
+import io.github.advancerman.todd.asset.texture.animated.AnimationEvent
 import io.github.advancerman.todd.box2d.bodyPattern.base.SensorName
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.Sensor
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.TopGroundListener
@@ -133,8 +134,8 @@ abstract class InGameObject(
         }
     }
 
-    open fun reportAnimationEvent(eventName: String) {
-        drawable.reportEvent(eventName)
+    open fun reportAnimationEvent(animationEvent: AnimationEvent) {
+        drawable.reportEvent(animationEvent)
     }
 
     final override fun setSize(width: Float, height: Float) {

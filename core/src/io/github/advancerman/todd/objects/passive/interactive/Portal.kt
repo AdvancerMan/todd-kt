@@ -10,6 +10,7 @@ import io.github.advancerman.todd.objects.base.InGameObject
 import io.github.advancerman.todd.objects.base.RealBodyWrapper
 import io.github.advancerman.todd.objects.passive.PassiveObject
 import io.github.advancerman.todd.asset.texture.ToddDrawable
+import io.github.advancerman.todd.asset.texture.animated.ToddAnimationEvent
 import io.github.advancerman.todd.box2d.bodyPattern.base.BodyPattern
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.Sensor
 import io.github.advancerman.todd.json.JsonFullSerializable
@@ -41,7 +42,7 @@ class Portal(
         while (delayedObjects.notEmpty() && delayedObjects.first().second < timeSinceCreation) {
             val igo = delayedObjects.removeFirst().first
             if (igo.alive) {
-                reportAnimationEvent(TELEPORT_ENTITY_EVENT)
+                reportAnimationEvent(ToddAnimationEvent.TELEPORT_ENTITY)
                 igo.body.setPosition(teleportTo.x, teleportTo.y, false)
             }
         }
@@ -52,7 +53,7 @@ class Portal(
                               otherFixture: Fixture, contact: Contact) {
         super.beginContact(otherSensor, other, myFixture, otherFixture, contact)
         if (otherSensor === other) {
-            reportAnimationEvent(DETECT_ENTITY_EVENT)
+            reportAnimationEvent(ToddAnimationEvent.DETECT_ENTITY)
             delayedObjects.addLast(other to timeSinceCreation + teleportDelay)
         }
     }
@@ -61,10 +62,5 @@ class Portal(
                           otherFixture: Fixture, contact: Contact, oldManifold: Manifold) {
         super.preSolve(otherSensor, other, myFixture, otherFixture, contact, oldManifold)
         contact.isEnabled = false
-    }
-
-    companion object {
-        const val DETECT_ENTITY_EVENT = "detectEntity"
-        const val TELEPORT_ENTITY_EVENT = "teleportEntity"
     }
 }

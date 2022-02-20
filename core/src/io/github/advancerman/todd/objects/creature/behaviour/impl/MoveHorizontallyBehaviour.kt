@@ -1,6 +1,7 @@
 package io.github.advancerman.todd.objects.creature.behaviour.impl
 
 import com.badlogic.gdx.math.Vector2
+import io.github.advancerman.todd.asset.texture.animated.ToddAnimationEvent
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.objects.creature.behaviour.Behaviour
@@ -37,7 +38,7 @@ open class MoveHorizontallyBehaviour(private val moveSpeed: Float) : MoveHorizon
         toRight: Boolean,
         speed: Float,
     ) {
-        operatedObject.reportAnimationEvent(MoveHorizontallyAction.MOVE_EVENT)
+        operatedObject.reportAnimationEvent(ToddAnimationEvent.HORIZONTAL_MOVE)
         preRunVelocity = if (toRight) speed else -speed
 
         if (toRight) {

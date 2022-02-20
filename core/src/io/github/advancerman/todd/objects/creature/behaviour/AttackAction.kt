@@ -14,8 +14,4 @@ interface AttackAction : Behaviour {
     fun canAttack(): Boolean
 
     fun getAttackedObjects(): List<InGameObject>
-
-    companion object {
-        const val ATTACK_EVENT = "attack"
-    }
 }

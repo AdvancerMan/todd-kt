@@ -71,7 +71,7 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
     }
 
     override fun update(delta: Float) {
-        reportedEvents.addAll(getAdditionallyReportedEvents())
+        reportedEvents.addAll(getAdditionallyReportedEvents().map { it.name })
 
         animationPackInfo.animationsOrder[type]
             .also {
@@ -86,17 +86,21 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
         super.update(delta)
     }
 
-    override fun reportEvent(eventName: String) {
-        super.reportEvent(eventName)
-        reportedEvents.add(eventName)
+    override fun reportEvent(animationEvent: AnimationEvent, prefix: String) {
+        super.reportEvent(animationEvent, prefix)
+        if (prefix.isBlank()) {
+            reportedEvents.add(animationEvent.name)
+        } else {
+            reportedEvents.add("$prefix.${animationEvent.name}")
+        }
     }
 
     override fun getPlayingType() = type
 
-    override fun getAdditionallyReportedEvents(): List<String> {
+    override fun getAdditionallyReportedEvents(): List<AnimationEvent> {
         return listOf(
-            isAnimationFinished() to ANIMATION_FINISHED_EVENT,
-            true to ALWAYS_EVENT
+            isAnimationFinished() to ToddAnimationEvent.ANIMATION_FINISHED,
+            true to ToddAnimationEvent.ALWAYS,
         )
             .filter { it.first }
             .map { it.second }
@@ -104,10 +108,5 @@ private constructor(private val animationPackInfo: AnimationPackInfo,
 
     override fun dispose(manager: TextureManager) {
         manager.unload(animationPackInfo)
-    }
-
-    companion object {
-        private const val ALWAYS_EVENT = "always"
-        private const val ANIMATION_FINISHED_EVENT = "animationFinished"
     }
 }

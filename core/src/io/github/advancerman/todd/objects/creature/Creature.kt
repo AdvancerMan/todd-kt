@@ -1,7 +1,6 @@
 package io.github.advancerman.todd.objects.creature
 
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.Manifold
@@ -12,6 +11,8 @@ import io.github.advancerman.todd.objects.base.InGameObject
 import io.github.advancerman.todd.objects.base.RealBodyWrapper
 import io.github.advancerman.todd.screen.game.GameScreen
 import io.github.advancerman.todd.asset.texture.ToddDrawable
+import io.github.advancerman.todd.asset.texture.animated.AnimationEvent
+import io.github.advancerman.todd.asset.texture.animated.ToddAnimationEvent
 import io.github.advancerman.todd.box2d.bodyPattern.base.BodyPattern
 import io.github.advancerman.todd.box2d.bodyPattern.sensor.Sensor
 import io.github.advancerman.todd.box2d.bodyPattern.base.SensorName
@@ -127,9 +128,9 @@ class Creature(
     override fun postAct(delta: Float) {
         super.postAct(delta)
         if (isOnGround) {
-            reportAnimationEvent(ON_GROUND_EVENT)
+            reportAnimationEvent(ToddAnimationEvent.ON_GROUND)
         } else if (body.getVelocity().y <= 0) {
-            reportAnimationEvent(FALL_EVENT)
+            reportAnimationEvent(ToddAnimationEvent.FALL)
         }
         behaviours.forEach { it.postUpdate(delta, this, screen) }
         drawable.getAdditionallyReportedEvents().forEach(::reportAnimationEventToChildren)
@@ -148,15 +149,15 @@ class Creature(
         sinceDamage = 0f
     }
 
-    override fun reportAnimationEvent(eventName: String) {
-        super.reportAnimationEvent(eventName)
-        reportAnimationEventToChildren(eventName)
+    override fun reportAnimationEvent(animationEvent: AnimationEvent) {
+        super.reportAnimationEvent(animationEvent)
+        reportAnimationEventToChildren(animationEvent)
     }
 
-    private fun reportAnimationEventToChildren(eventName: String) {
+    private fun reportAnimationEventToChildren(animationEvent: AnimationEvent) {
         children.filterIsInstance<DrawableActor>()
             .filter { it.drawable !== drawable }
-            .forEach { it.drawable!!.reportEvent("owner.$eventName") }
+            .forEach { it.drawable!!.reportEvent(animationEvent, "owner") }
     }
 
     override fun preSolve(
@@ -179,9 +180,6 @@ class Creature(
     }
 
     companion object {
-        private const val ON_GROUND_EVENT = "onGround"
-        private const val FALL_EVENT = "fall"
-
         @ManualJsonConstructor
         private fun getJsonDefaults(
             @Suppress("UNUSED_PARAMETER") json: JsonValue,

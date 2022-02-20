@@ -1,5 +1,6 @@
 package io.github.advancerman.todd.thinker.attack
 
+import io.github.advancerman.todd.asset.texture.animated.ToddAnimationEvent
 import io.github.advancerman.todd.json.SerializationType
 import io.github.advancerman.todd.objects.creature.Creature
 import io.github.advancerman.todd.objects.creature.behaviour.AttackAction
@@ -56,14 +57,14 @@ class PrepareBeforeAttackThinker(
     override fun think(delta: Float, operatedObject: Creature, screen: GameScreen) {
         sincePreparationStart += delta
         if (sincePreparationStart < preparationSeconds) {
-            operatedObject.reportAnimationEvent(PREPARATION_EVENT)
+            operatedObject.reportAnimationEvent(ToddAnimationEvent.ATTACK_PREPARATION)
         } else if (triedHits < maxHitTries) {
             if (!rolledRelaxation && Random.nextFloat() < relaxWithoutHitProbability) {
                 resetPreparation()
             } else if (shouldTryHit(delta)) {
                 tryHit(delta, operatedObject, screen)
             } else {
-                operatedObject.reportAnimationEvent(PREPARATION_EVENT)
+                operatedObject.reportAnimationEvent(ToddAnimationEvent.ATTACK_PREPARATION)
             }
             rolledRelaxation = true
         } else if (sincePreparationStart > tillPreparationEnd + relaxSeconds) {
@@ -72,7 +73,7 @@ class PrepareBeforeAttackThinker(
 
             if (distance < triggerDistancePixels) {
                 initPreparation()
-                operatedObject.reportAnimationEvent(PREPARATION_EVENT)
+                operatedObject.reportAnimationEvent(ToddAnimationEvent.ATTACK_PREPARATION)
             }
         }
     }
@@ -83,7 +84,7 @@ class PrepareBeforeAttackThinker(
             operatedObject.getBehaviour<AttackAction>()?.attack(delta, operatedObject, screen)
             resetPreparation()
         } else {
-            operatedObject.reportAnimationEvent(PREPARATION_EVENT)
+            operatedObject.reportAnimationEvent(ToddAnimationEvent.ATTACK_PREPARATION)
         }
     }
 
@@ -110,9 +111,5 @@ class PrepareBeforeAttackThinker(
                     && attackAction.getAttackedObjects().contains(screen.player)
         }
         return result == true
-    }
-
-    companion object {
-        private const val PREPARATION_EVENT = "preparation"
     }
 }
