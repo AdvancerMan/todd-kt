@@ -30,6 +30,7 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
     private var isJumping = false
     private var isNotJumping = false
     private var isAttacking = false
+    private var lands = "no"
 
     private val settings = jsonSettings["input"]
 
@@ -150,6 +151,12 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
         if (isAttacking) {
             operatedObject.getBehaviour<AttackAction>()?.attack(delta, operatedObject, screen)
         }
+        if (lands == "t") {
+            operatedObject.getBehaviour<FlyAction>()?.takeOff()
+        }
+        if (lands == "l") {
+            operatedObject.getBehaviour<FlyAction>()?.land()
+        }
     }
 
     fun setMovingActor(type: MovingInputType) {
@@ -181,6 +188,8 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                         Input.Keys.LEFT -> isMovingLeft = false
                         Input.Keys.RIGHT -> isMovingRight = false
                         Input.Keys.S -> isNotJumping = false
+                        Input.Keys.G -> lands = "no"
+                        Input.Keys.H -> lands = "no"
                         else -> return false
                     }
                     return true
@@ -196,6 +205,8 @@ class PlayerThinker(val game: ToddGame) : Group(), Thinker, Disposable {
                         Input.Keys.LEFT -> isMovingLeft = true
                         Input.Keys.RIGHT -> isMovingRight = true
                         Input.Keys.S -> isNotJumping = true
+                        Input.Keys.G -> lands = "l"
+                        Input.Keys.H -> lands = "t"
                         else -> return false
                     }
                     return true
