@@ -18,6 +18,9 @@ class BouncyFlyBehaviour(
     private val bounceDownSeconds: Float,
     runSpeed: Float,
 ) : MoveHorizontallyBehaviour(runSpeed), FlyAction {
+    private val bounceUpSeconds: Float
+        get() = bounceDownSpeed / bounceUpSpeed * bounceDownSeconds
+
     private var preVerticalFlyVelocity = 0f
     private var sinceBounceStart = 0f
     override var isLanded = false
@@ -36,14 +39,13 @@ class BouncyFlyBehaviour(
         } else {
             operatedObject.body.setGravityScale(0f)
             sinceBounceStart += delta
-            preVerticalFlyVelocity = calculateBounceVelocity()
+            preVerticalFlyVelocity = calculateBounceVelocity(sinceBounceStart)
         }
     }
 
-    private fun calculateBounceVelocity(): Float {
-        val bounceUpSeconds = bounceDownSpeed / bounceUpSpeed * bounceDownSeconds
+    private fun calculateBounceVelocity(atMoment: Float): Float {
         val period = bounceDownSeconds + bounceUpSeconds
-        val phase = (sinceBounceStart + bounceDownSeconds / 2f) % period
+        val phase = (atMoment + bounceDownSeconds / 2f) % period
 
         return if (phase < bounceDownSeconds) {
             val bounceDownPhase = phase / bounceDownSeconds * MathUtils.PI
@@ -71,8 +73,13 @@ class BouncyFlyBehaviour(
         toUp: Boolean
     ) {
         if (!isLanded) {
-            sinceBounceStart = 0f
-            preVerticalFlyVelocity = if (toUp) flyUpSpeed else -flyDownSpeed
+            if (toUp) {
+                preVerticalFlyVelocity = flyUpSpeed
+                sinceBounceStart = (bounceUpSeconds + bounceDownSeconds) / 2
+            } else {
+                preVerticalFlyVelocity = -flyDownSpeed
+                sinceBounceStart = 0f
+            }
         }
     }
 
