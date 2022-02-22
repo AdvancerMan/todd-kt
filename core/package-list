@@ -1,5 +1,7 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:AnimationEvent/AnimationEvent.Default///PointingToDeclaration/core/AnimationEvent/-animation-event.-default.html
+$dokka.location:AnimationEvent/AnimationEvent///PointingToDeclaration/core/AnimationEvent/index.html
 $dokka.location:AnimationInfo/AnimationInfo.Default///PointingToDeclaration/core/AnimationInfo/-animation-info.-default.html
 $dokka.location:AnimationInfo/AnimationInfo///PointingToDeclaration/core/AnimationInfo/index.html
 $dokka.location:AnimationOrder/AnimationOrder.Default///PointingToDeclaration/core/AnimationOrder/-animation-order.-default.html
@@ -59,6 +61,7 @@ $dokka.location:ToddDrawable/ToddDrawable///PointingToDeclaration/core/ToddDraw
 $dokka.location:Weapon/SimpleGun///PointingToDeclaration/core/Weapon/-simple-gun.html
 $dokka.location:Weapon/SimpleMeleeWeapon///PointingToDeclaration/core/Weapon/-simple-melee-weapon.html
 $dokka.location:Weapon/Weapon///PointingToDeclaration/core/Weapon/index.html
+AnimationEvent
 AnimationInfo
 AnimationOrder
 Behaviour
