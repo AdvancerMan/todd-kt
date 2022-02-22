@@ -1,11 +1,36 @@
 package io.github.advancerman.todd.json.docs
 
 import org.jetbrains.dokka.links.DRI
-import org.jetbrains.dokka.model.*
+import org.jetbrains.dokka.model.Annotations
+import org.jetbrains.dokka.model.ArrayValue
+import org.jetbrains.dokka.model.Bound
+import org.jetbrains.dokka.model.ClassValue
+import org.jetbrains.dokka.model.Contravariance
+import org.jetbrains.dokka.model.Covariance
+import org.jetbrains.dokka.model.DClass
+import org.jetbrains.dokka.model.DClasslike
+import org.jetbrains.dokka.model.DEnum
+import org.jetbrains.dokka.model.DFunction
+import org.jetbrains.dokka.model.DModule
+import org.jetbrains.dokka.model.DObject
+import org.jetbrains.dokka.model.DPackage
+import org.jetbrains.dokka.model.DParameter
+import org.jetbrains.dokka.model.GenericTypeConstructor
+import org.jetbrains.dokka.model.Invariance
+import org.jetbrains.dokka.model.Nullable
+import org.jetbrains.dokka.model.PrimaryConstructorExtra
+import org.jetbrains.dokka.model.Projection
+import org.jetbrains.dokka.model.Star
+import org.jetbrains.dokka.model.StringValue
+import org.jetbrains.dokka.model.TypeAliased
+import org.jetbrains.dokka.model.TypeParameter
+import org.jetbrains.dokka.model.Void
+import org.jetbrains.dokka.model.WithConstructors
 import org.jetbrains.dokka.model.doc.Description
 import org.jetbrains.dokka.model.doc.DocumentationNode
 import org.jetbrains.dokka.model.doc.Text
 import org.jetbrains.dokka.model.properties.PropertyContainer
+import org.jetbrains.dokka.model.properties.WithExtraProperties
 import org.jetbrains.dokka.plugability.DokkaContext
 import org.jetbrains.dokka.transformers.documentation.DocumentableTransformer
 
@@ -49,9 +74,9 @@ class SerializationTypeTransformer(val context: DokkaContext) : DocumentableTran
 
     private fun getSerializationTypes(classlike: DClasslike) =
         when (classlike) {
-            is DClass -> {
-                getSerializationData(classlike.extra).map { (baseClass, type) ->
-                    classlike.constructors.find {
+            is DClass, is DEnum -> {
+                getSerializationData((classlike as WithExtraProperties<*>).extra).map { (baseClass, type) ->
+                    (classlike as WithConstructors).constructors.find {
                         it.extra.allOfType<PrimaryConstructorExtra>().isNotEmpty()
                     }?.let { function ->
                         function.copy(

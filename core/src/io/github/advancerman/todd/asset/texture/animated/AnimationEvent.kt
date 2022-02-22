@@ -14,17 +14,20 @@ interface AnimationEvent {
  * * ALWAYS - always passed to the animation
  * * ANIMATION_FINISHED - passed continuously when animation is finished
  *
- * 
+ * <br>
+ *
  * * FALL - passed continuously when [Creature]'s y velocity is less than 0
  * * ON_GROUND - passed continuously when [Creature] is detected as 'touching ground'
  *
- * 
+ * <br>
+ *
  * * MOVE - passed continuously when [Creature]'s behaviour performs horizontal move
  * * JUMP - passed once when [Creature]'s behaviour performs a jump
  * * ATTACK - passed once when [Creature]'s behaviour performs an attack
  * * PREPARATION - passed continuously when [Creature]'s behaviour performs a preparation for attack
  *
- * 
+ * <br>
+ *
  * * DETECT_ENTITY - passed once, when [Portal] detects some entity to teleport
  * * TELEPORT_ENTITY - passed once, when [Portal] teleports some entity
  */
