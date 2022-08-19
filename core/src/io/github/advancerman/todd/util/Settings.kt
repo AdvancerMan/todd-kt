@@ -6,10 +6,6 @@ var SPF = 1f / 60
 const val SCREEN_WIDTH = 800
 const val SCREEN_HEIGHT = 450
 
-const val SCREEN_BACKGROUND_COLOR_R = 48f / 256f
-const val SCREEN_BACKGROUND_COLOR_G = 87f / 256f
-const val SCREEN_BACKGROUND_COLOR_B = 128f / 256f
-
 const val LEVELS_PATH = "levels/"
 const val TEXTURES_PATH = "pics/"
 const val PROTOTYPES_PATH = "prototypes/"

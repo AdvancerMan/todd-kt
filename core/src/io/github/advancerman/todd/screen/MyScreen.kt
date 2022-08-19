@@ -2,6 +2,7 @@ package io.github.advancerman.todd.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
@@ -10,11 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.StretchViewport
+import io.github.advancerman.todd.json.deserialization.construct
+import io.github.advancerman.todd.json.deserialization.jsonSettings
 import io.github.advancerman.todd.launcher.ToddGame
 import io.github.advancerman.todd.objects.base.getActorAABB
-import io.github.advancerman.todd.util.*
+import io.github.advancerman.todd.util.SCREEN_HEIGHT
+import io.github.advancerman.todd.util.SCREEN_WIDTH
 
 abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable, PostUpdatable {
+    private val backgroundColor = jsonSettings["screenBackgroundColor"].construct<Color>()
+
     protected val stage = Stage(StretchViewport(
             SCREEN_WIDTH.toFloat(), SCREEN_HEIGHT.toFloat(),
             OrthographicCamera().apply { setToOrtho(false) }
@@ -55,10 +61,10 @@ abstract class MyScreen(protected val game: ToddGame) : Screen, Disposable, Post
 
     open fun draw() {
         Gdx.gl.glClearColor(
-            SCREEN_BACKGROUND_COLOR_R,
-            SCREEN_BACKGROUND_COLOR_G,
-            SCREEN_BACKGROUND_COLOR_B,
-            1f
+            backgroundColor.r,
+            backgroundColor.g,
+            backgroundColor.b,
+            backgroundColor.a,
         )
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
